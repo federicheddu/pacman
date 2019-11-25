@@ -6,9 +6,9 @@
 
 
 void pacman(int pipe) {
-    int currDir = STOP; //direzione attuale
-    int newDir = STOP; //proposta di direzione
-    int nextDir = STOP; //direzione da prendere appena disponibile
+    char currDir = STOP; //direzione attuale
+    char newDir = STOP; //proposta di direzione
+    char nextDir = STOP; //direzione da prendere appena disponibile
     int x = SPAWN_LEVEL1_X; //spawn del primo livello X
     int y = SPAWN_LEVEL1_Y; //spawn del primo livello Y
 
@@ -32,7 +32,7 @@ void pacman(int pipe) {
             currDir = STOP;
         */
         currDir = getchar();
-        
+
         switch (currDir) {
             case SU:
                 x--;
@@ -53,7 +53,7 @@ void pacman(int pipe) {
     }
 }
 
-_Bool pacmanMv(int x, int y, int dir) {
+_Bool pacmanMv(int x, int y, char dir) {
     switch (dir) {
         case SU:
             if(mvinch(y-1,x) == '#' || mvinch(y-1,x+1) == '#' || mvinch(y-1,x+2) == '#')
@@ -77,7 +77,7 @@ _Bool pacmanMv(int x, int y, int dir) {
     return true;
 }
 
-void printPacMan(int x, int y, int direction) {
+void printPacMan(int x, int y, char direction) {
     char pacmanSU[3][3] = {{' ','1',' '},{'1',' ','1'},{'1','1','1'}};
     char pacmanGIU[3][3] = {{'1','1','1'},{'1',' ','1'},{' ','1',' '}};
     char pacmanDESTRA[3][3] = {{'1','1',' '},{'1',' ','1'},{'1','1',' '}};
@@ -154,7 +154,7 @@ void printPacMan(int x, int y, int direction) {
 }
 
 void clearPacMan(int x, int y) {
-    attron(COLOR_PAIR(1));
+    attron(COLOR_PAIR(3));
     for(int i=0; i<3; i++)
         mvprintw(y+i, x, "%s", "   ");
 }

@@ -49,6 +49,7 @@ int main() {
     refresh();
 
     while (getch()!='\n');//Aspetto che l'utente prema invio
+    kill(pid_PacMan,1);
     endwin();//Ripristino il normale funzionamento del terminale
 
     return 0;

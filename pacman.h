@@ -10,8 +10,8 @@
 
 void pacman(int pipe);
 
-_Bool pacmanMv(int x, int y, int dir);
+_Bool pacmanMv(int x, int y, char dir);
 
 void clearPacMan(int x, int y);
 
-void printPacMan(int x, int y, int direction);
+void printPacMan(int x, int y, char direction);
