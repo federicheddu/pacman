@@ -15,10 +15,11 @@ void pacman(int pipe) {
     printPacMan(x,y,STOP);
 
     while(true) {
-        usleep(1000);
+        //usleep(1000);
 
-        clearPacMan(x,y);
+        clearPacMan(y,x);
 
+        /*
         //prendere input
         newDir = getch();
         //controllo se l'input c'è / è valido
@@ -29,23 +30,26 @@ void pacman(int pipe) {
             currDir = nextDir;
         if (!pacmanMv(x,y,currDir))
             currDir = STOP;
-
+        */
+        currDir = getchar();
+        
         switch (currDir) {
             case SU:
-                y--;
+                x--;
                 break;
             case GIU:
-                y++;
-                break;
-            case DESTRA:
                 x++;
                 break;
+            case DESTRA:
+                y++;
+                break;
             case SINISTRA:
-                x--;
+                y--;
                 break;
         }
 
-        printPacMan(x,y,STOP);
+        printPacMan(x,y,currDir);
+        refresh();
     }
 }
 
@@ -83,7 +87,7 @@ void printPacMan(int x, int y, int direction) {
         case SU:
             for(int i=0; i<=2; i++) {
                 for(int j=0; j<=2; j++) {
-                    if(pacmanSU[j][i] == '1') {
+                    if(pacmanSU[i][j] == '1') {
                         attron(COLOR_PAIR(2));
                         mvaddch(x+i, y+j, pacmanSU[i][j]);
                     } else {
@@ -96,7 +100,7 @@ void printPacMan(int x, int y, int direction) {
         case GIU:
             for(int i=0; i<=2; i++) {
                 for(int j=0; j<=2; j++) {
-                    if(pacmanGIU[j][i] == '1') {
+                    if(pacmanGIU[i][j] == '1') {
                         attron(COLOR_PAIR(2));
                         mvaddch(x+i, y+j, pacmanGIU[i][j]);
                     } else {
@@ -109,7 +113,7 @@ void printPacMan(int x, int y, int direction) {
         case DESTRA:
             for(int i=0; i<=2; i++) {
                 for(int j=0; j<=2; j++) {
-                    if(pacmanDESTRA[j][i] == '1') {
+                    if(pacmanDESTRA[i][j] == '1') {
                         attron(COLOR_PAIR(2));
                         mvaddch(x+i, y+j, pacmanDESTRA[i][j]);
                     } else {
@@ -122,7 +126,7 @@ void printPacMan(int x, int y, int direction) {
         case SINISTRA:
             for(int i=0; i<=2; i++) {
                 for(int j=0; j<=2; j++) {
-                    if(pacmanSINISTRA[j][i] == '1') {
+                    if(pacmanSINISTRA[i][j] == '1') {
                         attron(COLOR_PAIR(2));
                         mvaddch(x+i, y+j, pacmanSINISTRA[i][j]);
                     } else {
@@ -150,10 +154,7 @@ void printPacMan(int x, int y, int direction) {
 }
 
 void clearPacMan(int x, int y) {
-    attron(COLOR_PAIR(0));
+    attron(COLOR_PAIR(1));
     for(int i=0; i<3; i++)
-        for(int j=0; j<0; j++)
-            mvaddch(x+i, y+j, ' ');
-
-    refresh();
+        mvprintw(y+i, x, "%s", "   ");
 }
