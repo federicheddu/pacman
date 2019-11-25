@@ -34,11 +34,13 @@ int mainMenu() {
         menu = menu%3;
 
     } while(selMenu != '\n');
+
+    return menu;
 }
 
-int levelsMenu() {
+//int levelsMenu() {
     //TODO
-}
+//}
 
 void gameController(int pipe, int level) {
     printCampo(level);

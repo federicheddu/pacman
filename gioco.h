@@ -27,6 +27,8 @@
 #define SUGA 2
 //macro di gioco
 #define LEVELS 1
+#define SPAWN_LEVEL1_X 29
+#define SPAWN_LEVEL1_Y 45
 
 //gioco
 int mainMenu();
