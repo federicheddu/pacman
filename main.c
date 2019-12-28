@@ -2,17 +2,12 @@
 #include "pacman.h"
 #include "utility.h"
 
-int num_vite = 3;
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
 int main(){
+  int livello;
   pthread_t pacmanID;
-  Pos pos_pacman;
-  Par par_pacman;
-
-  par_pacman.num_vite=&num_vite;
-  par_pacman.mutex=&mutex;
-  par_pacman.posizione=&pos_pacman;
+  Buffer buffer;
+  buffer.first = NULL;
+  buffer.last = NULL;
 
   srand(time((time_t*)NULL));
   initscr();
@@ -25,17 +20,13 @@ int main(){
   init_pair(2, COLOR_YELLOW, COLOR_YELLOW);
   init_pair(3, COLOR_BLACK, COLOR_BLACK);*/
 
+  livello = mainMenu();
 
-  printCampo(mainMenu());
-  pthread_create(&pacmanID, NULL, &pacman, (void*)&par_pacman);
+  pthread_create(&pacmanID, NULL, &pacman, (void*)&buffer);
 
-
-
-  areaGioco(&pos_pacman, num_vite);
+  gameController(livello, &buffer);
 
   pthread_join(pacmanID, NULL);
 
-  while(getch()!='\n');
-  endwin();
   return 0;
 }

@@ -1,64 +1,63 @@
 #include "pacman.h"
 
 void * pacman(void * param){
-  Par * parametri = (Par*) param; /*Converto la mia variabile in input*/
-  Pos * pos_pacman = parametri->posizione;
-  pthread_mutex_t * mutex = parametri->mutex;
-  int * num_vite = parametri->num_vite;
+  Buffer *buffer = (Buffer*) param; // parsing del buffer
+  char c;
+  int numVite = 3;
+  int numColpiSubiti = 0;
 
-  pos_pacman->x=45;
-  pos_pacman->y=29;
+  Pos posPacman;
+  posPacman.x = 45;
+  posPacman.y = 29;
+  posPacman.dir = FERMO;
+  posPacman.entita = PACMAN;
 
-  pthread_mutex_lock(mutex);
-  mvaddch(pos_pacman->y,pos_pacman->x,'@');
-  refresh();
-  pthread_mutex_unlock(mutex);
+  Par parPacman;
+  parPacman.posizione = &posPacman;
+  parPacman.numVite = &numVite;
+  parPacman.numColpiSubiti = &numColpiSubiti;
 
-  while(*num_vite>0)
-	{
-		char c;
+  //Segnalazione della posizione iniziale
+  insertBuffer(buffer, mutex, NULL, posPacman);
+
+  while(numVite>0) {
+
     c=getch();
 
-    pthread_mutex_lock(mutex);
-    mvaddch(pos_pacman->y,pos_pacman->x,' ');
-    pthread_mutex_unlock(mutex);
+    //Modifica della posizione
+    switch(c) {
+      case SU:
+        if(pacmanMv(posPacman.x, posPacman.y, SU)) {
+          posPacman.y-=1;
+          posPacman.dir = SU;
+        }
+        break;
 
-    switch(c)// Mi sposto in base al tasto che ho premuto
-		{				 // controllando ogni volta di non uscire dai limiti
-		case SU:
-			if(pacmanMv(pos_pacman->x, pos_pacman->y, SU))
-			pos_pacman->y-=1;
-      else
-      pos_pacman->y = pos_pacman->y;
-			break;
+      case GIU:
+        if(pacmanMv(posPacman.x, posPacman.y, GIU)) {
+          posPacman.y+=1;
+          posPacman.dir = GIU;
+        }
+        break;
 
-		case GIU:
-			if(pacmanMv(pos_pacman->x, pos_pacman->y, GIU))
-			pos_pacman->y+=1;
-      else
-      pos_pacman->y = pos_pacman->y;
-			break;
+      case SINISTRA:
+        if(pacmanMv(posPacman.x, posPacman.y, SINISTRA)) {
+          posPacman.x-=1;
+          posPacman.dir = SINISTRA;
+        }
+        break;
 
-		case SINISTRA:
-			if(pacmanMv(pos_pacman->x, pos_pacman->y, SINISTRA))
-			pos_pacman->x-=1;
-      else
-      pos_pacman->x= pos_pacman->x;
-			break;
+      case DESTRA:
+        if(pacmanMv(posPacman.x, posPacman.y, DESTRA)) {
+          posPacman.x+=1;
+          posPacman.dir = DESTRA;
+        }
+        break;
+    }
 
-		case DESTRA:
-			if(pacmanMv(pos_pacman->x, pos_pacman->y, DESTRA))
-			pos_pacman->x+=1;
-      else
-      pos_pacman->x = pos_pacman->x;
-			break;
+    //Aggiornamento della posizione nel buffer
+    insertBuffer(buffer, mutex, NULL, posPacman);
 
-		}
-
-    pthread_mutex_lock(mutex);
-    mvaddch(pos_pacman->y,pos_pacman->x,'@');
-    refresh();
-    pthread_mutex_unlock(mutex);
   }
 }
 

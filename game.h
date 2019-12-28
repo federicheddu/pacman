@@ -10,12 +10,12 @@ void printExit();
 void printSUGA();
 
 //stampa del gioco
-void printPacman(Pos pacman); //todo
-void printGhost(Pos ghost, GhostType type); //todo
+void printEntity(Pos entita, pthread_mutex_t *mutex);
+void clearEntity(Pos entita, pthread_mutex_t *mutex);
 void printCampo(int level);
 void printDati();
 
 //gioco
-void areaGioco(Pos *pos_pacman, int num_vite);
+void gameController(int livello, Buffer *buffer);
 
 #endif

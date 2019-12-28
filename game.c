@@ -287,9 +287,85 @@ void printCampo(int level){
         mvprintw(i,0,"%s", Campo[i]);
 }
 
+void printEntity(Pos entita, pthread_mutex_t *mutex) {
+
+    pthread_mutex_lock(mutex);
+
+    switch (entita.entita) {
+        case BULLET:
+            break;
+        case PACMAN:
+            mvaddch(entita.x,entita.y,'@');
+            break;
+        case BLINKY:
+            break;
+        case PINKY:
+            break;
+        case SPUNKY:
+            break;
+        case CLYDE:
+            break;
+        case INKY:
+            break;
+        case SUE:
+            break;
+        case FUNKY:
+            break;
+        case GLITCHY:
+            break;
+    }
+
+    refresh();
+    pthread_mutex_unlock(mutex);
+}
+
+void clearEntity(Pos entita, pthread_mutex_t *mutex) {
+
+    pthread_mutex_lock(mutex);
+
+    switch(entita.dir) {
+      case SU:
+        mvaddch(entita.x,entita.y+1,' ');
+        break;
+
+      case GIU:
+        mvaddch(entita.x,entita.y-1,' ');
+        break;
+
+      case SINISTRA:
+        mvaddch(entita.x+1,entita.y,' ');
+        break;
+
+      case DESTRA:
+        mvaddch(entita.x-1,entita.y,' ');
+        break;
+    }
+
+    refresh();
+    pthread_mutex_unlock(mutex);
+}
+
 //stampa delle statistiche della partita
-void areaGioco(Pos* pos_pacman, int num_vite){
-  do{
-    usleep(50000);
-  }while(num_vite>0);
+void gameController(int livello, Buffer *buffer){
+    int vite = 3;
+    int colpiSubiti = 0;
+    Pos entita;
+    BufferElement *node;
+
+    printCampo(livello);
+    refresh();
+
+    while(vite > 0) {
+        
+        node = removeBuffer(buffer, mutex, NULL, 0);
+
+        if(node != NULL) {
+            entita = *(node->posizione);
+            clearEntity(entita, mutex);
+            printEntity(entita, mutex);
+            mvaddch(15,200,'K');
+        }
+        
+        refresh();
+    }
 }
