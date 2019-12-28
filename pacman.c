@@ -1,160 +1,148 @@
-//
-// Created by Fabio Pili on 25/11/2019.
-//
-
 #include "pacman.h"
 
+void * pacman(void * param){
+  Par * parametri = (Par*) param; /*Converto la mia variabile in input*/
+  Pos * pos_pacman = parametri->posizione;
+  pthread_mutex_t * mutex = parametri->mutex;
+  int * num_vite = parametri->num_vite;
 
-void pacman(int pipe) {
-    char currDir = STOP; //direzione attuale
-    char newDir = STOP; //proposta di direzione
-    char nextDir = STOP; //direzione da prendere appena disponibile
-    int x = SPAWN_LEVEL1_X; //spawn del primo livello X
-    int y = SPAWN_LEVEL1_Y; //spawn del primo livello Y
+  pos_pacman->x=45;
+  pos_pacman->y=29;
 
-    printPacMan(x,y,STOP);
+  pthread_mutex_lock(mutex);
+  mvaddch(pos_pacman->y,pos_pacman->x,'@');
+  refresh();
+  pthread_mutex_unlock(mutex);
 
-    while(true) {
-        //usleep(1000);
+  while(*num_vite>0)
+	{
+		char c;
+    c=getch();
 
-        clearPacMan(y,x);
+    pthread_mutex_lock(mutex);
+    mvaddch(pos_pacman->y,pos_pacman->x,' ');
+    pthread_mutex_unlock(mutex);
 
-        /*
-        //prendere input
-        newDir = getch();
-        //controllo se l'input c'è / è valido
-        if(newDir == SU || newDir == GIU || newDir == DESTRA || newDir == SINISTRA)
-            nextDir = newDir;
-        //controllo se posso effettuare il cambio di direzione in buffer
-        if (pacmanMv(x,y,nextDir))
-            currDir = nextDir;
-        if (!pacmanMv(x,y,currDir))
-            currDir = STOP;
-        */
-        currDir = getchar();
+    switch(c)// Mi sposto in base al tasto che ho premuto
+		{				 // controllando ogni volta di non uscire dai limiti
+		case SU:
+			if(pacmanMv(pos_pacman->x, pos_pacman->y, SU))
+			pos_pacman->y-=1;
+      else
+      pos_pacman->y = pos_pacman->y;
+			break;
 
-        switch (currDir) {
-            case SU:
-                x--;
-                break;
-            case GIU:
-                x++;
-                break;
-            case DESTRA:
-                y++;
-                break;
-            case SINISTRA:
-                y--;
-                break;
-        }
+		case GIU:
+			if(pacmanMv(pos_pacman->x, pos_pacman->y, GIU))
+			pos_pacman->y+=1;
+      else
+      pos_pacman->y = pos_pacman->y;
+			break;
 
-        printPacMan(x,y,currDir);
-        refresh();
-    }
+		case SINISTRA:
+			if(pacmanMv(pos_pacman->x, pos_pacman->y, SINISTRA))
+			pos_pacman->x-=1;
+      else
+      pos_pacman->x= pos_pacman->x;
+			break;
+
+		case DESTRA:
+			if(pacmanMv(pos_pacman->x, pos_pacman->y, DESTRA))
+			pos_pacman->x+=1;
+      else
+      pos_pacman->x = pos_pacman->x;
+			break;
+
+		}
+
+    pthread_mutex_lock(mutex);
+    mvaddch(pos_pacman->y,pos_pacman->x,'@');
+    refresh();
+    pthread_mutex_unlock(mutex);
+  }
 }
 
 _Bool pacmanMv(int x, int y, char dir) {
+  char scampo[60][152]={"##==================================================================================================================================================##\n",
+                       "||                                                                                                                                                  ||\n",
+                       "||                                      #######################################################################                                     ||\n",
+                       "||                                      #                              #########                              #                                     ||\n",
+                       "||                                      # .  .  .  .   .  .  .  . .  . ######### .  . .  .  .  .   .  .  .  . #                                     ||\n",
+                       "||         LEVEL:                       #                              #########                              #             LIVEs:                  ||\n",
+                       "||         SCORE:                       #   ##########   ###########   #########   ###########   ##########   #             TIME:                   ||\n",
+                       "||                                      # . ########## . ########### . ######### . ########### . ########## . #             FRUITs:                 ||\n",
+                       "||                                      #   ##########   ###########   #########   ###########   ##########   #             KILLs:                  ||\n",
+                       "||                                      #   ##########   ###########   #########   ###########   ##########   #                                     ||\n",
+                       "||         HIGHSCORES:                  # . ########## . ########### . ######### . ########### . ########## . #                                     ||\n",
+                       "||         1.                           #   ##########   ###########   #########   ###########   ##########   #                                     ||\n",
+                       "||         2.                           #                                                                     #                                     ||\n",
+                       "||         3.                           # .  .  .  .   .  .  .  . .  .  .  .  .  .  . .  .  .  .   .  .  .  . #                                     ||\n",
+                       "||                                      #                                                                     #                                     ||\n",
+                       "||                                      #   ##########   ######   ###################   ######   ##########   #                                     ||\n",
+                       "||                                      # . ########## . ###### . ################### . ###### . ########## . #                                     ||\n",
+                       "||                                      #   ##########   ######   ###################   ######   ##########   #                                     ||\n",
+                       "||                                      #                ######        #########        ######                #                                     ||\n",
+                       "||                                      # .  .  .   .  . ###### .    . ######### .    . ###### .  .   .  .  . #                                     ||\n",
+                       "||                                      #                ######        #########        ######                #                                     ||\n",
+                       "||                                      ##############   ###########   #########   ###########   ##############                                     ||\n",
+                       "||                                      ############## . ########### . ######### . ########### . ##############                                     ||\n",
+                       "||                                      ##############   ###########   #########   ###########   ##############                                     ||\n",
+                       "||                                      ##############   ######                         ######   ##############                                     ||\n",
+                       "||                                      ############## . ###### .  .  .  .   .  .  .  . ###### . ##############                                     ||\n",
+                       "||                                      ##############   ######                         ######   ##############                                     ||\n",
+                       "||                                      ##############   ######   #######+   +#######   ######   ##############                                     ||\n",
+                       "||                                      ############## . ###### . #                 # . ###### . ##############                                     ||\n",
+                       "||                                                                +                 +                                                               ||\n",
+                       "||                                                     .  .  .  .                     .  .  .  .                                                    ||\n",
+                       "||                                                                +                 +                                                               ||\n",
+                       "||                                      ############## . ###### . #                 # . ###### . ##############                                     ||\n",
+                       "||                                      ##############   ######   #######+   +#######   ######   ##############                                     ||\n",
+                       "||                                      ##############   ######                         ######   ##############                                     ||\n",
+                       "||                                      ############## . ###### .  .  .  .   .  .  .  . ###### . ##############                                     ||\n",
+                       "||                                      ##############   ######                         ######   ##############                                     ||\n",
+                       "||                                      ##############   ######   ###################   ######   ##############                                     ||\n",
+                       "||                                      #                               #######                               #                                     ||\n",
+                       "||                                      # .  .  .  .   .  .  .  .  .  . ####### .  .  .  .  .  .   .  .  .  . #                                     ||\n",
+                       "||                                      #                               #######                               #                                     ||\n",
+                       "||                                      #   ##########   ############   #######   ############   ##########   #                                     ||\n",
+                       "||                                      # . ########## . ############ . ####### . ############ . ########## . #                                     ||\n",
+                       "||                                      #   ##########   ############   #######   ############   ##########   #                                     ||\n",
+                       "||                                      #          ###                                           ###          #                                     ||\n",
+                       "||                                      # .  .   . ### .  .  .  .  .  .  .   .  .  .  .  .  .  . ### .   .  . #                                     ||\n",
+                       "||                                      #          ###                                           ###          #                                     ||\n",
+                       "||                                      ########   ###   ######   ###################   ######   ###   ########                                     ||\n",
+                       "||                                      ######## . ### . ###### . ################### . ###### . ### . ########                                     ||\n",
+                       "||                                      ########   ###   ######   ###################   ######   ###   ########                                     ||\n",
+                       "||                                      #                ######         #######         ######                #                                     ||\n",
+                       "||                                      # .  .  .   .  . ###### .  .  . ####### .  .  . ###### .  .   .  .  . #                                     ||\n",
+                       "||                                      #                ######         #######         ######                #                                     ||\n",
+                       "||                                      # . ######################### . ####### . ######################### . #                                     ||\n",
+                       "||                                      #                                                                     #                                     ||\n",
+                       "||                                      # .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . #                                     ||\n",
+                       "||                                      #                                                                     #                                     ||\n",
+                       "||                                      #######################################################################                                     ||\n",
+                       "||                                                                                                                                                  ||\n",
+                       "##==================================================================================================================================================##"};
+
     switch (dir) {
         case SU:
-            if(mvinch(y-1,x) == '#' || mvinch(y-1,x+1) == '#' || mvinch(y-1,x+2) == '#')
+            if(scampo[y-1][x] == '#' /*|| mvinch(x-1,y+1) == '#' || mvinch(x-1,y+2) == '#'*/)
                 return false;
             break;
         case GIU:
-            if(mvinch(y+4,x) == '#' || mvinch(y+4,x+1) == '#' || mvinch(y+4,x+2) == '#')
+            if(scampo[y+1][x] == '#' /*|| mvinch(x+4,y+1) == '#' || mvinch(x+4,y+2) == '#'*/)
                 return false;
             break;
         case DESTRA:
-            if(mvinch(y,x+4) == '#' || mvinch(y+1,x+4) == '#' || mvinch(y+2,x+4) == '#')
+            if(scampo[y][x+1] == '#' /*|| mvinch(x+1,y+4) == '#' || mvinch(x+2,y+4) == '#'*/)
                 return false;
             break;
         case SINISTRA:
-            if(mvinch(y,x-1) == '#' || mvinch(y+1,x-1) == '#' || mvinch(y+2,x-1) == '#')
+            if(scampo[y][x-1] == '#' /*|| mvinch(x+1,y-1) == '#' || mvinch(x+2,y-1) == '#'*/)
                 return false;
             break;
         default:
             return false;
     }
     return true;
-}
-
-void printPacMan(int x, int y, char direction) {
-    char pacmanSU[3][3] = {{' ','1',' '},{'1',' ','1'},{'1','1','1'}};
-    char pacmanGIU[3][3] = {{'1','1','1'},{'1',' ','1'},{' ','1',' '}};
-    char pacmanDESTRA[3][3] = {{'1','1',' '},{'1',' ','1'},{'1','1',' '}};
-    char pacmanSINISTRA[3][3] = {{' ','1','1'},{'1',' ','1'},{' ','1','1'}};
-
-    switch (direction) {
-        case SU:
-            for(int i=0; i<=2; i++) {
-                for(int j=0; j<=2; j++) {
-                    if(pacmanSU[i][j] == '1') {
-                        attron(COLOR_PAIR(2));
-                        mvaddch(x+i, y+j, pacmanSU[i][j]);
-                    } else {
-                        attron(COLOR_PAIR(3));
-                        mvaddch(x+i, y+j, pacmanSU[i][j]);
-                    }
-                }
-            }
-            break;
-        case GIU:
-            for(int i=0; i<=2; i++) {
-                for(int j=0; j<=2; j++) {
-                    if(pacmanGIU[i][j] == '1') {
-                        attron(COLOR_PAIR(2));
-                        mvaddch(x+i, y+j, pacmanGIU[i][j]);
-                    } else {
-                        attron(COLOR_PAIR(3));
-                        mvaddch(x+i, y+j, pacmanGIU[i][j]);
-                    }
-                }
-            }
-            break;
-        case DESTRA:
-            for(int i=0; i<=2; i++) {
-                for(int j=0; j<=2; j++) {
-                    if(pacmanDESTRA[i][j] == '1') {
-                        attron(COLOR_PAIR(2));
-                        mvaddch(x+i, y+j, pacmanDESTRA[i][j]);
-                    } else {
-                        attron(COLOR_PAIR(3));
-                        mvaddch(x+i, y+j, pacmanDESTRA[i][j]);
-                    }
-                }
-            }
-            break;
-        case SINISTRA:
-            for(int i=0; i<=2; i++) {
-                for(int j=0; j<=2; j++) {
-                    if(pacmanSINISTRA[i][j] == '1') {
-                        attron(COLOR_PAIR(2));
-                        mvaddch(x+i, y+j, pacmanSINISTRA[i][j]);
-                    } else {
-                        attron(COLOR_PAIR(3));
-                        mvaddch(x+i, y+j, pacmanSINISTRA[i][j]);
-                    }
-                }
-            }
-            break;
-        default:
-            for(int i=0; i<=2; i++) {
-                for(int j=0; j<=2; j++) {
-                    if(pacmanDESTRA[i][j] == '1') {
-                        attron(COLOR_PAIR(2));
-                        mvaddch(x+i, y+j, pacmanDESTRA[i][j]);
-                    } else {
-                        attron(COLOR_PAIR(3));
-                        mvaddch(x+i, y+j, pacmanDESTRA[i][j]);
-                    }
-                }
-            }
-            break;
-    }
-
-}
-
-void clearPacMan(int x, int y) {
-    attron(COLOR_PAIR(3));
-    for(int i=0; i<3; i++)
-        mvprintw(y+i, x, "%s", "   ");
 }
