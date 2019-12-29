@@ -18,7 +18,9 @@ void * pacman(void * param){
   parPacman.numColpiSubiti = &numColpiSubiti;
 
   //Segnalazione della posizione iniziale
-  insertBuffer(buffer, mutex, NULL, posPacman);
+
+  
+  insertBuffer(buffer, mutexDati, posPacman);
 
   while(numVite>0) {
 
@@ -56,8 +58,8 @@ void * pacman(void * param){
     }
 
     //Aggiornamento della posizione nel buffer
-    insertBuffer(buffer, mutex, NULL, posPacman);
-
+    insertBuffer(buffer, mutexDati, posPacman);
+  usleep(10000);
   }
 }
 

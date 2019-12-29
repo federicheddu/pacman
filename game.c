@@ -289,13 +289,13 @@ void printCampo(int level){
 
 void printEntity(Pos entita, pthread_mutex_t *mutex) {
 
-    pthread_mutex_lock(mutex);
+   pthread_mutex_lock(mutex);
 
     switch (entita.entita) {
         case BULLET:
             break;
         case PACMAN:
-            mvaddch(entita.x,entita.y,'@');
+            mvaddch(entita.y,entita.x,'@');
             break;
         case BLINKY:
             break;
@@ -314,34 +314,33 @@ void printEntity(Pos entita, pthread_mutex_t *mutex) {
         case GLITCHY:
             break;
     }
-
-    refresh();
+  
     pthread_mutex_unlock(mutex);
+    refresh();
 }
 
 void clearEntity(Pos entita, pthread_mutex_t *mutex) {
 
     pthread_mutex_lock(mutex);
-
     switch(entita.dir) {
       case SU:
-        mvaddch(entita.x,entita.y+1,' ');
+        mvaddch(entita.y+1,entita.x,' ');
         break;
 
       case GIU:
-        mvaddch(entita.x,entita.y-1,' ');
+        mvaddch(entita.y-1,entita.x,' ');
         break;
 
       case SINISTRA:
-        mvaddch(entita.x+1,entita.y,' ');
+        mvaddch(entita.y,entita.x+1,' ');
         break;
 
       case DESTRA:
-        mvaddch(entita.x-1,entita.y,' ');
+        mvaddch(entita.y,entita.x-1,' ');
         break;
     }
 
-    refresh();
+    
     pthread_mutex_unlock(mutex);
 }
 
@@ -353,19 +352,21 @@ void gameController(int livello, Buffer *buffer){
     BufferElement *node;
 
     printCampo(livello);
+    
     refresh();
 
     while(vite > 0) {
-        
-        node = removeBuffer(buffer, mutex, NULL, 0);
+       
+        node = removeBuffer(buffer);
 
         if(node != NULL) {
-            entita = *(node->posizione);
-            clearEntity(entita, mutex);
-            printEntity(entita, mutex);
-            mvaddch(15,200,'K');
-        }
+            entita = node->posizione;
+            
+            clearEntity(entita, mutexTerminale);
+            printEntity(entita, mutexTerminale);
+           
+        } 
         
-        refresh();
+        
     }
 }

@@ -46,7 +46,7 @@ typedef struct {
 
 //elemento della lista che andrà a comporre il buffer
 typedef struct bufferElement {
-    Pos *posizione;
+    Pos posizione;
     struct bufferElement *next;
 } BufferElement;
 
@@ -57,11 +57,13 @@ typedef struct {
 } Buffer;
 
 //gestione del buffer
-void insertBuffer(Buffer *buffer, pthread_mutex_t *mutex, sem_t* semaphore, Pos new);
-BufferElement* removeBuffer(Buffer *buffer, pthread_mutex_t *mutex, sem_t* semaphore, int mode);
+void insertBuffer(Buffer *buffer, pthread_mutex_t *mutex, Pos new);
+BufferElement* removeBuffer(Buffer *buffer);
 
 //mutex
-static pthread_mutex_t mutexaux = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t *mutex = &mutexaux;
+static pthread_mutex_t mutexDatiAux = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t *mutexDati = &mutexDatiAux;
+static pthread_mutex_t mutexTeminaleAux = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t *mutexTerminale = &mutexTeminaleAux;
 
 #endif

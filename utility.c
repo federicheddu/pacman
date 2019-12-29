@@ -1,54 +1,32 @@
 #include "utility.h"
 
-void insertBuffer(Buffer *buffer, pthread_mutex_t *mutex, sem_t* semaphore, Pos new){
+void insertBuffer(Buffer *buffer, pthread_mutex_t *mutex, Pos new){
 
     BufferElement *newElement = (BufferElement*) malloc(sizeof(BufferElement));
-    newElement->posizione = &new;
+    newElement->posizione = new;
     newElement->next = NULL;
 
-	pthread_mutex_lock(mutex);
+	pthread_mutex_lock(&mutexDatiAux);
 
     if(buffer->first == NULL)
         buffer->first = newElement;
     buffer->last = newElement;
 
-    //sem_post(semaphore); // incrementa il semaforo
-
-	pthread_mutex_unlock(mutex);	
+	pthread_mutex_unlock(&mutexDatiAux);	
 }
 
-BufferElement* removeBuffer(Buffer *buffer, pthread_mutex_t *mutex, sem_t* semaphore, int mode){
+BufferElement* removeBuffer(Buffer *buffer){
     BufferElement *node;
 
-    /*
-    //Ingresso nella sezione critica
-    int value;
-    if (mode == WAIT)
-        value = sem_wait(semaphore); // se non ci sono job, li aspetta
-    if (mode == TRYWAIT)
-        value = sem_trywait(semaphore); // se non ci sono job, non li aspetta ma non esce
-        
-    if (value == 0){
-        pthread_mutex_lock(mutex);
-        
-            message = buffer[(*counter)-1];
-            memset(&buffer[(*counter)-1], 0, sizeof(Par)); //Nullizza la cella del buffer 
-            (*counter)--; 
-        
-        pthread_mutex_unlock(mutex);
-        return message;
-    }
-    message.entita = NOPE;
-    */
-
-   pthread_mutex_unlock(mutex);
+   pthread_mutex_unlock(mutexDati);
 
     node = buffer->first;
     if(buffer->first == buffer->last)
         buffer->last = NULL;
-    buffer->first = buffer->first->next;
+    if(buffer->first != NULL)
+        buffer->first = buffer->first->next;
 
-   pthread_mutex_lock(mutex);
+   pthread_mutex_lock(mutexDati);
 
     return node;
 }
