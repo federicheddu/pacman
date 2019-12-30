@@ -10,12 +10,13 @@
 #include <semaphore.h>
 #include <time.h>
 
-//macro tasti
+//macro tasti, movimento e azioni
 #define SU 65 						/* Freccia su */
 #define GIU 66 						/* Freccia giu */
 #define SINISTRA 68					/* Freccia sinsitra */
 #define DESTRA 67					/* Freccia destra */
-#define FERMO 0                     /* Nessun input */
+#define SPARO ' '                   /* Barra spaziatrice */
+#define FERMO 0                     /* Entità si ferma */
 
 //macro menu
 #define NEWGAME 0
@@ -31,17 +32,18 @@ typedef enum {
 
 //definisce la posizione e il tipo di entita
 typedef struct {
-    Entity entita;
     int x;
     int y;
     int dir;
+    _Bool sparo;
+    Entity entita;
 } Pos;
 
 //definisce i parametri della pos
 typedef struct {
-    Pos *posizione;
-    int *numVite;
-    int *numColpiSubiti;
+    Pos posizione;
+    int numVite;
+    int numColpiSubiti;
 } Par;
 
 //elemento della lista che andrà a comporre il buffer
@@ -55,6 +57,9 @@ typedef struct {
     BufferElement *first;
     BufferElement *last;
 } Buffer;
+
+//utility
+int randRange(int min, int max);
 
 //gestione del buffer
 void insertBuffer(Buffer *buffer, pthread_mutex_t *mutex, Pos new);

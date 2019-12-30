@@ -2,64 +2,73 @@
 
 void * pacman(void * param){
   Buffer *buffer = (Buffer*) param; // parsing del buffer
-  char c;
+  char c, dir;
   int numVite = 3;
   int numColpiSubiti = 0;
+
+  nodelay(stdscr, true);
 
   Pos posPacman;
   posPacman.x = 45;
   posPacman.y = 29;
   posPacman.dir = FERMO;
+  posPacman.sparo = false;
   posPacman.entita = PACMAN;
 
-  Par parPacman;
-  parPacman.posizione = &posPacman;
-  parPacman.numVite = &numVite;
-  parPacman.numColpiSubiti = &numColpiSubiti;
-
   //Segnalazione della posizione iniziale
-
-  
   insertBuffer(buffer, mutexDati, posPacman);
 
   while(numVite>0) {
+    
+    //sparo -> default a false
+    posPacman.sparo = false;
+    //direzione -> controllo se può continuare senza input
+    if(!pacmanMv(posPacman.x, posPacman.y, posPacman.dir))
+      posPacman.dir = FERMO;
 
+    //piglia input (non bloccante)
     c=getch();
+    if(c != ERR)
+      dir = c;
 
-    //Modifica della posizione
-    switch(c) {
+    //modifica della posizione
+    switch(dir) {
       case SU:
         if(pacmanMv(posPacman.x, posPacman.y, SU)) {
           posPacman.y-=1;
           posPacman.dir = SU;
-        }
+        } else posPacman.dir = FERMO;
         break;
 
       case GIU:
         if(pacmanMv(posPacman.x, posPacman.y, GIU)) {
           posPacman.y+=1;
           posPacman.dir = GIU;
-        }
+        } else posPacman.dir = FERMO;
         break;
 
       case SINISTRA:
         if(pacmanMv(posPacman.x, posPacman.y, SINISTRA)) {
           posPacman.x-=1;
           posPacman.dir = SINISTRA;
-        }
+        } else posPacman.dir = FERMO;
         break;
 
       case DESTRA:
         if(pacmanMv(posPacman.x, posPacman.y, DESTRA)) {
           posPacman.x+=1;
           posPacman.dir = DESTRA;
-        }
+        } else posPacman.dir = FERMO;
+        break;
+      
+      case SPARO:
+        posPacman.sparo = true;
         break;
     }
 
-    //Aggiornamento della posizione nel buffer
+    //aggiornamento della posizione nel buffer e pausa
     insertBuffer(buffer, mutexDati, posPacman);
-  usleep(10000);
+    usleep(100000);
   }
 }
 

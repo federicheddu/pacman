@@ -1,5 +1,9 @@
 #include "utility.h"
 
+int randRange(int min, int max) {
+    return min+rand()%(max-min+1);
+}
+
 void insertBuffer(Buffer *buffer, pthread_mutex_t *mutex, Pos new){
 
     BufferElement *newElement = (BufferElement*) malloc(sizeof(BufferElement));

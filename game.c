@@ -351,8 +351,8 @@ void gameController(int livello, Buffer *buffer){
     Pos entita;
     BufferElement *node;
 
+    usleep(500);
     printCampo(livello);
-    
     refresh();
 
     while(vite > 0) {
