@@ -43,11 +43,6 @@ typedef struct {
     pthread_t id;   //id del thread
 } Pos;
 
-//parametri di partenza per proiettili e fantasmi
-typedef struct {
-    Pos posizione;
-    Buffer *buffer;
-} PosStart;
 
 //definisce i parametri della pos
 typedef struct {
@@ -67,6 +62,12 @@ typedef struct {
     BufferElement *first;
     BufferElement *last;
 } Buffer;
+
+//parametri di partenza per proiettili e fantasmi
+typedef struct {
+    Pos posizione;
+    Buffer *buffer;
+} PosStart;
 
 //utility
 int randRange(int min, int max);

@@ -4,6 +4,5 @@
 #include "utility.h"
 
 void * ghost(void *param);
-_Bool ghostMv(int x, int y, char dir);
 
 #endif 

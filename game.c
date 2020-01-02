@@ -340,6 +340,7 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex) {
 
     
     pthread_mutex_unlock(mutex);
+    refresh();
 }
 
 void startBullet(Pos** proiettili) {
@@ -413,8 +414,8 @@ void gameController(int livello, Buffer *buffer){
     int colpiSubiti = 0;
     Pos entita;
     Par personaggi[NUM_PERSONAGGI];
-    Pos proiettili[NUM_PERSONAGGI][MAX_PROIETTILI];
-    startBullet(proiettili);
+    // Pos proiettili[NUM_PERSONAGGI][MAX_PROIETTILI];
+    // startBullet(proiettili);
     BufferElement *node;
 
     usleep(500);
@@ -436,7 +437,7 @@ void gameController(int livello, Buffer *buffer){
                 personaggi[entita.entita].posizione = entita;
             
             //se un entità ha sparato
-            if(entita.entita < NUM_PERSONAGGI && entita.sparo) {
+           /* if(entita.entita < NUM_PERSONAGGI && entita.sparo) {
                 for(int i=0; i<NUM_PERSONAGGI; i++) {
                     proiettili[entita.entita][i].x = entita.x;
                     proiettili[entita.entita][i].y = entita.y;
@@ -444,7 +445,6 @@ void gameController(int livello, Buffer *buffer){
 
                 if(entita.entita == PACMAN) {               //se l'entità ad aver sparato è pacman
                     if(entityMv(entita.x, entita.y, SU))
-
                     if(entityMv(entita.x, entita.y, GIU))
                     if(entityMv(entita.x, entita.y, DESTRA))
                     if(entityMv(entita.x, entita.y, SINISTRA))
@@ -452,7 +452,7 @@ void gameController(int livello, Buffer *buffer){
 
                 }
 
-            }
+            }*/
            
         } 
     }
