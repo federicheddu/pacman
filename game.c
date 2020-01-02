@@ -345,8 +345,8 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex) {
 /** --- INIZIALIZZAZIONE DATI ------------------------------------------------------- **/
 
 //inizializzazione dei proiettili
-void startBullet(Pos** proiettili) {
-    for(int i=0; i<3; i++) {
+/*void startBullet(Pos** proiettili) {
+    for(int i=0; i<4; i++) {
         proiettili[PACMAN][i].x = -1;
         proiettili[PACMAN][i].y = -1;
         proiettili[PACMAN][i].id = NULL;
@@ -355,8 +355,8 @@ void startBullet(Pos** proiettili) {
         proiettili[PACMAN][i].dir = i+SHIFT_MOVIMENTO;
     }
 
-    for(int i=1; i<6; i++) {
-        for (int j=0; j<3; j++) {
+    for(int i=1; i<7; i++) {
+        for (int j=0; j<4; j++) {
             proiettili[i][j].x = -1;
             proiettili[i][j].y = -1;
             proiettili[i][j].id = NULL;
@@ -365,7 +365,7 @@ void startBullet(Pos** proiettili) {
             proiettili[i][j].dir = i+SHIFT_MOVIMENTO;
         }
     }
-}
+}*/
 
 /** --- CONTROLLI DI GIOCO ---------------------------------------------------------- **/
 _Bool canShoot(Pos **proiettili, Entity entita) {
@@ -398,7 +398,29 @@ void gameController(int livello, Buffer *buffer){
 
     Par personaggi[NUM_PERSONAGGI];
     Pos proiettili[NUM_PERSONAGGI][MAX_PROIETTILI];
-    startBullet(proiettili);
+
+
+    //startBullet(proiettili);
+
+    for(int i=0; i<4; i++) {
+        proiettili[PACMAN][i].x = -1;
+        proiettili[PACMAN][i].y = -1;
+        proiettili[PACMAN][i].id = NULL;
+        proiettili[PACMAN][i].sparo = false;
+        proiettili[PACMAN][i].entita = PAC_BULLET;
+        proiettili[PACMAN][i].dir = i+SHIFT_MOVIMENTO;
+    }
+
+    for(int i=1; i<7; i++) {
+        for (int j=0; j<4; j++) {
+            proiettili[i][j].x = -1;
+            proiettili[i][j].y = -1;
+            proiettili[i][j].id = NULL;
+            proiettili[i][j].sparo = false;
+            proiettili[i][j].entita = GHOST_BULLET;
+            proiettili[i][j].dir = i+SHIFT_MOVIMENTO;
+        }
+    }
     BufferElement *node;
 
     usleep(500);

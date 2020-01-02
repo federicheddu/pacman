@@ -16,7 +16,7 @@ void printCampo(int level);
 void printDati();
 
 //inizializzazione dati
-void startBullet(Pos** proiettili);
+//void startBullet(Pos** proiettili);
 
 //controlli di gioco
 _Bool canShoot(Pos **proiettili, Entity entita);
