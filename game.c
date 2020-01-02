@@ -292,7 +292,9 @@ void printEntity(Pos entita, pthread_mutex_t *mutex) {
    pthread_mutex_lock(mutex);
 
     switch (entita.entita) {
-        case BULLET:
+        case PAC_BULLET:
+            break;
+        case GHOST_BULLET:
             break;
         case PACMAN:
             mvaddch(entita.y,entita.x,'@');
@@ -301,13 +303,9 @@ void printEntity(Pos entita, pthread_mutex_t *mutex) {
             break;
         case PINKY:
             break;
-        case SPUNKY:
-            break;
         case CLYDE:
             break;
         case INKY:
-            break;
-        case SUE:
             break;
         case FUNKY:
             break;
@@ -344,18 +342,86 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex) {
     pthread_mutex_unlock(mutex);
 }
 
+void startBullet(Pos** proiettili) {
+    proiettili[PACMAN][SU - SHIFT_MOVIMENTO].entita = PAC_BULLET;
+    proiettili[PACMAN][SU - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[PACMAN][GIU - SHIFT_MOVIMENTO].entita = PAC_BULLET;
+    proiettili[PACMAN][GIU - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[PACMAN][DESTRA - SHIFT_MOVIMENTO].entita = PAC_BULLET;
+    proiettili[PACMAN][DESTRA - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[PACMAN][SINISTRA - SHIFT_MOVIMENTO].entita = PAC_BULLET;
+    proiettili[PACMAN][SINISTRA - SHIFT_MOVIMENTO].sparo = false;
+
+    proiettili[BLINKY][SU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[BLINKY][SU - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[BLINKY][GIU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[BLINKY][GIU - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[BLINKY][DESTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[BLINKY][DESTRA - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[BLINKY][SINISTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[BLINKY][SINISTRA - SHIFT_MOVIMENTO].sparo = false;
+
+    proiettili[PINKY][SU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[PINKY][SU - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[PINKY][GIU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[PINKY][GIU - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[PINKY][DESTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[PINKY][DESTRA - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[PINKY][SINISTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[PINKY][SINISTRA - SHIFT_MOVIMENTO].sparo = false;
+
+    proiettili[CLYDE][SU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[CLYDE][SU - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[CLYDE][GIU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[CLYDE][GIU - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[CLYDE][DESTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[CLYDE][DESTRA - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[CLYDE][SINISTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[CLYDE][SINISTRA - SHIFT_MOVIMENTO].sparo = false;
+
+    proiettili[INKY][SU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[INKY][SU - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[INKY][GIU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[INKY][GIU - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[INKY][DESTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[INKY][DESTRA - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[INKY][SINISTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[INKY][SINISTRA - SHIFT_MOVIMENTO].sparo = false;
+
+    proiettili[FUNKY][SU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[FUNKY][SU - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[FUNKY][GIU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[FUNKY][GIU - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[FUNKY][DESTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[FUNKY][DESTRA - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[FUNKY][SINISTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[FUNKY][SINISTRA - SHIFT_MOVIMENTO].sparo = false;
+
+    proiettili[GLITCHY][SU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[GLITCHY][SU - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[GLITCHY][GIU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[GLITCHY][GIU - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[GLITCHY][DESTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[GLITCHY][DESTRA - SHIFT_MOVIMENTO].sparo = false;
+    proiettili[GLITCHY][SINISTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
+    proiettili[GLITCHY][SINISTRA - SHIFT_MOVIMENTO].sparo = false;
+}
+
 //stampa delle statistiche della partita
 void gameController(int livello, Buffer *buffer){
     int vite = 3;
     int colpiSubiti = 0;
     Pos entita;
+    Par personaggi[NUM_PERSONAGGI];
+    Pos proiettili[NUM_PERSONAGGI][MAX_PROIETTILI];
+    startBullet(proiettili);
     BufferElement *node;
 
     usleep(500);
     printCampo(livello);
     refresh();
 
-    while(vite > 0) {
+    while(personaggi[PACMAN].vite > 0) {
        
         node = removeBuffer(buffer);
 
@@ -364,9 +430,30 @@ void gameController(int livello, Buffer *buffer){
             
             clearEntity(entita, mutexTerminale);
             printEntity(entita, mutexTerminale);
+
+            //backup delle posizioni in locale
+            if(entita.entita < NUM_PERSONAGGI)
+                personaggi[entita.entita].posizione = entita;
+            
+            //se un entità ha sparato
+            if(entita.entita < NUM_PERSONAGGI && entita.sparo) {
+                for(int i=0; i<NUM_PERSONAGGI; i++) {
+                    proiettili[entita.entita][i].x = entita.x;
+                    proiettili[entita.entita][i].y = entita.y;
+                }
+
+                if(entita.entita == PACMAN) {               //se l'entità ad aver sparato è pacman
+                    if(entityMv(entita.x, entita.y, SU))
+
+                    if(entityMv(entita.x, entita.y, GIU))
+                    if(entityMv(entita.x, entita.y, DESTRA))
+                    if(entityMv(entita.x, entita.y, SINISTRA))
+                } else {                                    //se l'entità ad aver sparato è un fantasma
+
+                }
+
+            }
            
         } 
-        
-        
     }
 }

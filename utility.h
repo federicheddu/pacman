@@ -17,6 +17,7 @@
 #define DESTRA 67					/* Freccia destra */
 #define SPARO ' '                   /* Barra spaziatrice */
 #define FERMO 0                     /* Entità si ferma */
+#define SHIFT_MOVIMENTO 65
 
 //macro menu
 #define NEWGAME 0
@@ -25,25 +26,34 @@
 
 //macro gioco
 #define PASSO 1 					/* Spostamento entita */
+#define NUM_PERSONAGGI 7              /* Pacman + fantasmi */
+#define MAX_PROIETTILI 4            /* Numero massimo di proiettili in contemporanea per entità*/
 
 typedef enum {
-    BULLET, PACMAN, BLINKY, PINKY, SPUNKY, CLYDE, INKY, SUE, FUNKY, GLITCHY
+    PACMAN, BLINKY, PINKY, CLYDE, INKY, FUNKY, GLITCHY, PAC_BULLET, GHOST_BULLET
 } Entity;
 
 //definisce la posizione e il tipo di entita
 typedef struct {
-    int x;
-    int y;
-    int dir;
-    _Bool sparo;
-    Entity entita;
+    int x;          //coordinata sul terminale
+    int y;          //coordinata sul terminale
+    int dir;        //direzione di movimento
+    _Bool sparo;    //personaggio: se ha sparato || proiettile: se è attivo
+    Entity entita;  //tipo di entità
+    pthread_t id;   //id del thread
 } Pos;
+
+//parametri di partenza per proiettili e fantasmi
+typedef struct {
+    Pos posizione;
+    Buffer *buffer;
+} PosStart;
 
 //definisce i parametri della pos
 typedef struct {
     Pos posizione;
-    int numVite;
-    int numColpiSubiti;
+    int vite;           //numero di vite
+    int colpiSubiti;    //numero di colpi di proiettile subiti
 } Par;
 
 //elemento della lista che andrà a comporre il buffer
@@ -60,6 +70,7 @@ typedef struct {
 
 //utility
 int randRange(int min, int max);
+_Bool entityMv(int x, int y, char dir);
 
 //gestione del buffer
 void insertBuffer(Buffer *buffer, pthread_mutex_t *mutex, Pos new);

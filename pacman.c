@@ -3,8 +3,6 @@
 void * pacman(void * param){
   Buffer *buffer = (Buffer*) param; // parsing del buffer
   char c, dir;
-  int numVite = 3;
-  int numColpiSubiti = 0;
 
   nodelay(stdscr, true);
 
@@ -14,16 +12,17 @@ void * pacman(void * param){
   posPacman.dir = FERMO;
   posPacman.sparo = false;
   posPacman.entita = PACMAN;
+  posPacman.id = pthread_self();
 
   //Segnalazione della posizione iniziale
   insertBuffer(buffer, mutexDati, posPacman);
 
-  while(numVite>0) {
+  while(true) {
     
     //sparo -> default a false
     posPacman.sparo = false;
     //direzione -> controllo se può continuare senza input
-    if(!pacmanMv(posPacman.x, posPacman.y, posPacman.dir))
+    if(!entityMv(posPacman.x, posPacman.y, posPacman.dir))
       posPacman.dir = FERMO;
 
     //piglia input (non bloccante)
@@ -34,30 +33,30 @@ void * pacman(void * param){
     //modifica della posizione
     switch(dir) {
       case SU:
-        if(pacmanMv(posPacman.x, posPacman.y, SU)) {
+        if(entityMv(posPacman.x, posPacman.y, SU)) {
           posPacman.y-=1;
           posPacman.dir = SU;
         } else posPacman.dir = FERMO;
         break;
 
       case GIU:
-        if(pacmanMv(posPacman.x, posPacman.y, GIU)) {
+        if(entityMv(posPacman.x, posPacman.y, GIU)) {
           posPacman.y+=1;
           posPacman.dir = GIU;
         } else posPacman.dir = FERMO;
         break;
 
-      case SINISTRA:
-        if(pacmanMv(posPacman.x, posPacman.y, SINISTRA)) {
-          posPacman.x-=1;
-          posPacman.dir = SINISTRA;
+      case DESTRA:
+        if(entityMv(posPacman.x, posPacman.y, DESTRA)) {
+          posPacman.x+=1;
+          posPacman.dir = DESTRA;
         } else posPacman.dir = FERMO;
         break;
 
-      case DESTRA:
-        if(pacmanMv(posPacman.x, posPacman.y, DESTRA)) {
-          posPacman.x+=1;
-          posPacman.dir = DESTRA;
+      case SINISTRA:
+        if(entityMv(posPacman.x, posPacman.y, SINISTRA)) {
+          posPacman.x-=1;
+          posPacman.dir = SINISTRA;
         } else posPacman.dir = FERMO;
         break;
       
@@ -72,87 +71,19 @@ void * pacman(void * param){
   }
 }
 
-_Bool pacmanMv(int x, int y, char dir) {
-  char scampo[60][152]={"##==================================================================================================================================================##\n",
-                       "||                                                                                                                                                  ||\n",
-                       "||                                      #######################################################################                                     ||\n",
-                       "||                                      #                              #########                              #                                     ||\n",
-                       "||                                      # .  .  .  .   .  .  .  . .  . ######### .  . .  .  .  .   .  .  .  . #                                     ||\n",
-                       "||         LEVEL:                       #                              #########                              #             LIVEs:                  ||\n",
-                       "||         SCORE:                       #   ##########   ###########   #########   ###########   ##########   #             TIME:                   ||\n",
-                       "||                                      # . ########## . ########### . ######### . ########### . ########## . #             FRUITs:                 ||\n",
-                       "||                                      #   ##########   ###########   #########   ###########   ##########   #             KILLs:                  ||\n",
-                       "||                                      #   ##########   ###########   #########   ###########   ##########   #                                     ||\n",
-                       "||         HIGHSCORES:                  # . ########## . ########### . ######### . ########### . ########## . #                                     ||\n",
-                       "||         1.                           #   ##########   ###########   #########   ###########   ##########   #                                     ||\n",
-                       "||         2.                           #                                                                     #                                     ||\n",
-                       "||         3.                           # .  .  .  .   .  .  .  . .  .  .  .  .  .  . .  .  .  .   .  .  .  . #                                     ||\n",
-                       "||                                      #                                                                     #                                     ||\n",
-                       "||                                      #   ##########   ######   ###################   ######   ##########   #                                     ||\n",
-                       "||                                      # . ########## . ###### . ################### . ###### . ########## . #                                     ||\n",
-                       "||                                      #   ##########   ######   ###################   ######   ##########   #                                     ||\n",
-                       "||                                      #                ######        #########        ######                #                                     ||\n",
-                       "||                                      # .  .  .   .  . ###### .    . ######### .    . ###### .  .   .  .  . #                                     ||\n",
-                       "||                                      #                ######        #########        ######                #                                     ||\n",
-                       "||                                      ##############   ###########   #########   ###########   ##############                                     ||\n",
-                       "||                                      ############## . ########### . ######### . ########### . ##############                                     ||\n",
-                       "||                                      ##############   ###########   #########   ###########   ##############                                     ||\n",
-                       "||                                      ##############   ######                         ######   ##############                                     ||\n",
-                       "||                                      ############## . ###### .  .  .  .   .  .  .  . ###### . ##############                                     ||\n",
-                       "||                                      ##############   ######                         ######   ##############                                     ||\n",
-                       "||                                      ##############   ######   #######+   +#######   ######   ##############                                     ||\n",
-                       "||                                      ############## . ###### . #                 # . ###### . ##############                                     ||\n",
-                       "||                                                                +                 +                                                               ||\n",
-                       "||                                                     .  .  .  .                     .  .  .  .                                                    ||\n",
-                       "||                                                                +                 +                                                               ||\n",
-                       "||                                      ############## . ###### . #                 # . ###### . ##############                                     ||\n",
-                       "||                                      ##############   ######   #######+   +#######   ######   ##############                                     ||\n",
-                       "||                                      ##############   ######                         ######   ##############                                     ||\n",
-                       "||                                      ############## . ###### .  .  .  .   .  .  .  . ###### . ##############                                     ||\n",
-                       "||                                      ##############   ######                         ######   ##############                                     ||\n",
-                       "||                                      ##############   ######   ###################   ######   ##############                                     ||\n",
-                       "||                                      #                               #######                               #                                     ||\n",
-                       "||                                      # .  .  .  .   .  .  .  .  .  . ####### .  .  .  .  .  .   .  .  .  . #                                     ||\n",
-                       "||                                      #                               #######                               #                                     ||\n",
-                       "||                                      #   ##########   ############   #######   ############   ##########   #                                     ||\n",
-                       "||                                      # . ########## . ############ . ####### . ############ . ########## . #                                     ||\n",
-                       "||                                      #   ##########   ############   #######   ############   ##########   #                                     ||\n",
-                       "||                                      #          ###                                           ###          #                                     ||\n",
-                       "||                                      # .  .   . ### .  .  .  .  .  .  .   .  .  .  .  .  .  . ### .   .  . #                                     ||\n",
-                       "||                                      #          ###                                           ###          #                                     ||\n",
-                       "||                                      ########   ###   ######   ###################   ######   ###   ########                                     ||\n",
-                       "||                                      ######## . ### . ###### . ################### . ###### . ### . ########                                     ||\n",
-                       "||                                      ########   ###   ######   ###################   ######   ###   ########                                     ||\n",
-                       "||                                      #                ######         #######         ######                #                                     ||\n",
-                       "||                                      # .  .  .   .  . ###### .  .  . ####### .  .  . ###### .  .   .  .  . #                                     ||\n",
-                       "||                                      #                ######         #######         ######                #                                     ||\n",
-                       "||                                      # . ######################### . ####### . ######################### . #                                     ||\n",
-                       "||                                      #                                                                     #                                     ||\n",
-                       "||                                      # .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . #                                     ||\n",
-                       "||                                      #                                                                     #                                     ||\n",
-                       "||                                      #######################################################################                                     ||\n",
-                       "||                                                                                                                                                  ||\n",
-                       "##==================================================================================================================================================##"};
+/*
+void * pacmanBullet(void * param) {
+  Buffer *buffer = (Buffer*) param; // parsing del buffer
+  char c, dir;
 
-    switch (dir) {
-        case SU:
-            if(scampo[y-1][x] == '#' /*|| mvinch(x-1,y+1) == '#' || mvinch(x-1,y+2) == '#'*/)
-                return false;
-            break;
-        case GIU:
-            if(scampo[y+1][x] == '#' /*|| mvinch(x+4,y+1) == '#' || mvinch(x+4,y+2) == '#'*/)
-                return false;
-            break;
-        case DESTRA:
-            if(scampo[y][x+1] == '#' /*|| mvinch(x+1,y+4) == '#' || mvinch(x+2,y+4) == '#'*/)
-                return false;
-            break;
-        case SINISTRA:
-            if(scampo[y][x-1] == '#' /*|| mvinch(x+1,y-1) == '#' || mvinch(x+2,y-1) == '#'*/)
-                return false;
-            break;
-        default:
-            return false;
-    }
-    return true;
+  Pos posBullet;
+  posPacman.x = 45;
+  posPacman.y = 29;
+  posPacman.dir = FERMO;
+  posPacman.sparo = false;
+  posPacman.entita = PACMAN;
+
+  //Segnalazione della posizione iniziale
+  insertBuffer(buffer, mutexDati, posPacman);
 }
+*/
