@@ -70,20 +70,3 @@ void * pacman(void * param){
     usleep(100000);
   }
 }
-
-/*
-void * pacmanBullet(void * param) {
-  Buffer *buffer = (Buffer*) param; // parsing del buffer
-  char c, dir;
-
-  Pos posBullet;
-  posPacman.x = 45;
-  posPacman.y = 29;
-  posPacman.dir = FERMO;
-  posPacman.sparo = false;
-  posPacman.entita = PACMAN;
-
-  //Segnalazione della posizione iniziale
-  insertBuffer(buffer, mutexDati, posPacman);
-}
-*/

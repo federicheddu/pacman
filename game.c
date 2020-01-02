@@ -1,6 +1,6 @@
 #include "game.h"
 
-/* --- STAMPA DEL MENU --- */
+/** --- STAMPA DEL MENU ------------------------------------------------------------- **/
 
 //gestione del menu
 int mainMenu() {
@@ -217,7 +217,7 @@ void printSUGA() {
 }
 
 
-/* --- STAMPA DEL GIOCO --- */
+/** --- STAMPA DEL GIOCO ------------------------------------------------------------ **/
 
 //stampa del gioco
 void printCampo(int level){
@@ -340,82 +340,65 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex) {
 
     
     pthread_mutex_unlock(mutex);
-    refresh();
 }
 
+/** --- INIZIALIZZAZIONE DATI ------------------------------------------------------- **/
+
+//inizializzazione dei proiettili
 void startBullet(Pos** proiettili) {
-    proiettili[PACMAN][SU - SHIFT_MOVIMENTO].entita = PAC_BULLET;
-    proiettili[PACMAN][SU - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[PACMAN][GIU - SHIFT_MOVIMENTO].entita = PAC_BULLET;
-    proiettili[PACMAN][GIU - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[PACMAN][DESTRA - SHIFT_MOVIMENTO].entita = PAC_BULLET;
-    proiettili[PACMAN][DESTRA - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[PACMAN][SINISTRA - SHIFT_MOVIMENTO].entita = PAC_BULLET;
-    proiettili[PACMAN][SINISTRA - SHIFT_MOVIMENTO].sparo = false;
+    for(int i=0; i<3; i++) {
+        proiettili[PACMAN][i].x = -1;
+        proiettili[PACMAN][i].y = -1;
+        proiettili[PACMAN][i].id = NULL;
+        proiettili[PACMAN][i].sparo = false;
+        proiettili[PACMAN][i].entita = PAC_BULLET;
+        proiettili[PACMAN][i].dir = i+SHIFT_MOVIMENTO;
+    }
 
-    proiettili[BLINKY][SU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[BLINKY][SU - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[BLINKY][GIU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[BLINKY][GIU - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[BLINKY][DESTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[BLINKY][DESTRA - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[BLINKY][SINISTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[BLINKY][SINISTRA - SHIFT_MOVIMENTO].sparo = false;
-
-    proiettili[PINKY][SU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[PINKY][SU - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[PINKY][GIU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[PINKY][GIU - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[PINKY][DESTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[PINKY][DESTRA - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[PINKY][SINISTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[PINKY][SINISTRA - SHIFT_MOVIMENTO].sparo = false;
-
-    proiettili[CLYDE][SU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[CLYDE][SU - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[CLYDE][GIU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[CLYDE][GIU - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[CLYDE][DESTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[CLYDE][DESTRA - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[CLYDE][SINISTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[CLYDE][SINISTRA - SHIFT_MOVIMENTO].sparo = false;
-
-    proiettili[INKY][SU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[INKY][SU - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[INKY][GIU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[INKY][GIU - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[INKY][DESTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[INKY][DESTRA - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[INKY][SINISTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[INKY][SINISTRA - SHIFT_MOVIMENTO].sparo = false;
-
-    proiettili[FUNKY][SU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[FUNKY][SU - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[FUNKY][GIU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[FUNKY][GIU - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[FUNKY][DESTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[FUNKY][DESTRA - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[FUNKY][SINISTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[FUNKY][SINISTRA - SHIFT_MOVIMENTO].sparo = false;
-
-    proiettili[GLITCHY][SU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[GLITCHY][SU - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[GLITCHY][GIU - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[GLITCHY][GIU - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[GLITCHY][DESTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[GLITCHY][DESTRA - SHIFT_MOVIMENTO].sparo = false;
-    proiettili[GLITCHY][SINISTRA - SHIFT_MOVIMENTO].entita = GHOST_BULLET;
-    proiettili[GLITCHY][SINISTRA - SHIFT_MOVIMENTO].sparo = false;
+    for(int i=1; i<6; i++) {
+        for (int j=0; j<3; j++) {
+            proiettili[i][j].x = -1;
+            proiettili[i][j].y = -1;
+            proiettili[i][j].id = NULL;
+            proiettili[i][j].sparo = false;
+            proiettili[i][j].entita = GHOST_BULLET;
+            proiettili[i][j].dir = i+SHIFT_MOVIMENTO;
+        }
+    }
 }
 
-//stampa delle statistiche della partita
+/** --- CONTROLLI DI GIOCO ---------------------------------------------------------- **/
+_Bool canShoot(Pos **proiettili, Entity entita) {
+    return !proiettili[entita][SU-SHIFT_MOVIMENTO].sparo && !proiettili[entita][GIU-SHIFT_MOVIMENTO].sparo && !proiettili[entita][DESTRA-SHIFT_MOVIMENTO].sparo && !proiettili[entita][SINISTRA-SHIFT_MOVIMENTO].sparo;
+}
+
+/** --- ENTITÀ GENERALI ------------------------------------------------------------- **/
+void * bullet(void * param) {
+    PosStart *posPartenza = (PosStart*) param;
+    Pos posBullet = posPartenza->posizione;
+    Buffer* buffer = posPartenza->buffer;
+
+    while(true) {
+
+    }
+
+    //Segnalazione della posizione iniziale
+    //insertBuffer(buffer, mutexDati, posPacman);
+}
+
+/** --- GIOCO ----------------------------------------------------------------------- **/
 void gameController(int livello, Buffer *buffer){
+
     int vite = 3;
     int colpiSubiti = 0;
+
     Pos entita;
+    PosStart posPartenza;
+    posPartenza.buffer = buffer;
+
     Par personaggi[NUM_PERSONAGGI];
-    // Pos proiettili[NUM_PERSONAGGI][MAX_PROIETTILI];
-    // startBullet(proiettili);
+    Pos proiettili[NUM_PERSONAGGI][MAX_PROIETTILI];
+    startBullet(proiettili);
     BufferElement *node;
 
     usleep(500);
@@ -437,23 +420,23 @@ void gameController(int livello, Buffer *buffer){
                 personaggi[entita.entita].posizione = entita;
             
             //se un entità ha sparato
-           /* if(entita.entita < NUM_PERSONAGGI && entita.sparo) {
-                for(int i=0; i<NUM_PERSONAGGI; i++) {
-                    proiettili[entita.entita][i].x = entita.x;
-                    proiettili[entita.entita][i].y = entita.y;
-                }
+            if(entita.entita < NUM_PERSONAGGI && entita.sparo) {
+                if(canShoot(proiettili, entita.entita))
+                    for(int i=0; i<3; i++) {
+                        proiettili[entita.entita][i].x = entita.x;
+                        proiettili[entita.entita][i].y = entita.y;
+                        proiettili[entita.entita][i].sparo = true;
+                    }
 
-                if(entita.entita == PACMAN) {               //se l'entità ad aver sparato è pacman
-                    if(entityMv(entita.x, entita.y, SU))
-                    if(entityMv(entita.x, entita.y, GIU))
-                    if(entityMv(entita.x, entita.y, DESTRA))
-                    if(entityMv(entita.x, entita.y, SINISTRA))
-                } else {                                    //se l'entità ad aver sparato è un fantasma
-
-                }
-
-            }*/
-           
+                if(entityMv(entita.x, entita.y, SU))
+                    pthread_create(&proiettili[entita.entita][SU-SHIFT_MOVIMENTO].id, NULL, &bullet, (void*)&posPartenza);
+                if(entityMv(entita.x, entita.y, GIU))
+                    pthread_create(&proiettili[entita.entita][GIU-SHIFT_MOVIMENTO].id, NULL, &bullet, (void*)&posPartenza);
+                if(entityMv(entita.x, entita.y, DESTRA))
+                    pthread_create(&proiettili[entita.entita][DESTRA-SHIFT_MOVIMENTO].id, NULL, &bullet, (void*)&posPartenza);
+                if(entityMv(entita.x, entita.y, SINISTRA))
+                    pthread_create(&proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO].id, NULL, &bullet, (void*)&posPartenza);
+            }
         } 
     }
 }

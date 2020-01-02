@@ -15,6 +15,12 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex);
 void printCampo(int level);
 void printDati();
 
+//inizializzazione dati
+void startBullet(Pos** proiettili);
+
+//controlli di gioco
+_Bool canShoot(Pos **proiettili, Entity entita);
+
 //gioco
 void gameController(int livello, Buffer *buffer);
 
