@@ -1,6 +1,6 @@
 #include "pacman.h"
 
-void * pacman(void * param){
+void * pacman(void * param) {
   Buffer *buffer = (Buffer*) param; // parsing del buffer
   char c, dir;
 
@@ -67,6 +67,6 @@ void * pacman(void * param){
 
     //aggiornamento della posizione nel buffer e pausa
     insertBuffer(buffer, mutexDati, posPacman);
-    usleep(100000);
+    usleep(150000);
   }
 }

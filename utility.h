@@ -7,8 +7,10 @@
 #include <unistd.h>
 #include <curses.h>
 #include <pthread.h>
-#include <semaphore.h>
 #include <time.h>
+
+//macro sacra
+#define DEBUG 1
 
 //macro tasti, movimento e azioni
 #define SU 65 						/* Freccia su */

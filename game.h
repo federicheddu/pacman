@@ -16,10 +16,11 @@ void printCampo(int level);
 void printDati();
 
 //inizializzazione dati
-void startBullet(Pos** proiettili);
+void startBullet(Pos proiettili[][MAX_PROIETTILI]);
+void startCharacter(Par personaggi[]);
 
 //controlli di gioco
-_Bool canShoot(Pos **proiettili, Entity entita);
+_Bool canShoot(Pos proiettili[][MAX_PROIETTILI], Entity entita);
 
 //gioco
 void gameController(int livello, Buffer *buffer);

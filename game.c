@@ -345,7 +345,7 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex) {
 /** --- INIZIALIZZAZIONE DATI ------------------------------------------------------- **/
 
 //inizializzazione dei proiettili
-void startBullet(Pos** proiettili) {
+void startBullet(Pos proiettili[][MAX_PROIETTILI]) {
     for(int i=0; i<3; i++) {
         proiettili[PACMAN][i].x = -1;
         proiettili[PACMAN][i].y = -1;
@@ -367,8 +367,16 @@ void startBullet(Pos** proiettili) {
     }
 }
 
+//inizializzazione dei personaggi
+void startCharacter(Par personaggi[]) {
+    for(int i=0; i<NUM_PERSONAGGI; i++) {
+        personaggi[i].vite = 3;
+        personaggi[i].colpiSubiti = 0;
+    }
+}
+
 /** --- CONTROLLI DI GIOCO ---------------------------------------------------------- **/
-_Bool canShoot(Pos **proiettili, Entity entita) {
+_Bool canShoot(Pos proiettili[][MAX_PROIETTILI], Entity entita) {
     return !proiettili[entita][SU-SHIFT_MOVIMENTO].sparo && !proiettili[entita][GIU-SHIFT_MOVIMENTO].sparo && !proiettili[entita][DESTRA-SHIFT_MOVIMENTO].sparo && !proiettili[entita][SINISTRA-SHIFT_MOVIMENTO].sparo;
 }
 
@@ -376,11 +384,45 @@ _Bool canShoot(Pos **proiettili, Entity entita) {
 void * bullet(void * param) {
     PosStart *posPartenza = (PosStart*) param;
     Pos posBullet = posPartenza->posizione;
+    posBullet.id = pthread_self();
     Buffer* buffer = posPartenza->buffer;
 
-    while(true) {
+    while(entityMv(posBullet.x, posBullet.y, posBullet.dir)) {
+        switch (posBullet.dir) {
+            case SU:
+                posBullet.y -= 1;
+                break;
+            case GIU:
+                posBullet.y += 1;
+                break;
+            case DESTRA:
+                posBullet.x += 1;
+                break;
+            case SINISTRA:
+                posBullet.x -= 1;
+                break;
+        }
 
+        insertBuffer(buffer, mutexDati, posBullet);
+        usleep(100000);
     }
+
+    switch (posBullet.dir) {
+        case SU:
+            posBullet.y -= 1;
+            break;
+        case GIU:
+            posBullet.y += 1;
+            break;
+        case DESTRA:
+            posBullet.x += 1;
+            break;
+        case SINISTRA:
+            posBullet.x -= 1;
+            break;
+    }
+    posBullet.sparo = false;
+    insertBuffer(buffer,mutexDati,posBullet);
 
     //Segnalazione della posizione iniziale
     //insertBuffer(buffer, mutexDati, posPacman);
@@ -397,6 +439,7 @@ void gameController(int livello, Buffer *buffer){
     posPartenza.buffer = buffer;
 
     Par personaggi[NUM_PERSONAGGI];
+    startCharacter(personaggi);
     Pos proiettili[NUM_PERSONAGGI][MAX_PROIETTILI];
     startBullet(proiettili);
     BufferElement *node;
@@ -413,7 +456,8 @@ void gameController(int livello, Buffer *buffer){
             entita = node->posizione;
             
             clearEntity(entita, mutexTerminale);
-            printEntity(entita, mutexTerminale);
+            if(entita.entita != PAC_BULLET && entita.entita != GHOST_BULLET ||
+                printEntity(entita, mutexTerminale);
 
             //backup delle posizioni in locale
             if(entita.entita < NUM_PERSONAGGI)
