@@ -312,7 +312,7 @@ void printEntity(Pos entita, pthread_mutex_t *mutex) {
         case GLITCHY:
             break;
     }
-  
+
     pthread_mutex_unlock(mutex);
     refresh();
 }
@@ -338,7 +338,7 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex) {
         break;
     }
 
-    
+
     pthread_mutex_unlock(mutex);
 }
 
@@ -355,8 +355,8 @@ void startBullet(Pos proiettili[][MAX_PROIETTILI]) {
         proiettili[PACMAN][i].dir = i+SHIFT_MOVIMENTO;
     }
 
-    for(int i=1; i<6; i++) {
-        for (int j=0; j<3; j++) {
+    for(int i=1; i<7; i++) {
+        for (int j=0; j<4; j++) {
             proiettili[i][j].x = -1;
             proiettili[i][j].y = -1;
             proiettili[i][j].id = NULL;
@@ -365,7 +365,7 @@ void startBullet(Pos proiettili[][MAX_PROIETTILI]) {
             proiettili[i][j].dir = i+SHIFT_MOVIMENTO;
         }
     }
-}
+}*/
 
 //inizializzazione dei personaggi
 void startCharacter(Par personaggi[]) {
@@ -441,7 +441,29 @@ void gameController(int livello, Buffer *buffer){
     Par personaggi[NUM_PERSONAGGI];
     startCharacter(personaggi);
     Pos proiettili[NUM_PERSONAGGI][MAX_PROIETTILI];
-    startBullet(proiettili);
+
+
+    //startBullet(proiettili);
+
+    for(int i=0; i<4; i++) {
+        proiettili[PACMAN][i].x = -1;
+        proiettili[PACMAN][i].y = -1;
+        proiettili[PACMAN][i].id = NULL;
+        proiettili[PACMAN][i].sparo = false;
+        proiettili[PACMAN][i].entita = PAC_BULLET;
+        proiettili[PACMAN][i].dir = i+SHIFT_MOVIMENTO;
+    }
+
+    for(int i=1; i<7; i++) {
+        for (int j=0; j<4; j++) {
+            proiettili[i][j].x = -1;
+            proiettili[i][j].y = -1;
+            proiettili[i][j].id = NULL;
+            proiettili[i][j].sparo = false;
+            proiettili[i][j].entita = GHOST_BULLET;
+            proiettili[i][j].dir = i+SHIFT_MOVIMENTO;
+        }
+    }
     BufferElement *node;
 
     usleep(500);
@@ -449,12 +471,12 @@ void gameController(int livello, Buffer *buffer){
     refresh();
 
     while(personaggi[PACMAN].vite > 0) {
-       
+
         node = removeBuffer(buffer);
 
         if(node != NULL) {
             entita = node->posizione;
-            
+
             clearEntity(entita, mutexTerminale);
             if(entita.entita != PAC_BULLET && entita.entita != GHOST_BULLET ||
                 printEntity(entita, mutexTerminale);
@@ -462,7 +484,7 @@ void gameController(int livello, Buffer *buffer){
             //backup delle posizioni in locale
             if(entita.entita < NUM_PERSONAGGI)
                 personaggi[entita.entita].posizione = entita;
-            
+
             //se un entità ha sparato
             if(entita.entita < NUM_PERSONAGGI && entita.sparo) {
                 if(canShoot(proiettili, entita.entita))
@@ -481,6 +503,6 @@ void gameController(int livello, Buffer *buffer){
                 if(entityMv(entita.x, entita.y, SINISTRA))
                     pthread_create(&proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO].id, NULL, &bullet, (void*)&posPartenza);
             }
-        } 
+        }
     }
 }
