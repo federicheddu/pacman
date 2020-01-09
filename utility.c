@@ -68,19 +68,19 @@ _Bool entityMv(int x, int y, char dir) {
 
     switch (dir) {
         case SU:
-            if(scampo[y-1][x] == '#' /*|| mvinch(x-1,y+1) == '#' || mvinch(x-1,y+2) == '#'*/)
+            if(scampo[y-1][x] == '#' || scampo[y-1][x+1] == '#' || scampo[y-1][x+2] == '#')
                 return false;
             break;
         case GIU:
-            if(scampo[y+1][x] == '#' /*|| mvinch(x+4,y+1) == '#' || mvinch(x+4,y+2) == '#'*/)
+            if(scampo[y+3][x] == '#' || scampo[y+3][x+1] == '#' || scampo[y+3][x+2] == '#')
                 return false;
             break;
         case DESTRA:
-            if(scampo[y][x+1] == '#' /*|| mvinch(x+1,y+4) == '#' || mvinch(x+2,y+4) == '#'*/)
+            if(scampo[y][x+3] == '#' || scampo[y+1][x+3] == '#' || scampo[y+2][x+3] == '#')
                 return false;
             break;
         case SINISTRA:
-            if(scampo[y][x-1] == '#' /*|| mvinch(x+1,y-1) == '#' || mvinch(x+2,y-1) == '#'*/)
+            if(scampo[y][x-1] == '#' || scampo[y+1][x-1] == '#' || scampo[y+2][x-1] == '#')
                 return false;
             break;
         default:
