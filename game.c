@@ -365,7 +365,7 @@ void startBullet(Pos proiettili[][MAX_PROIETTILI]) {
             proiettili[i][j].dir = i+SHIFT_MOVIMENTO;
         }
     }
-}*/
+}
 
 //inizializzazione dei personaggi
 void startCharacter(Par personaggi[]) {
@@ -477,8 +477,10 @@ void gameController(int livello, Buffer *buffer){
         if(node != NULL) {
             entita = node->posizione;
 
+            //pulisce sempre la vecchia posizione
             clearEntity(entita, mutexTerminale);
-            if(entita.entita != PAC_BULLET && entita.entita != GHOST_BULLET ||
+            //stampa solo se è un personaggio oppure un proiettile ancora in vita (motivo del controllo)
+            if(!(entita.entita == PAC_BULLET && entita.sparo == false) || !(entita.entita == GHOST_BULLET && entita.sparo == false))
                 printEntity(entita, mutexTerminale);
 
             //backup delle posizioni in locale
