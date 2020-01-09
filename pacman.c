@@ -2,7 +2,7 @@
 
 void * pacman(void * param) {
   Buffer *buffer = (Buffer*) param; // parsing del buffer
-  char c, dir;
+  char c, dir, dirOld;
 
   nodelay(stdscr, true);
 
@@ -19,8 +19,6 @@ void * pacman(void * param) {
 
   while(true) {
     
-    //sparo -> default a false
-    posPacman.sparo = false;
     //direzione -> controllo se può continuare senza input
     if(!entityMv(posPacman.x, posPacman.y, posPacman.dir))
       posPacman.dir = FERMO;
@@ -37,6 +35,7 @@ void * pacman(void * param) {
           posPacman.y-=1;
           posPacman.dir = SU;
         } else posPacman.dir = FERMO;
+        posPacman.sparo = false;
         break;
 
       case GIU:
@@ -44,6 +43,7 @@ void * pacman(void * param) {
           posPacman.y+=1;
           posPacman.dir = GIU;
         } else posPacman.dir = FERMO;
+        posPacman.sparo = false;
         break;
 
       case DESTRA:
@@ -51,6 +51,7 @@ void * pacman(void * param) {
           posPacman.x+=1;
           posPacman.dir = DESTRA;
         } else posPacman.dir = FERMO;
+        posPacman.sparo = false;
         break;
 
       case SINISTRA:
@@ -58,15 +59,21 @@ void * pacman(void * param) {
           posPacman.x-=1;
           posPacman.dir = SINISTRA;
         } else posPacman.dir = FERMO;
+        posPacman.sparo = false;
         break;
       
       case SPARO:
-        posPacman.sparo = true;
+        if(!posPacman.sparo)
+          posPacman.sparo = true;
+        break;
+      
+      default:
+        posPacman.sparo = false;
         break;
     }
 
     //aggiornamento della posizione nel buffer e pausa
     insertBuffer(buffer, mutexDati, posPacman);
-    usleep(150000);
+    usleep(200000);
   }
 }

@@ -85,4 +85,7 @@ static pthread_mutex_t *mutexDati = &mutexDatiAux;
 static pthread_mutex_t mutexTeminaleAux = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t *mutexTerminale = &mutexTeminaleAux;
 
+//campo
+
+
 #endif

@@ -293,8 +293,8 @@ void printEntity(Pos entita, pthread_mutex_t *mutex) {
 
     switch (entita.entita) {
         case PAC_BULLET:
-            break;
         case GHOST_BULLET:
+            mvaddch(entita.y,entita.x,'o');
             break;
         case PACMAN:
             mvaddch(entita.y,entita.x,'@');
@@ -404,7 +404,7 @@ void * bullet(void * param) {
         }
 
         insertBuffer(buffer, mutexDati, posBullet);
-        usleep(100000);
+        usleep(2000000);
     }
 
     switch (posBullet.dir) {
@@ -496,14 +496,22 @@ void gameController(int livello, Buffer *buffer){
                         proiettili[entita.entita][i].sparo = true;
                     }
 
-                if(entityMv(entita.x, entita.y, SU))
-                    pthread_create(&proiettili[entita.entita][SU-SHIFT_MOVIMENTO].id, NULL, &bullet, (void*)&posPartenza);
-                if(entityMv(entita.x, entita.y, GIU))
-                    pthread_create(&proiettili[entita.entita][GIU-SHIFT_MOVIMENTO].id, NULL, &bullet, (void*)&posPartenza);
-                if(entityMv(entita.x, entita.y, DESTRA))
-                    pthread_create(&proiettili[entita.entita][DESTRA-SHIFT_MOVIMENTO].id, NULL, &bullet, (void*)&posPartenza);
-                if(entityMv(entita.x, entita.y, SINISTRA))
-                    pthread_create(&proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO].id, NULL, &bullet, (void*)&posPartenza);
+                if(entityMv(entita.x, entita.y, SU)) {
+                    posPartenza.posizione = proiettili[entita.entita][SU-SHIFT_MOVIMENTO];
+                    pthread_create(&(proiettili[entita.entita][SU-SHIFT_MOVIMENTO].id), NULL, &bullet, (void*)&posPartenza);
+                }
+                if(entityMv(entita.x, entita.y, GIU)) {
+                    posPartenza.posizione = proiettili[entita.entita][GIU-SHIFT_MOVIMENTO];
+                    pthread_create(&(proiettili[entita.entita][GIU-SHIFT_MOVIMENTO].id), NULL, &bullet, (void*)&posPartenza);
+                }
+                if(entityMv(entita.x, entita.y, DESTRA)) {
+                    posPartenza.posizione = proiettili[entita.entita][DESTRA-SHIFT_MOVIMENTO];
+                    pthread_create(&(proiettili[entita.entita][DESTRA-SHIFT_MOVIMENTO].id), NULL, &bullet, (void*)&posPartenza);
+                }   
+                if(entityMv(entita.x, entita.y, SINISTRA)) {
+                    posPartenza.posizione = proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO];
+                    pthread_create(&(proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO].id), NULL, &bullet, (void*)&posPartenza);
+                }
             }
         }
     }
