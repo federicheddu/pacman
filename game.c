@@ -297,7 +297,19 @@ void printEntity(Pos entita, pthread_mutex_t *mutex) {
         case GHOST_BULLET:
             break;
         case PACMAN:
-            mvaddch(entita.y,entita.x,'@');
+            //1° riga
+            mvaddch(entita.y,entita.x,'p');
+            mvaddch(entita.y,entita.x+1,'o');
+            mvaddch(entita.y,entita.x+2,'r');
+            //2° riga
+            mvaddch(entita.y+1,entita.x,'c');
+            mvaddch(entita.y+1,entita.x+1,' ');
+            mvaddch(entita.y+1,entita.x+2,'o');
+            //3° riga
+            mvaddch(entita.y+2,entita.x,'d');
+            mvaddch(entita.y+2,entita.x+1,'i');
+            mvaddch(entita.y+2,entita.x+2,'o');
+
             break;
         case BLINKY:
             break;
@@ -322,19 +334,27 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex) {
     pthread_mutex_lock(mutex);
     switch(entita.dir) {
       case SU:
-        mvaddch(entita.y+1,entita.x,' ');
+        mvaddch(entita.y+3,entita.x,' ');
+        mvaddch(entita.y+3,entita.x+1,' ');
+        mvaddch(entita.y+3,entita.x+2,' ');
         break;
 
       case GIU:
         mvaddch(entita.y-1,entita.x,' ');
+        mvaddch(entita.y-1,entita.x+1,' ');
+        mvaddch(entita.y-1,entita.x+2,' ');
         break;
 
       case SINISTRA:
-        mvaddch(entita.y,entita.x+1,' ');
+        mvaddch(entita.y,entita.x+3,' ');
+        mvaddch(entita.y+1,entita.x+3,' ');
+        mvaddch(entita.y+2,entita.x+3,' ');
         break;
 
       case DESTRA:
         mvaddch(entita.y,entita.x-1,' ');
+        mvaddch(entita.y+1,entita.x-1,' ');
+        mvaddch(entita.y+2,entita.x-1,' ');
         break;
     }
 
@@ -390,17 +410,21 @@ void * bullet(void * param) {
     while(entityMv(posBullet.x, posBullet.y, posBullet.dir)) {
         switch (posBullet.dir) {
             case SU:
-                posBullet.y -= 1;
-                break;
-            case GIU:
-                posBullet.y += 1;
-                break;
-            case DESTRA:
-                posBullet.x += 1;
-                break;
-            case SINISTRA:
-                posBullet.x -= 1;
-                break;
+            posBullet.y -= 1;
+            posBullet.x += 1;
+            break;
+        case GIU:
+            posBullet.y += 4;
+            posBullet.x += 1;
+            break;
+        case DESTRA:
+            posBullet.x += 4;
+            posBullet.y += 1;
+            break;
+        case SINISTRA:
+            posBullet.x -= 1;
+            posBullet.y -= 1;
+            break;
         }
 
         insertBuffer(buffer, mutexDati, posBullet);
