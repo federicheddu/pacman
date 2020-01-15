@@ -283,8 +283,17 @@ void printCampo(int level){
                        "##==================================================================================================================================================##"};
 
     attron(COLOR_PAIR(1));
-    for (int i=0; i<=59; i++)
-        mvprintw(i,0,"%s", Campo[i]);
+    for (int i=0; i<=59; i++){
+        for(int j=0; j<=151; j++){
+            if(Campo[i][j] == '#' && (j> 2 && j< 145)){
+                attron(COLOR_PAIR(4));
+                mvprintw(i,j, "%c", Campo[i][j]);
+                attroff(COLOR_PAIR(4));
+            }else{
+                mvprintw(i,j,"%c", Campo[i][j]);
+            }
+        }
+    }
 }
 
 void printEntity(Pos entita, pthread_mutex_t *mutex) {
@@ -293,25 +302,49 @@ void printEntity(Pos entita, pthread_mutex_t *mutex) {
 
     switch (entita.entita) {
         case PAC_BULLET:
+            mvaddch(entita.y,entita.x,'o');
+            break;
         case GHOST_BULLET:
             mvaddch(entita.y,entita.x,'o');
             break;
         case PACMAN:
+            attron(COLOR_PAIR(2));
             //1° riga
-            mvaddch(entita.y,entita.x,'p');
-            mvaddch(entita.y,entita.x+1,'o');
-            mvaddch(entita.y,entita.x+2,'r');
+            mvaddch(entita.y,entita.x,'P');
+            //mvaddch(entita.y,entita.x+1,' ');
+            mvaddch(entita.y,entita.x+2,'M');
             //2° riga
-            mvaddch(entita.y+1,entita.x,'c');
-            mvaddch(entita.y+1,entita.x+1,' ');
-            mvaddch(entita.y+1,entita.x+2,'o');
+            //mvaddch(entita.y+1,entita.x,' ');
+            mvaddch(entita.y+1,entita.x+1,'A');
+            //mvaddch(entita.y+1,entita.x+2,' ');
             //3° riga
-            mvaddch(entita.y+2,entita.x,'d');
-            mvaddch(entita.y+2,entita.x+1,'i');
-            mvaddch(entita.y+2,entita.x+2,'o');
+            mvaddch(entita.y+2,entita.x,'N');
+            //mvaddch(entita.y+2,entita.x+1,' ');
+            mvaddch(entita.y+2,entita.x+2,'C');
+            attroff(COLOR_PAIR(2));
 
+            attron(COLOR_PAIR(5));
+            mvaddch(entita.y,entita.x+1,' ');
+            mvaddch(entita.y+1,entita.x,' ');
+            mvaddch(entita.y+1,entita.x+2,' ');
+            mvaddch(entita.y+2,entita.x+1,' ');
+            attroff(COLOR_PAIR(5));
             break;
         case BLINKY:
+            attron(COLOR_PAIR(2));
+            //1° riga
+            mvaddch(entita.y,entita.x,'B');
+            mvaddch(entita.y,entita.x+1,'@');
+            mvaddch(entita.y,entita.x+2,'N');
+            //2° riga
+            mvaddch(entita.y+1,entita.x,'L');
+            mvaddch(entita.y+1,entita.x+1,' ');
+            mvaddch(entita.y+1,entita.x+2,'K');
+            //3° riga
+            mvaddch(entita.y+2,entita.x,'I');
+            mvaddch(entita.y+2,entita.x+1,'@');
+            mvaddch(entita.y+2,entita.x+2,'Y');
+            attroff(COLOR_PAIR(2));
             break;
         case PINKY:
             break;
@@ -491,7 +524,9 @@ void gameController(int livello, Buffer *buffer){
     BufferElement *node;
 
     usleep(500);
+    
     printCampo(livello);
+    
     refresh();
 
     while(personaggi[PACMAN].vite > 0) {

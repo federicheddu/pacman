@@ -14,11 +14,18 @@ int main(){
   noecho();
   curs_set(0);
 
-  /*start_color();
+  start_color();
 
+  //BACKGROUND
   init_pair(1, COLOR_WHITE, COLOR_BLACK);
-  init_pair(2, COLOR_YELLOW, COLOR_YELLOW);
-  init_pair(3, COLOR_BLACK, COLOR_BLACK);*/
+  //PACMAN
+  init_pair(2, COLOR_YELLOW, COLOR_BLACK);
+  init_pair(5, COLOR_YELLOW, COLOR_YELLOW);
+  //BLINKY
+  init_pair(3, COLOR_CYAN, COLOR_BLACK);
+  //WALLS
+  init_pair(4, COLOR_BLUE, COLOR_BLUE);
+  
 
   livello = mainMenu();
 
