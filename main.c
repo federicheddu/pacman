@@ -1,10 +1,12 @@
 #include "game.h"
-#include "pacman.h"
 #include "utility.h"
+#include "pacman.h"
+
 
 int main(){
   int livello;
   pthread_t pacmanID;
+  pthread_t blinkyID;
   Buffer buffer;
   buffer.first = NULL;
   buffer.last = NULL;
@@ -28,9 +30,8 @@ int main(){
   
 
   livello = mainMenu();
-
   pthread_create(&pacmanID, NULL, &pacman, (void*)&buffer);
-
+  pthread_create(&blinkyID, NULL, &ghost, (void*)&buffer);
   gameController(livello, &buffer);
 
   pthread_join(pacmanID, NULL);
