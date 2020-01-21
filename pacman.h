@@ -5,6 +5,5 @@
 
 void * pacman(void *param);
 void * pacmanBullet(void * param);
-void * ghost(void *param);
 
 #endif 

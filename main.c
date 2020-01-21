@@ -1,7 +1,4 @@
 #include "game.h"
-#include "utility.h"
-#include "pacman.h"
-
 
 int main(){
   int livello;

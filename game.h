@@ -1,7 +1,8 @@
 #ifndef PROJECT_GAME_H
 #define PROJECT_GAME_H
 
-#include "utility.h"
+#include "pacman.h"
+#include "ghost.h"
 
 //stampa del menu
 int mainMenu();
