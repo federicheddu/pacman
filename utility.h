@@ -30,6 +30,7 @@
 #define PASSO 1 					/* Spostamento entita */
 #define NUM_PERSONAGGI 7              /* Pacman + fantasmi */
 #define MAX_PROIETTILI 4            /* Numero massimo di proiettili in contemporanea per entità*/
+#define NUM_PALLINI 210
 
 typedef enum {
     PACMAN, BLINKY, PINKY, CLYDE, INKY, FUNKY, GLITCHY, BULLET

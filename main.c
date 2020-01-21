@@ -7,6 +7,11 @@ int main(){
   Buffer buffer;
   buffer.first = NULL;
   buffer.last = NULL;
+  PosStart ghost1;
+  ghost1.posizione.entita = BLINKY;
+  ghost1.buffer = &buffer;
+  ghost1.posizione.x = 41;
+  ghost1.posizione.y = 3;
 
   srand(time((time_t*)NULL));
   initscr();
@@ -26,9 +31,9 @@ int main(){
   init_pair(4, COLOR_BLUE, COLOR_BLUE);
   
 
-  livello = mainMenu();
+  livello = mainMenu()+1;
   pthread_create(&pacmanID, NULL, &pacman, (void*)&buffer);
-  pthread_create(&blinkyID, NULL, &ghost, (void*)&buffer);
+  pthread_create(&blinkyID, NULL, &ghost, (void*)&ghost1);
   gameController(livello, &buffer);
 
   pthread_join(pacmanID, NULL);

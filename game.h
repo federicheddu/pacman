@@ -14,14 +14,16 @@ void printSUGA();
 void printEntity(Pos entita, pthread_mutex_t *mutex);
 void clearEntity(Pos entita, pthread_mutex_t *mutex);
 void printCampo(int level);
-void printDati();
+void printStats(int livello, int score);
+void printDot(int num, int pallini[][num]);
 
 //inizializzazione dati
-void startBullet(Pos proiettili[][MAX_PROIETTILI]);
+void startBullet(int num, Pos proiettili[][num]);
 void startCharacter(Par personaggi[]);
 
 //controlli di gioco
 _Bool canShoot(Pos proiettili[][MAX_PROIETTILI], Entity entita);
+int checkScore(int x, int y, int num, int pallini[][num]);
 
 //gioco
 void gameController(int livello, Buffer *buffer);
