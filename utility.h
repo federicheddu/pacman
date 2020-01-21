@@ -32,7 +32,7 @@
 #define MAX_PROIETTILI 4            /* Numero massimo di proiettili in contemporanea per entità*/
 
 typedef enum {
-    PACMAN, BLINKY, PINKY, CLYDE, INKY, FUNKY, GLITCHY, PAC_BULLET, GHOST_BULLET
+    PACMAN, BLINKY, PINKY, CLYDE, INKY, FUNKY, GLITCHY, BULLET
 } Entity;
 
 //definisce la posizione e il tipo di entita

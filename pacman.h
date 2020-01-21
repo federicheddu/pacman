@@ -4,7 +4,7 @@
 #include "utility.h"
 
 void * pacman(void *param);
-void * pacmanBullet(void * param);
+void * bullet(void * param);
 void * ghost(void *param);
 
 #endif 

@@ -79,19 +79,19 @@ void * pacman(void * param) {
 }
 
 void * ghost (void * param){
-  PosStart *start = (PosStart*) param; //parsing del buffer
-  Pos posIniziale = start -> posizione;
-  Buffer *buffer = start -> buffer;
+  //PosStart *start = (PosStart*) param; //parsing del buffer
+ //Pos posIniziale = start -> posizione;
+  Buffer *buffer = (Buffer*) param;
   int dir, dirOpposta;
 
   nodelay(stdscr, true);
 
   Pos posGhost;
-  posGhost.x = posIniziale.x;
-  posGhost.y = posIniziale.y;
+  posGhost.x = 42; //42
+  posGhost.y = 3; //3
   posGhost.dir = FERMO;
   posGhost.sparo = false;
-  posGhost.entita = posIniziale.entita;
+  posGhost.entita = BLINKY;
   posGhost.id = pthread_self();
 
   //Segnalazione della posizione iniziale
@@ -137,5 +137,30 @@ void * ghost (void * param){
     //aggiornamento della posizione nel buffer e pausa
     insertBuffer(buffer, mutexDati, posGhost);
     usleep(100000);
+  }
+}
+
+void * bullet (void *param){
+  PosStart *start = (PosStart*) param;
+  Pos posIniziale = start -> posizione;
+  int dir = start -> posizione.dir;
+  Buffer *buffer = start -> buffer;
+
+
+  nodelay(stdscr, true);
+
+  Pos posBullet;
+  posBullet.x = posIniziale.x; //42
+  posBullet.y = posIniziale.y; //3
+  posBullet.dir = FERMO;
+  posBullet.sparo = true;
+  posBullet.entita = BULLET;
+  posBullet.id = pthread_self();
+
+  //Segnalazione della posizione iniziale
+  insertBuffer(buffer, mutexDati, posBullet);
+
+  switch(dir){
+    case
   }
 }

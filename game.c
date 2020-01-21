@@ -301,11 +301,19 @@ void printEntity(Pos entita, pthread_mutex_t *mutex) {
    pthread_mutex_lock(mutex);
 
     switch (entita.entita) {
-        case PAC_BULLET:
-            mvaddch(entita.y,entita.x,'o');
-            break;
-        case GHOST_BULLET:
-            mvaddch(entita.y,entita.x,'o');
+        case BULLET:
+            //1° riga
+            mvaddch(entita.y,entita.x,' ');
+            mvaddch(entita.y,entita.x+1,' ');
+            mvaddch(entita.y,entita.x+2,' ');
+            //2° riga
+            mvaddch(entita.y+1,entita.x,' ');
+            mvaddch(entita.y+1,entita.x+1,'o');
+            mvaddch(entita.y+1,entita.x+2,' ');
+            //3° riga
+            mvaddch(entita.y+2,entita.x,' ');
+            mvaddch(entita.y+2,entita.x+1,' ');
+            mvaddch(entita.y+2,entita.x+2,' ');
             break;
         case PACMAN:
             attron(COLOR_PAIR(2));
@@ -399,22 +407,13 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex) {
 
 //inizializzazione dei proiettili
 void startBullet(Pos proiettili[][MAX_PROIETTILI]) {
-    for(int i=0; i<3; i++) {
-        proiettili[PACMAN][i].x = -1;
-        proiettili[PACMAN][i].y = -1;
-        proiettili[PACMAN][i].id = NULL;
-        proiettili[PACMAN][i].sparo = false;
-        proiettili[PACMAN][i].entita = PAC_BULLET;
-        proiettili[PACMAN][i].dir = i+SHIFT_MOVIMENTO;
-    }
-
-    for(int i=1; i<7; i++) {
+    for(int i=0; i<7; i++) {
         for (int j=0; j<4; j++) {
             proiettili[i][j].x = -1;
             proiettili[i][j].y = -1;
             proiettili[i][j].id = NULL;
             proiettili[i][j].sparo = false;
-            proiettili[i][j].entita = GHOST_BULLET;
+            proiettili[i][j].entita = BULLET;
             proiettili[i][j].dir = i+SHIFT_MOVIMENTO;
         }
     }
@@ -502,22 +501,13 @@ void gameController(int livello, Buffer *buffer){
 
     //startBullet(proiettili);
 
-    for(int i=0; i<4; i++) {
-        proiettili[PACMAN][i].x = -1;
-        proiettili[PACMAN][i].y = -1;
-        proiettili[PACMAN][i].id = NULL;
-        proiettili[PACMAN][i].sparo = false;
-        proiettili[PACMAN][i].entita = PAC_BULLET;
-        proiettili[PACMAN][i].dir = i+SHIFT_MOVIMENTO;
-    }
-
-    for(int i=1; i<7; i++) {
+    for(int i=0; i<7; i++) {
         for (int j=0; j<4; j++) {
             proiettili[i][j].x = -1;
             proiettili[i][j].y = -1;
             proiettili[i][j].id = NULL;
             proiettili[i][j].sparo = false;
-            proiettili[i][j].entita = GHOST_BULLET;
+            proiettili[i][j].entita = BULLET;
             proiettili[i][j].dir = i+SHIFT_MOVIMENTO;
         }
     }
@@ -539,7 +529,7 @@ void gameController(int livello, Buffer *buffer){
             //pulisce sempre la vecchia posizione
             clearEntity(entita, mutexTerminale);
             //stampa solo se è un personaggio oppure un proiettile ancora in vita (motivo del controllo)
-            if(!(entita.entita == PAC_BULLET && entita.sparo == false) || !(entita.entita == GHOST_BULLET && entita.sparo == false))
+            if(!(entita.entita == BULLET && entita.sparo == false) || !(entita.entita == BULLET && entita.sparo == false))
                 printEntity(entita, mutexTerminale);
 
             //backup delle posizioni in locale
