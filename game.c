@@ -380,7 +380,7 @@ void printEntity(Pos entita, pthread_mutex_t *mutex) {
     }
 
     pthread_mutex_unlock(mutex);
-    //refresh();
+    refresh();
 }
 
 void clearEntity(Pos entita, pthread_mutex_t *mutex, int num, int pallini[][num]) {
@@ -458,6 +458,7 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex, int num, int pallini[][num]
     }
 
     pthread_mutex_unlock(mutex);
+    refresh();
 }
 
 /** --- INIZIALIZZAZIONE DATI ------------------------------------------------------- **/
@@ -618,11 +619,11 @@ void gameController(int livello, Buffer *buffer){
 
         if(node != NULL) {
             entita = node->posizione;
-
+            
             //stampa solo se è un personaggio oppure un proiettile ancora in vita (motivo del controllo)
             if(!(entita.entita == BULLET && entita.sparo == false))
                 printEntity(entita, mutexTerminale);
-            refresh();
+            
             //pulisce sempre la vecchia posizione
             clearEntity(entita, mutexTerminale, 3, pallini);
 
@@ -631,11 +632,12 @@ void gameController(int livello, Buffer *buffer){
                 personaggi[entita.entita].posizione = entita;
 
             score += checkScore(personaggi[PACMAN].posizione.x, personaggi[PACMAN].posizione.y, 3, pallini);
-
+            refresh();
+            
             //se un entità ha sparato
             if(entita.entita < NUM_PERSONAGGI && entita.sparo) {
                 if(canShoot(proiettili, entita.entita))
-                    for(int i=0; i<3; i++) {
+                    for(int i=0; i<4; i++) {
                         proiettili[entita.entita][i].x = entita.x;
                         proiettili[entita.entita][i].y = entita.y;
                         proiettili[entita.entita][i].sparo = true;
