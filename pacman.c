@@ -52,6 +52,10 @@ void * pacman(void * param) {
           posPacman.dir = DESTRA;
         } else posPacman.dir = FERMO;
         posPacman.sparo = false;
+
+        //effetto pacman
+        if(posPacman.x+3 == 112)
+          posPacman.x= 40;
         break;
 
       case SINISTRA:
@@ -60,6 +64,10 @@ void * pacman(void * param) {
           posPacman.dir = SINISTRA;
         } else posPacman.dir = FERMO;
         posPacman.sparo = false;
+
+        //effetto pacman
+        if(posPacman.x-1 == 38)
+          posPacman.x = 108;
         break;
 
       case SPARO:
@@ -74,6 +82,6 @@ void * pacman(void * param) {
 
     //aggiornamento della posizione nel buffer e pausa
     insertBuffer(buffer, mutexDati, posPacman);
-    usleep(200000);
+    usleep(150000);
   }
 }

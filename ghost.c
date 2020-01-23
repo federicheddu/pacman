@@ -40,24 +40,32 @@ void * ghost (void * param){
     //Una volta che la direzione è ok allora può camminare
     switch(dir){
       case SU:
-          posGhost.y-=1;
-          posGhost.dir = SU;
-          break;
+        posGhost.y-=1;
+        posGhost.dir = SU;
+        break;
       case GIU:
-          posGhost.y+=1;
-          posGhost.dir = GIU;
-          break;
+        posGhost.y+=1;
+        posGhost.dir = GIU;
+        break;
       case DESTRA:
-          posGhost.x+=1;
-          posGhost.dir = DESTRA;
-          break;
+        posGhost.x+=1;
+        posGhost.dir = DESTRA;
+
+        //effetto pacman
+        if(posGhost.x+3 == 112)
+          posGhost.x= 40;
+        break;
       case SINISTRA:
-          posGhost.x-=1;
-          posGhost.dir = SINISTRA;
-          break;
+        posGhost.x-=1;
+        posGhost.dir = SINISTRA;
+
+        //effetto pacman
+        if(posGhost.x-1 == 38)
+          posGhost.x = 108;
+        break;
     }
     //aggiornamento della posizione nel buffer e pausa
     insertBuffer(buffer, mutexDati, posGhost);
-    usleep(100000);
+    usleep(150000);
   }
 }

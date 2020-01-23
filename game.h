@@ -12,7 +12,7 @@ void printSUGA();
 
 //stampa del gioco
 void printEntity(Pos entita, pthread_mutex_t *mutex);
-void clearEntity(Pos entita, pthread_mutex_t *mutex);
+void clearEntity(Pos entita, pthread_mutex_t *mutex, int num, int pallini[][num]);
 void printCampo(int level);
 void printStats(int livello, int score);
 void printDot(int num, int pallini[][num]);

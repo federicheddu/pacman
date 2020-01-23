@@ -225,58 +225,58 @@ void printCampo(int level){
                        "||                                                                                                                                                  ||\n",
                        "||                                      #######################################################################                                     ||\n",
                        "||                                      #                              #########                              #                                     ||\n",
-                       "||                                      #                              #########                              #                                     ||\n",
+                       "||                                      # .  .  .  .   .  .  .  . .  . ######### .  . .  .  .  .   .  .  .  . #                                     ||\n",
                        "||         LEVEL:                       #                              #########                              #             LIVEs:                  ||\n",
                        "||         SCORE:                       #   ##########   ###########   #########   ###########   ##########   #             TIME:                   ||\n",
-                       "||                                      #   ##########   ###########   #########   ###########   ##########   #             FRUITs:                 ||\n",
+                       "||                                      # . ########## . ########### . ######### . ########### . ########## . #             FRUITs:                 ||\n",
                        "||                                      #   ##########   ###########   #########   ###########   ##########   #             KILLs:                  ||\n",
                        "||                                      #   ##########   ###########   #########   ###########   ##########   #                                     ||\n",
-                       "||         HIGHSCORES:                  #   ##########   ###########   #########   ###########   ##########   #                                     ||\n",
+                       "||         HIGHSCORES:                  # . ########## . ########### . ######### . ########### . ########## . #                                     ||\n",
                        "||         1.                           #   ##########   ###########   #########   ###########   ##########   #                                     ||\n",
                        "||         2.                           #                                                                     #                                     ||\n",
-                       "||         3.                           #                                                                     #                                     ||\n",
+                       "||         3.                           # .  .  .  .   .  .  .  . .  .  .  .  .  .  . .  .  .  .   .  .  .  . #                                     ||\n",
                        "||                                      #                                                                     #                                     ||\n",
                        "||                                      #   ##########   ######   ###################   ######   ##########   #                                     ||\n",
-                       "||                                      #   ##########   ######   ###################   ######   ##########   #                                     ||\n",
+                       "||                                      # . ########## . ###### . ################### . ###### . ########## . #                                     ||\n",
                        "||                                      #   ##########   ######   ###################   ######   ##########   #                                     ||\n",
                        "||                                      #                ######        #########        ######                #                                     ||\n",
-                       "||                                      #                ######        #########        ######                #                                     ||\n",
+                       "||                                      # .  .  .   .  . ###### .    . ######### .    . ###### .  .   .  .  . #                                     ||\n",
                        "||                                      #                ######        #########        ######                #                                     ||\n",
                        "||                                      ##############   ###########   #########   ###########   ##############                                     ||\n",
-                       "||                                      ##############   ###########   #########   ###########   ##############                                     ||\n",
+                       "||                                      ############## . ########### . ######### . ########### . ##############                                     ||\n",
                        "||                                      ##############   ###########   #########   ###########   ##############                                     ||\n",
                        "||                                      ##############   ######                         ######   ##############                                     ||\n",
-                       "||                                      ##############   ######                         ######   ##############                                     ||\n",
+                       "||                                      ############## . ###### .  .  .  .   .  .  .  . ###### . ##############                                     ||\n",
                        "||                                      ##############   ######                         ######   ##############                                     ||\n",
                        "||                                      ##############   ######   #######+   +#######   ######   ##############                                     ||\n",
-                       "||                                      ##############   ######   #                 #   ######   ##############                                     ||\n",
+                       "||                                      ############## . ###### . #                 # . ###### . ##############                                     ||\n",
                        "||                                                                +                 +                                                               ||\n",
-                       "||                                                                                                                                                  ||\n",
+                       "||                                                     .  .  .  .                     .  .  .  .                                                    ||\n",
                        "||                                                                +                 +                                                               ||\n",
-                       "||                                      ##############   ######   #                 #   ######   ##############                                     ||\n",
+                       "||                                      ############## . ###### . #                 # . ###### . ##############                                     ||\n",
                        "||                                      ##############   ######   #######+   +#######   ######   ##############                                     ||\n",
                        "||                                      ##############   ######                         ######   ##############                                     ||\n",
-                       "||                                      ##############   ######                         ######   ##############                                     ||\n",
+                       "||                                      ############## . ###### .  .  .  .   .  .  .  . ###### . ##############                                     ||\n",
                        "||                                      ##############   ######                         ######   ##############                                     ||\n",
                        "||                                      ##############   ######   ###################   ######   ##############                                     ||\n",
                        "||                                      #                               #######                               #                                     ||\n",
+                       "||                                      # .  .  .  .   .  .  .  .  .  . ####### .  .  .  .  .  .   .  .  .  . #                                     ||\n",
                        "||                                      #                               #######                               #                                     ||\n",
-                       "||                                      #                               #######                               #                                     ||\n",
                        "||                                      #   ##########   ############   #######   ############   ##########   #                                     ||\n",
-                       "||                                      #   ##########   ############   #######   ############   ##########   #                                     ||\n",
+                       "||                                      # . ########## . ############ . ####### . ############ . ########## . #                                     ||\n",
                        "||                                      #   ##########   ############   #######   ############   ##########   #                                     ||\n",
                        "||                                      #          ###                                           ###          #                                     ||\n",
+                       "||                                      # .  .   . ### .  .  .  .  .  .  .   .  .  .  .  .  .  . ### .   .  . #                                     ||\n",
                        "||                                      #          ###                                           ###          #                                     ||\n",
-                       "||                                      #          ###                                           ###          #                                     ||\n",
                        "||                                      ########   ###   ######   ###################   ######   ###   ########                                     ||\n",
-                       "||                                      ########   ###   ######   ###################   ######   ###   ########                                     ||\n",
+                       "||                                      ######## . ### . ###### . ################### . ###### . ### . ########                                     ||\n",
                        "||                                      ########   ###   ######   ###################   ######   ###   ########                                     ||\n",
                        "||                                      #                ######         #######         ######                #                                     ||\n",
+                       "||                                      # .  .  .   .  . ###### .  .  . ####### .  .  . ###### .  .   .  .  . #                                     ||\n",
                        "||                                      #                ######         #######         ######                #                                     ||\n",
-                       "||                                      #                ######         #######         ######                #                                     ||\n",
-                       "||                                      #   #########################   #######   #########################   #                                     ||\n",
+                       "||                                      # . ######################### . ####### . ######################### . #                                     ||\n",
                        "||                                      #                                                                     #                                     ||\n",
-                       "||                                      #                                                                     #                                     ||\n",
+                       "||                                      # .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . #                                     ||\n",
                        "||                                      #                                                                     #                                     ||\n",
                        "||                                      #######################################################################                                     ||\n",
                        "||                                                                                                                                                  ||\n",
@@ -309,11 +309,11 @@ void printDot(int num, int pallini[][num]){
     pthread_mutex_lock(mutexTerminale);
     for(int i; i<NUM_PALLINI; i++){
         if(pallini[i][2]==0){
-            mvaddch(pallini[i][0], pallini[i][1], '.');
+            mvprintw(pallini[i][0], pallini[i][1], "%c", '.');
         }
     }
     pthread_mutex_unlock(mutexTerminale);
-
+    //refresh();
 }
 
 void printEntity(Pos entita, pthread_mutex_t *mutex) {
@@ -336,26 +336,19 @@ void printEntity(Pos entita, pthread_mutex_t *mutex) {
             mvaddch(entita.y+2,entita.x+2,' ');
             break;
         case PACMAN:
-            attron(COLOR_PAIR(2));
+            attron(COLOR_PAIR(5));
             //1° riga
             mvaddch(entita.y,entita.x,'P');
-            //mvaddch(entita.y,entita.x+1,' ');
+            mvaddch(entita.y,entita.x+1,' ');
             mvaddch(entita.y,entita.x+2,'M');
             //2° riga
-            //mvaddch(entita.y+1,entita.x,' ');
+            mvaddch(entita.y+1,entita.x,' ');
             mvaddch(entita.y+1,entita.x+1,'A');
-            //mvaddch(entita.y+1,entita.x+2,' ');
+            mvaddch(entita.y+1,entita.x+2,' ');
             //3° riga
             mvaddch(entita.y+2,entita.x,'N');
-            //mvaddch(entita.y+2,entita.x+1,' ');
-            mvaddch(entita.y+2,entita.x+2,'C');
-            attroff(COLOR_PAIR(2));
-
-            attron(COLOR_PAIR(5));
-            mvaddch(entita.y,entita.x+1,' ');
-            mvaddch(entita.y+1,entita.x,' ');
-            mvaddch(entita.y+1,entita.x+2,' ');
             mvaddch(entita.y+2,entita.x+1,' ');
+            mvaddch(entita.y+2,entita.x+2,'C');
             attroff(COLOR_PAIR(5));
             break;
         case BLINKY:
@@ -387,10 +380,10 @@ void printEntity(Pos entita, pthread_mutex_t *mutex) {
     }
 
     pthread_mutex_unlock(mutex);
-    refresh();
+    //refresh();
 }
 
-void clearEntity(Pos entita, pthread_mutex_t *mutex) {
+void clearEntity(Pos entita, pthread_mutex_t *mutex, int num, int pallini[][num]) {
 
     pthread_mutex_lock(mutex);
     switch(entita.dir) {
@@ -398,27 +391,71 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex) {
         mvaddch(entita.y+3,entita.x,' ');
         mvaddch(entita.y+3,entita.x+1,' ');
         mvaddch(entita.y+3,entita.x+2,' ');
+        if(entita.entita>PACMAN)
+            for(int i=0; i<NUM_PALLINI; i++)
+                if(entita.y+3 == pallini[i][0] && entita.x+1 == pallini[i][1] && pallini[i][2] == 0)
+                    mvaddch(entita.y+3,entita.x+1,'.');
         break;
 
       case GIU:
         mvaddch(entita.y-1,entita.x,' ');
         mvaddch(entita.y-1,entita.x+1,' ');
         mvaddch(entita.y-1,entita.x+2,' ');
+        if(entita.entita>PACMAN)
+            for(int i=0; i<NUM_PALLINI; i++)
+                if(entita.y-1 == pallini[i][0] && entita.x+1 == pallini[i][1] && pallini[i][2] == 0)
+                    mvaddch(entita.y-1,entita.x+1,'.');
         break;
 
       case SINISTRA:
         mvaddch(entita.y,entita.x+3,' ');
         mvaddch(entita.y+1,entita.x+3,' ');
         mvaddch(entita.y+2,entita.x+3,' ');
+
+        if(entita.entita>PACMAN)
+            for(int i=0; i<NUM_PALLINI; i++)
+                if(entita.y+1 == pallini[i][0] && entita.x+3 == pallini[i][1] && pallini[i][2] == 0)
+                    mvaddch(entita.y+1,entita.x+3,'.');
+
+        if(entita.x == 108) {
+            mvaddch(entita.y,40,' ');
+            mvaddch(entita.y+1,40,' ');
+            mvaddch(entita.y+2,40,' ');
+
+            mvaddch(entita.y,41,' ');
+            mvaddch(entita.y+1,41,' ');
+            mvaddch(entita.y+2,41,' ');
+
+            mvaddch(entita.y,42,' ');
+            mvaddch(entita.y+1,42,' ');
+            mvaddch(entita.y+2,42,' ');
+        }
         break;
 
       case DESTRA:
         mvaddch(entita.y,entita.x-1,' ');
         mvaddch(entita.y+1,entita.x-1,' ');
         mvaddch(entita.y+2,entita.x-1,' ');
-        break;
-    }
+        if(entita.entita>PACMAN)
+            for(int i=0; i<NUM_PALLINI; i++)
+                if(entita.y+1 == pallini[i][0] && entita.x-1 == pallini[i][1] && pallini[i][2] == 0)
+                    mvaddch(entita.y+1,entita.x-1,'.');
+        
+        if(entita.x == 40) {
+            mvaddch(entita.y,108,' ');
+            mvaddch(entita.y+1,108,' ');
+            mvaddch(entita.y+2,108,' ');
 
+            mvaddch(entita.y,109,' ');
+            mvaddch(entita.y+1,109,' ');
+            mvaddch(entita.y+2,109,' ');
+
+            mvaddch(entita.y,110,' ');
+            mvaddch(entita.y+1,110,' ');
+            mvaddch(entita.y+2,110,' ');
+        }
+        break;            
+    }
 
     pthread_mutex_unlock(mutex);
 }
@@ -572,23 +609,22 @@ void gameController(int livello, Buffer *buffer){
     usleep(500);
 
     printCampo(livello);
-    refresh();
+
+    //refresh();
 
     while(personaggi[PACMAN].vite > 0) {
-
-        
-        printDot(3, pallini);
 
         node = removeBuffer(buffer);
 
         if(node != NULL) {
             entita = node->posizione;
 
-            //pulisce sempre la vecchia posizione
-            clearEntity(entita, mutexTerminale);
             //stampa solo se è un personaggio oppure un proiettile ancora in vita (motivo del controllo)
-            if(!(entita.entita == BULLET && entita.sparo == false) || !(entita.entita == BULLET && entita.sparo == false))
+            if(!(entita.entita == BULLET && entita.sparo == false))
                 printEntity(entita, mutexTerminale);
+            refresh();
+            //pulisce sempre la vecchia posizione
+            clearEntity(entita, mutexTerminale, 3, pallini);
 
             //backup delle posizioni in locale
             if(entita.entita < NUM_PERSONAGGI)
@@ -623,8 +659,6 @@ void gameController(int livello, Buffer *buffer){
                 }
             }
         }
-
         printStats(livello, score);
     }
-    refresh();
 }
