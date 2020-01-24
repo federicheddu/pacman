@@ -337,34 +337,19 @@ void printEntity(Pos entita, pthread_mutex_t *mutex) {
             break;
         case PACMAN:
             attron(COLOR_PAIR(5));
-            //1° riga
-            mvaddch(entita.y,entita.x,'P');
-            mvaddch(entita.y,entita.x+1,' ');
-            mvaddch(entita.y,entita.x+2,'M');
-            //2° riga
-            mvaddch(entita.y+1,entita.x,' ');
-            mvaddch(entita.y+1,entita.x+1,'A');
-            mvaddch(entita.y+1,entita.x+2,' ');
-            //3° riga
-            mvaddch(entita.y+2,entita.x,'N');
-            mvaddch(entita.y+2,entita.x+1,' ');
-            mvaddch(entita.y+2,entita.x+2,'C');
+            mvprintw(entita.y,entita.x, "%s","P M"); //1° riga
+            mvprintw(entita.y+1,entita.x, "%s"," A "); //2° riga
+            mvprintw(entita.y+2,entita.x, "%s","N C"); //3° riga
             attroff(COLOR_PAIR(5));
             break;
         case BLINKY:
             attron(COLOR_PAIR(2));
             //1° riga
-            mvaddch(entita.y,entita.x,'B');
-            mvaddch(entita.y,entita.x+1,'@');
-            mvaddch(entita.y,entita.x+2,'N');
+            mvprintw(entita.y,entita.x, "%s","B@N");
             //2° riga
-            mvaddch(entita.y+1,entita.x,'L');
-            mvaddch(entita.y+1,entita.x+1,' ');
-            mvaddch(entita.y+1,entita.x+2,'K');
+            mvprintw(entita.y+1,entita.x, "%s","L K");
             //3° riga
-            mvaddch(entita.y+2,entita.x,'I');
-            mvaddch(entita.y+2,entita.x+1,'@');
-            mvaddch(entita.y+2,entita.x+2,'Y');
+            mvprintw(entita.y+2,entita.x, "%s","I@Y");
             attroff(COLOR_PAIR(2));
             break;
         case PINKY:
@@ -378,9 +363,8 @@ void printEntity(Pos entita, pthread_mutex_t *mutex) {
         case GLITCHY:
             break;
     }
-
     pthread_mutex_unlock(mutex);
-    refresh();
+    //refresh();
 }
 
 void clearEntity(Pos entita, pthread_mutex_t *mutex, int num, int pallini[][num]) {
@@ -388,77 +372,55 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex, int num, int pallini[][num]
     pthread_mutex_lock(mutex);
     switch(entita.dir) {
       case SU:
-        mvaddch(entita.y+3,entita.x,' ');
-        mvaddch(entita.y+3,entita.x+1,' ');
-        mvaddch(entita.y+3,entita.x+2,' ');
+        mvprintw(entita.y+3,entita.x, "%s","   ");
         if(entita.entita>PACMAN)
             for(int i=0; i<NUM_PALLINI; i++)
                 if(entita.y+3 == pallini[i][0] && entita.x+1 == pallini[i][1] && pallini[i][2] == 0)
-                    mvaddch(entita.y+3,entita.x+1,'.');
+                    mvprintw(entita.y+3,entita.x+1, "%c",'.');
         break;
 
       case GIU:
-        mvaddch(entita.y-1,entita.x,' ');
-        mvaddch(entita.y-1,entita.x+1,' ');
-        mvaddch(entita.y-1,entita.x+2,' ');
+        mvprintw(entita.y-1,entita.x, "%s", "   ");
         if(entita.entita>PACMAN)
             for(int i=0; i<NUM_PALLINI; i++)
                 if(entita.y-1 == pallini[i][0] && entita.x+1 == pallini[i][1] && pallini[i][2] == 0)
-                    mvaddch(entita.y-1,entita.x+1,'.');
+                    mvprintw(entita.y-1,entita.x+1, "%c", '.');
         break;
 
       case SINISTRA:
-        mvaddch(entita.y,entita.x+3,' ');
-        mvaddch(entita.y+1,entita.x+3,' ');
-        mvaddch(entita.y+2,entita.x+3,' ');
+        mvprintw(entita.y,entita.x+3, "%c", ' ');
+        mvprintw(entita.y+1,entita.x+3, "%c", ' ');
+        mvprintw(entita.y+2,entita.x+3, "%c", ' ');
 
         if(entita.entita>PACMAN)
             for(int i=0; i<NUM_PALLINI; i++)
                 if(entita.y+1 == pallini[i][0] && entita.x+3 == pallini[i][1] && pallini[i][2] == 0)
-                    mvaddch(entita.y+1,entita.x+3,'.');
+                    mvprintw(entita.y+1,entita.x+3, "%c",'.');
 
         if(entita.x == 108) {
-            mvaddch(entita.y,40,' ');
-            mvaddch(entita.y+1,40,' ');
-            mvaddch(entita.y+2,40,' ');
-
-            mvaddch(entita.y,41,' ');
-            mvaddch(entita.y+1,41,' ');
-            mvaddch(entita.y+2,41,' ');
-
-            mvaddch(entita.y,42,' ');
-            mvaddch(entita.y+1,42,' ');
-            mvaddch(entita.y+2,42,' ');
+            mvprintw(entita.y,40, "%s","   ");
+            mvprintw(entita.y+1,40, "%s","   ");
+            mvprintw(entita.y+2,40, "%s","   ");
         }
         break;
 
       case DESTRA:
-        mvaddch(entita.y,entita.x-1,' ');
-        mvaddch(entita.y+1,entita.x-1,' ');
-        mvaddch(entita.y+2,entita.x-1,' ');
+        mvprintw(entita.y,entita.x-1, "%c",' ');
+        mvprintw(entita.y+1,entita.x-1, "%c",' ');
+        mvprintw(entita.y+2,entita.x-1, "%c",' ');
         if(entita.entita>PACMAN)
             for(int i=0; i<NUM_PALLINI; i++)
                 if(entita.y+1 == pallini[i][0] && entita.x-1 == pallini[i][1] && pallini[i][2] == 0)
-                    mvaddch(entita.y+1,entita.x-1,'.');
+                    mvprintw(entita.y+1,entita.x-1, "%c",'.');
         
         if(entita.x == 40) {
-            mvaddch(entita.y,108,' ');
-            mvaddch(entita.y+1,108,' ');
-            mvaddch(entita.y+2,108,' ');
-
-            mvaddch(entita.y,109,' ');
-            mvaddch(entita.y+1,109,' ');
-            mvaddch(entita.y+2,109,' ');
-
-            mvaddch(entita.y,110,' ');
-            mvaddch(entita.y+1,110,' ');
-            mvaddch(entita.y+2,110,' ');
+            mvprintw(entita.y,108, "%s","   ");
+            mvprintw(entita.y+1,108, "%s","   ");
+            mvprintw(entita.y+2,108, "%s","   ");
         }
         break;            
     }
-
     pthread_mutex_unlock(mutex);
-    refresh();
 }
 
 /** --- INIZIALIZZAZIONE DATI ------------------------------------------------------- **/
@@ -619,11 +581,10 @@ void gameController(int livello, Buffer *buffer){
 
         if(node != NULL) {
             entita = node->posizione;
-            
+
             //stampa solo se è un personaggio oppure un proiettile ancora in vita (motivo del controllo)
             if(!(entita.entita == BULLET && entita.sparo == false))
                 printEntity(entita, mutexTerminale);
-            
             //pulisce sempre la vecchia posizione
             clearEntity(entita, mutexTerminale, 3, pallini);
 
@@ -632,12 +593,12 @@ void gameController(int livello, Buffer *buffer){
                 personaggi[entita.entita].posizione = entita;
 
             score += checkScore(personaggi[PACMAN].posizione.x, personaggi[PACMAN].posizione.y, 3, pallini);
-            refresh();
-            
+
+            /*
             //se un entità ha sparato
             if(entita.entita < NUM_PERSONAGGI && entita.sparo) {
                 if(canShoot(proiettili, entita.entita))
-                    for(int i=0; i<4; i++) {
+                    for(int i=0; i<3; i++) {
                         proiettili[entita.entita][i].x = entita.x;
                         proiettili[entita.entita][i].y = entita.y;
                         proiettili[entita.entita][i].sparo = true;
@@ -660,7 +621,9 @@ void gameController(int livello, Buffer *buffer){
                     pthread_create(&(proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO].id), NULL, &bullet, (void*)&posPartenza);
                 }
             }
+            */
         }
         printStats(livello, score);
+        refresh();
     }
 }
