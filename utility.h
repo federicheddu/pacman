@@ -36,6 +36,8 @@ typedef enum {
     PACMAN, BLINKY, PINKY, CLYDE, INKY, FUNKY, GLITCHY, BULLET
 } Entity;
 
+const static char EntityName[8][10] = {"PACMAN   ", "BINKY    ", "PINKY    ", "CLYDE    ", "INKY     ", "FUNKY    ", "GLITCHY  ", "BULLET   "};
+
 //definisce la posizione e il tipo di entita
 typedef struct {
     int x;          //coordinata sul terminale

@@ -4,7 +4,7 @@ void * pacman(void * param) {
   Buffer *buffer = (Buffer*) param; // parsing del buffer
   char c, dir, dirOld;
 
-  nodelay(stdscr, true);
+  nodelay(stdscr, TRUE);
 
   Pos posPacman;
   posPacman.x = 45;

@@ -4,7 +4,7 @@ void * ghost (void * param){
   PosStart *start = (PosStart*) param; //parsing del buffer
   Pos posIniziale = start -> posizione;
   Buffer *buffer = start -> buffer;
-  int dir, dirOpposta;
+  int dir, dirOpposta, dirNext = 0;
 
   nodelay(stdscr, true);
 
@@ -29,24 +29,31 @@ void * ghost (void * param){
     else
       dirOpposta = 1;
 
-      /*BEST RICORDO DEL PROGETTO DI SO1 EVER*/
+    /*BEST RICORDO DEL PROGETTO DI SO1 EVER*/
     //while(dir=randRange(65,68) == posGhost.dir + dirOpposta && !entityMv(posGhost.x, posGhost.y,dir)) {};
 
     //Genera una direzione che non sia l'opposta a quella attuale, e che sia fattibile nella mappa
-    do{
-      dir = randRange(65,68);
-    }while(dir == posGhost.dir + dirOpposta || !entityMv(posGhost.x, posGhost.y,dir));
+    dirNext = randRange(0,3);
+    dir = dirNext + SHIFT_MOVIMENTO;
+    while (dir == posGhost.dir + dirOpposta || !entityMv(posGhost.x, posGhost.y,dir)) {
+       dirNext++;
+       dirNext %= 4;
+       dir = dirNext + SHIFT_MOVIMENTO;
+    }
 
     //Una volta che la direzione è ok allora può camminare
     switch(dir){
+
       case SU:
         posGhost.y-=1;
         posGhost.dir = SU;
         break;
+
       case GIU:
         posGhost.y+=1;
         posGhost.dir = GIU;
         break;
+
       case DESTRA:
         posGhost.x+=1;
         posGhost.dir = DESTRA;
@@ -54,7 +61,9 @@ void * ghost (void * param){
         //effetto pacman
         if(posGhost.x+3 == 112)
           posGhost.x= 40;
+
         break;
+
       case SINISTRA:
         posGhost.x-=1;
         posGhost.dir = SINISTRA;
@@ -62,10 +71,11 @@ void * ghost (void * param){
         //effetto pacman
         if(posGhost.x-1 == 38)
           posGhost.x = 108;
+
         break;
     }
     //aggiornamento della posizione nel buffer e pausa
     insertBuffer(buffer, mutexDati, posGhost);
-    usleep(150000);
+    usleep(200000);
   }
 }

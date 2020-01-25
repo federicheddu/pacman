@@ -26,7 +26,7 @@ int main(){
   init_pair(2, COLOR_YELLOW, COLOR_BLACK);
   init_pair(5, COLOR_YELLOW, COLOR_YELLOW);
   //BLINKY
-  init_pair(3, COLOR_CYAN, COLOR_BLACK);
+  init_pair(3, COLOR_RED, COLOR_RED);
   //WALLS
   init_pair(4, COLOR_BLUE, COLOR_BLUE);
   

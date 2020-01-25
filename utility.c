@@ -107,7 +107,7 @@ void insertBuffer(Buffer *buffer, pthread_mutex_t *mutex, Pos new){
 BufferElement* removeBuffer(Buffer *buffer){
     BufferElement *node;
 
-   pthread_mutex_unlock(mutexDati);
+   pthread_mutex_lock(mutexDati);
 
     node = buffer->first;
     if(buffer->first == buffer->last)
@@ -115,7 +115,7 @@ BufferElement* removeBuffer(Buffer *buffer){
     if(buffer->first != NULL)
         buffer->first = buffer->first->next;
 
-   pthread_mutex_lock(mutexDati);
+   pthread_mutex_unlock(mutexDati);
 
     return node;
 }
