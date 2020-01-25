@@ -14,6 +14,8 @@ void * ghost (void * param){
   posGhost.entita = posIniziale.entita;
   posGhost.id = pthread_self();
 
+  sleep(randRange(4,7));
+
   //Segnalazione della posizione iniziale
   insertBuffer(buffer, mutexDati, posGhost);
 
@@ -78,6 +80,6 @@ void * ghost (void * param){
     */
     //aggiornamento della posizione nel buffer e pausa
     insertBuffer(buffer, mutexDati, posGhost);
-    usleep(200000);
+    usleep(150000);
   }
 }

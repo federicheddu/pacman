@@ -28,7 +28,9 @@
 
 //macro gioco
 #define PASSO 1 					/* Spostamento entita */
-#define NUM_PERSONAGGI 7              /* Pacman + fantasmi */
+#define NUM_PERSONAGGI 7            /* Pacman + fantasmi */
+#define NUM_FANTASMI 4
+#define MAX_FANTASMI 6
 #define MAX_PROIETTILI 4            /* Numero massimo di proiettili in contemporanea per entità*/
 #define NUM_PALLINI 210
 

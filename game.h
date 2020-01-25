@@ -20,6 +20,7 @@ void printDot(int num, int pallini[][num]);
 //inizializzazione dati
 void startBullet(int num, Pos proiettili[][num]);
 void startCharacter(Par personaggi[]);
+void startGhost(int num, int pallini[][num], Pos fantasmi[]);
 
 //controlli di gioco
 _Bool canShoot(Pos proiettili[][MAX_PROIETTILI], Entity entita);
