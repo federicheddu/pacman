@@ -6,8 +6,6 @@ void * ghost (void * param){
   Buffer *buffer = start -> buffer;
   int dir, dirOpposta, dirNext = 0;
 
-  nodelay(stdscr, true);
-
   Pos posGhost;
   posGhost.x = posIniziale.x;
   posGhost.y = posIniziale.y;
@@ -74,6 +72,10 @@ void * ghost (void * param){
 
         break;
     }
+
+    /*if(randRange(1,5) == 3)
+      posGhost.sparo = true;
+    */
     //aggiornamento della posizione nel buffer e pausa
     insertBuffer(buffer, mutexDati, posGhost);
     usleep(200000);
