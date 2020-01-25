@@ -412,13 +412,13 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex, int num, int pallini[][num]
             for(int i=0; i<NUM_PALLINI; i++)
                 if(entita.y+1 == pallini[i][0] && entita.x-1 == pallini[i][1] && pallini[i][2] == 0)
                     mvprintw(entita.y+1,entita.x-1, "%c",'.');
-        
+
         if(entita.x == 40) {
             mvprintw(entita.y,108, "%s","   ");
             mvprintw(entita.y+1,108, "%s","   ");
             mvprintw(entita.y+2,108, "%s","   ");
         }
-        break;            
+        break;
     }
     //pthread_mutex_unlock(mutex);
 }
@@ -584,7 +584,7 @@ void gameController(int livello, Buffer *buffer){
         node = removeBuffer(buffer);
 
         if(node != NULL) {
-            
+
             entita = node->posizione;
 
             //stampa solo se è un personaggio oppure un proiettile ancora in vita (motivo del controllo)
@@ -621,7 +621,7 @@ void gameController(int livello, Buffer *buffer){
                 if(entityMv(entita.x, entita.y, DESTRA)) {
                     posPartenza.posizione = proiettili[entita.entita][DESTRA-SHIFT_MOVIMENTO];
                     pthread_create(&(proiettili[entita.entita][DESTRA-SHIFT_MOVIMENTO].id), NULL, &bullet, (void*)&posPartenza);
-                }   
+                }
                 if(entityMv(entita.x, entita.y, SINISTRA)) {
                     posPartenza.posizione = proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO];
                     pthread_create(&(proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO].id), NULL, &bullet, (void*)&posPartenza);
@@ -634,7 +634,7 @@ void gameController(int livello, Buffer *buffer){
         end = clock();
         deltaTime = ((double) (end-start))/CLOCKS_PER_SEC;
         mvprintw(3, 160, "Tempo: %f", deltaTime);
-        
+
         if(entita.entita == PACMAN) {
             mvprintw(5, 160, "PACMAN [0]");
             mvprintw(6, 160, "X: %d  \t Y: %d  ", entita.x, entita.y);

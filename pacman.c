@@ -82,6 +82,6 @@ void * pacman(void * param) {
 
     //aggiornamento della posizione nel buffer e pausa
     insertBuffer(buffer, mutexDati, posPacman);
-    usleep(150000);
+    usleep(100000);
   }
 }
