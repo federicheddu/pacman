@@ -3,6 +3,7 @@
 void * pacman(void * param) {
   Buffer *buffer = (Buffer*) param; // parsing del buffer
   char c, dir, dirOld;
+  int hoSparato = 0;
 
   nodelay(stdscr, TRUE);
 
@@ -35,7 +36,7 @@ void * pacman(void * param) {
           posPacman.y-=1;
           posPacman.dir = SU;
         } else posPacman.dir = FERMO;
-        posPacman.sparo = false;
+        hoSparato = 0;
         break;
 
       case GIU:
@@ -43,7 +44,7 @@ void * pacman(void * param) {
           posPacman.y+=1;
           posPacman.dir = GIU;
         } else posPacman.dir = FERMO;
-        posPacman.sparo = false;
+        hoSparato = 0;
         break;
 
       case DESTRA:
@@ -51,7 +52,7 @@ void * pacman(void * param) {
           posPacman.x+=1;
           posPacman.dir = DESTRA;
         } else posPacman.dir = FERMO;
-        posPacman.sparo = false;
+        hoSparato = 0;
 
         //effetto pacman
         if(posPacman.x+3 == 112)
@@ -63,7 +64,7 @@ void * pacman(void * param) {
           posPacman.x-=1;
           posPacman.dir = SINISTRA;
         } else posPacman.dir = FERMO;
-        posPacman.sparo = false;
+        hoSparato = 0;
 
         //effetto pacman
         if(posPacman.x-1 == 38)
@@ -71,12 +72,17 @@ void * pacman(void * param) {
         break;
 
       case SPARO:
-        if(!posPacman.sparo)
+      
+        if(hoSparato == 0)
           posPacman.sparo = true;
+        else
+          posPacman.sparo = false;
+
+        hoSparato++;
         break;
 
       default:
-        posPacman.sparo = false;
+        hoSparato = 0;
         break;
     }
 

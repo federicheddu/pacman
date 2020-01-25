@@ -366,7 +366,11 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex, int num, int pallini[][num]
 
     switch(entita.dir) {
       case SU:
-        mvprintw(entita.y+3,entita.x, "%s","   ");
+        if(entita.entita != BULLET)
+            mvprintw(entita.y+3,entita.x, "%s","   ");
+        else
+            mvprintw(entita.y+1,entita.x, "%s"," ");
+
         if(entita.entita>PACMAN)
             for(int i=0; i<NUM_PALLINI; i++)
                 if(entita.y+3 == pallini[i][0] && entita.x+1 == pallini[i][1] && pallini[i][2] == 0)
@@ -374,7 +378,10 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex, int num, int pallini[][num]
         break;
 
       case GIU:
-        mvprintw(entita.y-1,entita.x, "%s", "   ");
+        if(entita.entita != BULLET)
+            mvprintw(entita.y-1,entita.x, "%s", "   ");
+        else
+            mvprintw(entita.y-1,entita.x, "%s", " ");
         if(entita.entita>PACMAN)
             for(int i=0; i<NUM_PALLINI; i++)
                 if(entita.y-1 == pallini[i][0] && entita.x+1 == pallini[i][1] && pallini[i][2] == 0)
@@ -382,11 +389,13 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex, int num, int pallini[][num]
         break;
 
       case SINISTRA:
-        mvprintw(entita.y,entita.x+3, "%c", ' ');
+
         if(entita.entita != BULLET) {
+            mvprintw(entita.y,entita.x+3, "%c", ' ');
             mvprintw(entita.y+1,entita.x+3, "%c", ' ');
             mvprintw(entita.y+2,entita.x+3, "%c", ' ');
-        }
+        } else
+            mvprintw(entita.y,entita.x+1, "%c", ' ');
         
 
         if(entita.entita>PACMAN)
@@ -433,7 +442,7 @@ void startBullet(int num, Pos proiettili[][num]) {
             proiettili[i][j].id = NULL;
             proiettili[i][j].sparo = false;
             proiettili[i][j].entita = BULLET;
-            proiettili[i][j].dir = i+SHIFT_MOVIMENTO;
+            proiettili[i][j].dir = j+SHIFT_MOVIMENTO;
         }
     }
 }
@@ -465,6 +474,8 @@ int checkScore(int x, int y, int num, int pallini[][num]){
 
 _Bool bulletMv(int x, int y, char dir) {
 
+    pthread_mutex_lock(mutexDati);
+
     switch (dir) {
         case SU:
             if(scampo[y-1][x] == '#' )
@@ -485,7 +496,9 @@ _Bool bulletMv(int x, int y, char dir) {
         default:
             return false;
     }
+    
     return true;
+    pthread_mutex_unlock(mutexDati);
 }
 
 /** --- ENTITÀ GENERALI ------------------------------------------------------------- **/
@@ -540,7 +553,7 @@ void * bullet(void * param) {
     }
     posBullet.sparo = false;
     insertBuffer(buffer,mutexDati,posBullet);
-    
+    pthread_exit(NULL);
 }
 
 /** --- GIOCO ----------------------------------------------------------------------- **/
@@ -553,15 +566,19 @@ void gameController(int livello, Buffer *buffer){
     double deltaTime;
 
     Pos entita;
-    PosStart posPartenza;
-    posPartenza.buffer = buffer;
+    PosStart posPartenza_SU, posPartenza_GIU, posPartenza_DESTRA, posPartenza_SINISTRA;
+    posPartenza_SU.buffer = buffer;
+    posPartenza_GIU.buffer = buffer;
+    posPartenza_DESTRA.buffer = buffer;
+    posPartenza_SINISTRA.buffer = buffer;
 
     Par personaggi[NUM_PERSONAGGI];
     startCharacter(personaggi);
     Pos proiettili[NUM_PERSONAGGI][MAX_PROIETTILI];
     startBullet(MAX_PROIETTILI, proiettili);
 
-    int pallini[210][3]={{4, 42, 0},{4, 45, 0},{4, 48, 0},{4, 51, 0},
+    int pallini[210][3]= {
+        {4, 42, 0},{4, 45, 0},{4, 48, 0},{4, 51, 0},
         {4, 55, 0},{4, 58, 0},{4, 61, 0},{4, 64, 0},{4, 66, 0},{4, 69, 0},
         {4, 81, 0},{4, 84, 0},{4, 86, 0},{4, 89, 0},{4, 92, 0},{4, 95, 0},
         {4, 99, 0},{4, 102, 0},{4, 105, 0},{4, 108, 0},{7, 42, 0},{7, 55, 0},
@@ -596,7 +613,9 @@ void gameController(int livello, Buffer *buffer){
         {55, 51, 0},{55, 54, 0},{55, 57, 0},{55, 60, 0},{55, 63, 0},{55, 66, 0},
         {55, 69, 0},{55, 72, 0},{55, 75, 0},{55, 78, 0},{55, 81, 0},{55, 84, 0},
         {55, 87, 0},{55, 90, 0},{55, 93, 0},{55, 96, 0},{55, 99, 0},{55, 102, 0},
-        {55, 105, 0},{55, 108, 0}};
+        {55, 105, 0},{55, 108, 0}
+        };
+    /**/
 
     BufferElement *node;
 
@@ -635,53 +654,43 @@ void gameController(int livello, Buffer *buffer){
             //se un entità ha sparato
             if(entita.entita < NUM_PERSONAGGI && entita.sparo) {
                 if(canShoot(proiettili, entita.entita)) {
-
                     if(entityMv(entita.x, entita.y, SU)) {
                         proiettili[entita.entita][SU-SHIFT_MOVIMENTO].x = entita.x+1;
                         proiettili[entita.entita][SU-SHIFT_MOVIMENTO].y = entita.y-1;
-                        proiettili[entita.entita][SU-SHIFT_MOVIMENTO].dir = SU;
                         proiettili[entita.entita][SU-SHIFT_MOVIMENTO].sparo = true;
-                        posPartenza.posizione = proiettili[entita.entita][SU-SHIFT_MOVIMENTO];
-
-                        posPartenza.posizione = proiettili[entita.entita][SU-SHIFT_MOVIMENTO];
-                        pthread_create(&(proiettili[entita.entita][SU-SHIFT_MOVIMENTO].id), NULL, &bullet, (void*)&posPartenza);
+                        posPartenza_SU.posizione = proiettili[entita.entita][SU-SHIFT_MOVIMENTO];
+                        pthread_create(&(proiettili[entita.entita][SU-SHIFT_MOVIMENTO].id), NULL, &bullet, (void*)&posPartenza_SU);
                     }
                     if(entityMv(entita.x, entita.y, GIU)) {
                         proiettili[entita.entita][GIU-SHIFT_MOVIMENTO].x = entita.x+1;
                         proiettili[entita.entita][GIU-SHIFT_MOVIMENTO].y = entita.y-3;
                         proiettili[entita.entita][GIU-SHIFT_MOVIMENTO].sparo = true;
-                        proiettili[entita.entita][GIU-SHIFT_MOVIMENTO].dir = GIU;
-                        posPartenza.posizione = proiettili[entita.entita][GIU-SHIFT_MOVIMENTO];
-
-                        posPartenza.posizione = proiettili[entita.entita][GIU-SHIFT_MOVIMENTO];
-                        pthread_create(&(proiettili[entita.entita][GIU-SHIFT_MOVIMENTO].id), NULL, &bullet, (void*)&posPartenza);
+                        posPartenza_GIU.posizione = proiettili[entita.entita][GIU-SHIFT_MOVIMENTO];
+                        pthread_create(&(proiettili[entita.entita][GIU-SHIFT_MOVIMENTO].id), NULL, &bullet, (void*)&posPartenza_GIU);
                     }
                     if(entityMv(entita.x, entita.y, DESTRA)) {
                         proiettili[entita.entita][DESTRA-SHIFT_MOVIMENTO].x = entita.x+3;
                         proiettili[entita.entita][DESTRA-SHIFT_MOVIMENTO].y = entita.y+1;
                         proiettili[entita.entita][DESTRA-SHIFT_MOVIMENTO].sparo = true;
-                        proiettili[entita.entita][DESTRA-SHIFT_MOVIMENTO].dir = DESTRA;
-                        posPartenza.posizione = proiettili[entita.entita][DESTRA-SHIFT_MOVIMENTO];
-
-                        posPartenza.posizione = proiettili[entita.entita][DESTRA-SHIFT_MOVIMENTO];
-                        pthread_create(&(proiettili[entita.entita][DESTRA-SHIFT_MOVIMENTO].id), NULL, &bullet, (void*)&posPartenza);
+                        posPartenza_DESTRA.posizione = proiettili[entita.entita][DESTRA-SHIFT_MOVIMENTO];
+                        pthread_create(&(proiettili[entita.entita][DESTRA-SHIFT_MOVIMENTO].id), NULL, &bullet, (void*)&posPartenza_DESTRA);
                     }
                     if(entityMv(entita.x, entita.y, SINISTRA)) {
                         proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO].x = entita.x-1;
                         proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO].y = entita.y+1;
                         proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO].sparo = true;
-                        proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO].dir = SINISTRA;
-                        posPartenza.posizione = proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO];
-
-                        posPartenza.posizione = proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO];
-                        pthread_create(&(proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO].id), NULL, &bullet, (void*)&posPartenza);
+                        posPartenza_SINISTRA.posizione = proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO];
+                        pthread_create(&(proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO].id), NULL, &bullet, (void*)&posPartenza_SINISTRA);
                     }
-
                 }
+                
             }
-            
+    
         }
+
         printStats(livello, score);
+
+        #if DEBUG == 1
 
         end = clock();
         deltaTime = ((double) (end-start))/CLOCKS_PER_SEC;
@@ -693,32 +702,32 @@ void gameController(int livello, Buffer *buffer){
             mvprintw(7, 160, "Sparo: %d, ID: %d", entita.sparo, entita.id);
         }
         
-            mvprintw(9, 160, "BULLET [SU]");
-            mvprintw(10, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][SU-SHIFT_MOVIMENTO].x, proiettili[PACMAN][SU-SHIFT_MOVIMENTO].y);
-            mvprintw(11, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][SU-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][SU-SHIFT_MOVIMENTO].id);
-            if(entita.entita == BULLET && entita.dir == SU)
-                mvprintw(9, 172, "SPARATO al ciclo %d", ciclo);
+        mvprintw(9, 160, "BULLET [SU]");
+        mvprintw(10, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][SU-SHIFT_MOVIMENTO].x, proiettili[PACMAN][SU-SHIFT_MOVIMENTO].y);
+        mvprintw(11, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][SU-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][SU-SHIFT_MOVIMENTO].id);
+        if(entita.entita == BULLET && entita.dir == SU)
+            mvprintw(9, 172, "SPARATO al ciclo %d", ciclo);
 
-        
-            mvprintw(13, 160, "BULLET [GIU]");
-            mvprintw(14, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].x, proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].y);
-            mvprintw(15, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].id);
-            if(entita.entita == BULLET && entita.dir == GIU)
-                mvprintw(13, 172, "SPARATO al ciclo %d", ciclo);
 
-       
-            mvprintw(17, 160, "BULLET [DESTRA]");
-            mvprintw(18, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].x, proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].y);
-            mvprintw(19, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].id);
-            if(entita.entita == BULLET && entita.dir == DESTRA)
-                mvprintw(17, 172, "SPARATO al ciclo %d", ciclo);
+        mvprintw(13, 160, "BULLET [GIU]");
+        mvprintw(14, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].x, proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].y);
+        mvprintw(15, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].id);
+        if(entita.entita == BULLET && entita.dir == GIU)
+            mvprintw(13, 172, "SPARATO al ciclo %d", ciclo);
 
-        
-            mvprintw(21, 160, "BULLET [SINISTRA]");
-            mvprintw(22, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].x, proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].y);
-            mvprintw(23, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].id);
-            if(entita.entita == BULLET && entita.dir == SINISTRA)
-                mvprintw(21, 172, "SPARATO al ciclo %d", ciclo);
+
+        mvprintw(17, 160, "BULLET [DESTRA]");
+        mvprintw(18, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].x, proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].y);
+        mvprintw(19, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].id);
+        if(entita.entita == BULLET && entita.dir == DESTRA)
+            mvprintw(17, 172, "SPARATO al ciclo %d", ciclo);
+
+
+        mvprintw(21, 160, "BULLET [SINISTRA]");
+        mvprintw(22, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].x, proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].y);
+        mvprintw(23, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].id);
+        if(entita.entita == BULLET && entita.dir == SINISTRA)
+            mvprintw(21, 172, "SPARATO al ciclo %d", ciclo);
 
         if(entita.entita == BLINKY) {
             mvprintw(25, 160, "BLINKY [1]");
@@ -735,5 +744,9 @@ void gameController(int livello, Buffer *buffer){
             mvprintw(29 + (ciclo % 47), 160, "%d : NULL     ", ciclo);
         */
 
+        #endif
+
+        //se vuoi ridere togli la refresh (anche se vuoi piangere)
+        //refresh();
     }
 }
