@@ -88,7 +88,7 @@ void * ghost (void * param){
         usleep(150000);
         break;
       case INKY:
-        usleep(75000);
+        usleep(90000);
         break;
       case CLYDE:
         usleep(200000);
