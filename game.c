@@ -335,9 +335,9 @@ void printEntity(Pos entita, pthread_mutex_t *mutex) {
             break;
         case PINKY:
             attron(COLOR_PAIR(8));
-            mvprintw(entita.y,entita.x, "%s","B@N"); //1° riga
-            mvprintw(entita.y+1,entita.x, "%s","L K"); //2° riga
-            mvprintw(entita.y+2,entita.x, "%s","I@Y"); //3° riga
+            mvprintw(entita.y,entita.x, "%s","P@K"); //1° riga
+            mvprintw(entita.y+1,entita.x, "%s","I @"); //2° riga
+            mvprintw(entita.y+2,entita.x, "%s","N@Y"); //3° riga
             attroff(COLOR_PAIR(8));
             break;
         case CLYDE:
@@ -653,11 +653,16 @@ void gameController(int livello, Buffer *buffer){
 
             entita = node->posizione;
 
+            
             //stampa solo se è un personaggio oppure un proiettile ancora in vita (motivo del controllo)
-            if(!(entita.entita == BULLET && entita.sparo == false))
+            if(!(entita.entita == BULLET && entita.sparo == false)) {
+                mvprintw(personaggi[entita.entita].posizione.y,personaggi[entita.entita].posizione.x, "%s", "   ");
+                mvprintw(personaggi[entita.entita].posizione.y+1,personaggi[entita.entita].posizione.x, "%s", "   ");
+                mvprintw(personaggi[entita.entita].posizione.y+2,personaggi[entita.entita].posizione.x, "%s", "   ");
                 printEntity(entita, mutexTerminale);
+            }
             //pulisce sempre la vecchia posizione
-            clearEntity(entita, mutexTerminale, 3, pallini);
+            clearEntity(personaggi[entita.entita].posizione, mutexTerminale, 3, pallini);
 
             //backup delle posizioni in locale
             if(entita.entita < NUM_PERSONAGGI)
@@ -667,7 +672,7 @@ void gameController(int livello, Buffer *buffer){
                     for(int j = 0; j<MAX_PROIETTILI; j++)
                         if(proiettili[i][j].id == entita.id)
                             proiettili[i][j] = entita;
-            
+        
             score += checkScore(personaggi[PACMAN].posizione.x, personaggi[PACMAN].posizione.y, 3, pallini);
 
             for(int i=0; i< NUM_FANTASMI; i++){
