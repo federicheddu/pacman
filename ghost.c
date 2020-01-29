@@ -80,6 +80,28 @@ void * ghost (void * param){
     */
     //aggiornamento della posizione nel buffer e pausa
     insertBuffer(buffer, mutexDati, posGhost);
-    usleep(200000);
+    switch(posGhost.entita){
+      case BLINKY:
+        usleep(100000);
+        break;
+      case PINKY:
+        usleep(150000);
+        break;
+      case INKY:
+        usleep(75000);
+        break;
+      case CLYDE:
+        usleep(200000);
+        break;
+      case FUNKY:
+        usleep(200000);
+        break;
+      case GLITCHY:
+        usleep(10000);
+        break;  
+      default:
+        usleep(0);
+
+  }
   }
 }
