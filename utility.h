@@ -89,6 +89,8 @@ static pthread_mutex_t mutexDatiAux = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t *mutexDati = &mutexDatiAux;
 static pthread_mutex_t mutexTeminaleAux = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t *mutexTerminale = &mutexTeminaleAux;
+static pthread_mutex_t mutexFantasmiAux = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t *mutexFantasmi = &mutexFantasmiAux;
 
 //campo
 const static char scampo[60][152]={"##==================================================================================================================================================##\n",

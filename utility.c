@@ -6,6 +6,8 @@ int randRange(int min, int max) {
 
 _Bool entityMv(int x, int y, char dir) {
 
+    pthread_mutex_lock(mutexFantasmi);
+
     switch (dir) {
         case SU:
             if(scampo[y-1][x] == '#' || scampo[y-1][x+1] == '#' || scampo[y-1][x+2] == '#')
@@ -27,6 +29,8 @@ _Bool entityMv(int x, int y, char dir) {
             return false;
     }
     return true;
+
+    pthread_mutex_unlock(mutexFantasmi);
 }
 
 void insertBuffer(Buffer *buffer, pthread_mutex_t *mutex, Pos new){

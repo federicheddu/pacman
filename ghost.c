@@ -80,6 +80,6 @@ void * ghost (void * param){
     */
     //aggiornamento della posizione nel buffer e pausa
     insertBuffer(buffer, mutexDati, posGhost);
-    usleep(150000);
+    usleep(200000);
   }
 }

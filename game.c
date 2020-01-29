@@ -722,6 +722,9 @@ void gameController(int livello, Buffer *buffer){
         end = clock();
         deltaTime = ((double) (end-start))/CLOCKS_PER_SEC;
         mvprintw(3, 160, "Tempo: %f", deltaTime);
+        
+        ciclo++;
+        mvprintw(2, 160, "Cicli per secondo: %f", ciclo/deltaTime);
 
         if(entita.entita == PACMAN) {
             mvprintw(5, 160, "PACMAN [0]");
@@ -757,32 +760,27 @@ void gameController(int livello, Buffer *buffer){
             mvprintw(21, 172, "SPARATO al ciclo %d", ciclo);
 
         
-            mvprintw(25, 160, "BLINKY [1]");
-            mvprintw(26, 160, "X: %d  \t Y: %d  ", personaggi[BLINKY].posizione.x, personaggi[BLINKY].posizione.y);
-            mvprintw(27, 160, "Sparo: %d, ID: %d", personaggi[BLINKY].posizione.sparo, personaggi[BLINKY].posizione.id);
-        
+        mvprintw(25, 160, "BLINKY [1]");
+        mvprintw(26, 160, "X: %d  \t Y: %d  ", personaggi[BLINKY].posizione.x, personaggi[BLINKY].posizione.y);
+        mvprintw(27, 160, "Sparo: %d, ID: %d", personaggi[BLINKY].posizione.sparo, personaggi[BLINKY].posizione.id);
+    
+
+
+        mvprintw(29, 160, "PINKY [2]");
+        mvprintw(30, 160, "X: %d  \t Y: %d  ", personaggi[PINKY].posizione.x, personaggi[PINKY].posizione.y);
+        mvprintw(31, 160, "Sparo: %d, ID: %d", personaggi[PINKY].posizione.sparo, personaggi[PINKY].posizione.id);
+    
 
     
-            mvprintw(29, 160, "PINKY [2]");
-            mvprintw(30, 160, "X: %d  \t Y: %d  ", personaggi[PINKY].posizione.x, personaggi[PINKY].posizione.y);
-            mvprintw(31, 160, "Sparo: %d, ID: %d", personaggi[PINKY].posizione.sparo, personaggi[PINKY].posizione.id);
-        
+        mvprintw(33, 160, "CLYDE [3]");
+        mvprintw(34, 160, "X: %d  \t Y: %d  ", personaggi[CLYDE].posizione.x, personaggi[CLYDE].posizione.y);
+        mvprintw(35, 160, "Sparo: %d, ID: %d", personaggi[CLYDE].posizione.sparo, personaggi[CLYDE].posizione.id);
+    
 
-     
-            mvprintw(33, 160, "CLYDE [3]");
-            mvprintw(34, 160, "X: %d  \t Y: %d  ", personaggi[CLYDE].posizione.x, personaggi[CLYDE].posizione.y);
-            mvprintw(35, 160, "Sparo: %d, ID: %d", personaggi[CLYDE].posizione.sparo, personaggi[CLYDE].posizione.id);
-        
-
-      
-            mvprintw(37, 160, "INKY [4]");
-            mvprintw(38, 160, "X: %d  \t Y: %d  ", personaggi[INKY].posizione.x, personaggi[INKY].posizione.y);
-            mvprintw(39, 160, "Sparo: %d, ID: %d", personaggi[INKY].posizione.sparo, personaggi[INKY].posizione.id);
-        
-
-        
-
-        ciclo++;
+    
+        mvprintw(37, 160, "INKY [4]");
+        mvprintw(38, 160, "X: %d  \t Y: %d  ", personaggi[INKY].posizione.x, personaggi[INKY].posizione.y);
+        mvprintw(39, 160, "Sparo: %d, ID: %d", personaggi[INKY].posizione.sparo, personaggi[INKY].posizione.id);
 
         /*
         if(node != NULL)
