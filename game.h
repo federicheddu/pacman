@@ -27,6 +27,6 @@ _Bool canShoot(Pos proiettili[][MAX_PROIETTILI], Entity entita);
 int checkScore(int x, int y, int num, int pallini[][num]);
 
 //gioco
-void gameController(int livello, Buffer *buffer);
+void gameController(int livello, Buffer *buffer, Buffer *collisioni);
 
 #endif

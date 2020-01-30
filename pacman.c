@@ -1,7 +1,9 @@
 #include "pacman.h"
 
 void * pacman(void * param) {
-  Buffer *buffer = (Buffer*) param; // parsing del buffer
+  PosStart *pacStart = (PosStart*) param; // parsing della posizione iniziale
+  Buffer *buffer = pacStart->buffer;
+  Buffer *collisioni = pacStart->collisioni;
   char c, dir, dirOld;
   int hoSparato = 0;
 

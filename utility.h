@@ -40,6 +40,10 @@ typedef enum {
 
 const static char EntityName[8][10] = {"PACMAN   ", "BLINKY    ", "PINKY    ", "CLYDE    ", "INKY     ", "FUNKY    ", "GLITCHY  ", "BULLET   "};
 
+typedef enum {
+    VIVO, MORTO, RIMBALZA
+} State;
+
 //definisce la posizione e il tipo di entita
 typedef struct {
     int x;          //coordinata sul terminale
@@ -74,6 +78,7 @@ typedef struct {
 typedef struct {
     Pos posizione;
     Buffer *buffer;
+    Buffer *collisioni;
 } PosStart;
 
 //utility
@@ -83,14 +88,16 @@ _Bool entityMv(int x, int y, char dir);
 //gestione del buffer
 void insertBuffer(Buffer *buffer, pthread_mutex_t *mutex, Pos new);
 BufferElement* removeBuffer(Buffer *buffer);
+State checkBuffer(Buffer *buffer, Pos pos);
+
 
 //mutex
 static pthread_mutex_t mutexDatiAux = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t *mutexDati = &mutexDatiAux;
 static pthread_mutex_t mutexTeminaleAux = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t *mutexTerminale = &mutexTeminaleAux;
-static pthread_mutex_t mutexFantasmiAux = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t *mutexFantasmi = &mutexFantasmiAux;
+static pthread_mutex_t mutexCollisioniAux = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t *mutexCollisioni = &mutexCollisioniAux;
 
 //campo
 const static char scampo[60][152]={"##==================================================================================================================================================##\n",
