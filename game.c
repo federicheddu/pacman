@@ -330,48 +330,48 @@ void printEntity(Pos entita, pthread_mutex_t *mutex) {
             break;
         case BLINKY:
             attron(COLOR_PAIR(3));
-            mvprintw(entita.y,entita.x, "%s","B@N"); //1° riga
-            mvprintw(entita.y+1,entita.x, "%s","L K"); //2° riga
-            mvprintw(entita.y+2,entita.x, "%s","I@Y"); //3° riga
+            mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
+            mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
+            mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
             attroff(COLOR_PAIR(3));
             break;
         case PINKY:
             attron(COLOR_PAIR(8));
-            mvprintw(entita.y,entita.x, "%s","P@K"); //1° riga
-            mvprintw(entita.y+1,entita.x, "%s","I @"); //2° riga
-            mvprintw(entita.y+2,entita.x, "%s","N@Y"); //3° riga
+            mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
+            mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
+            mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
             attroff(COLOR_PAIR(8));
             break;
         case CLYDE:
             attron(COLOR_PAIR(9));
-            mvprintw(entita.y,entita.x, "%s","B@N"); //1° riga
-            mvprintw(entita.y+1,entita.x, "%s","L K"); //2° riga
-            mvprintw(entita.y+2,entita.x, "%s","I@Y"); //3° riga
+            mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
+            mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
+            mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
             attroff(COLOR_PAIR(9));
             break;
         case INKY:
             attron(COLOR_PAIR(7));
-            mvprintw(entita.y,entita.x, "%s","B@N"); //1° riga
-            mvprintw(entita.y+1,entita.x, "%s","L K"); //2° riga
-            mvprintw(entita.y+2,entita.x, "%s","I@Y"); //3° riga
+            mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
+            mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
+            mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
             attroff(COLOR_PAIR(7));
             break;
         case FUNKY:
             attron(COLOR_PAIR(10));
-            mvprintw(entita.y,entita.x, "%s","B@N"); //1° riga
-            mvprintw(entita.y+1,entita.x, "%s","L K"); //2° riga
-            mvprintw(entita.y+2,entita.x, "%s","I@Y"); //3° riga
+            mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
+            mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
+            mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
             attroff(COLOR_PAIR(10));
             break;
         case GLITCHY:
             attron(COLOR_PAIR(7));
-            mvprintw(entita.y,entita.x, "%s","B@N"); //1° riga
+            mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
             attroff(COLOR_PAIR(7));
             attron(COLOR_PAIR(9));
-            mvprintw(entita.y+1,entita.x, "%s","L K"); //2° riga
+            mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
             attroff(COLOR_PAIR(9));
             attron(COLOR_PAIR(3));
-            mvprintw(entita.y+2,entita.x, "%s","I@Y"); //3° riga
+            mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
             attroff(COLOR_PAIR(3));
             break;
     }
