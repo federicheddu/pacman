@@ -5,7 +5,7 @@ int randRange(int min, int max) {
 }
 
 _Bool entityMv(int x, int y, char dir) {
-    
+    pthread_mutex_trylock(mutexFantasmi);
     switch (dir) {
         case SU:
             if(scampo[y-1][x] == '#' || scampo[y-1][x+1] == '#' || scampo[y-1][x+2] == '#')
@@ -27,7 +27,7 @@ _Bool entityMv(int x, int y, char dir) {
             return false;
     }
     return true;
-    
+        pthread_mutex_unlock(mutexFantasmi);
 
 }
 
@@ -37,13 +37,13 @@ void insertBuffer(Buffer *buffer, pthread_mutex_t *mutex, Pos new){
     newElement->posizione = new;
     newElement->next = NULL;
 
-	pthread_mutex_lock(mutex);
+	pthread_mutex_lock(&mutexDatiAux);
 
     if(buffer->first == NULL)
         buffer->first = newElement;
     buffer->last = newElement;
 
-	pthread_mutex_unlock(mutex);	
+	pthread_mutex_unlock(&mutexDatiAux);	
 }
 
 BufferElement* removeBuffer(Buffer *buffer){
@@ -60,32 +60,4 @@ BufferElement* removeBuffer(Buffer *buffer){
    pthread_mutex_unlock(mutexDati);
 
     return node;
-}
-
-State checkBuffer(Buffer *buffer, Pos pos){
-    BufferElement *node, *oldNode;
-    State flag = true;
-
-    pthread_mutex_lock(mutexCollisioni);
-    node = buffer ->first;
-    oldNode = buffer ->first;
-    do{
-
-        if(pos.id == node->posizione.id){
-            if(node->posizione.sparo == true)
-                flag = MORTO;
-            else
-                return RIMBALZA;
-            oldNode->next = node->next;
-            if(node == buffer ->first) 
-                removeBuffer(buffer);
-        }else{
-            oldNode = node;
-            node = node->next;
-        }
-
-    }while(flag || node->next == NULL);
-    pthread_mutex_unlock(mutexCollisioni);
-
-    return flag;
 }
