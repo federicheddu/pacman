@@ -1,12 +1,19 @@
 #include "game.h"
 
 int main(){
+
   int livello;
+
+  Buffer dati, collisioni;
+  dati.first = NULL;
+  dati.last = NULL;
+  collisioni.first = NULL;
+  collisioni.last = NULL;
+
   pthread_t pacmanID;
-  pthread_t blinkyID;
-  Buffer buffer;
-  buffer.first = NULL;
-  buffer.last = NULL;
+  PosStart pacStart;
+  pacStart.dati = &dati;
+  pacStart.collisioni = &collisioni;
 
   srand(time((time_t*)NULL));
   initscr();
@@ -38,8 +45,8 @@ int main(){
   
 
   livello = mainMenu()+1;
-  pthread_create(&pacmanID, NULL, &pacman, (void*)&buffer);
-  gameController(livello, &buffer);
+  pthread_create(&pacmanID, NULL, &pacman, (void*)&pacStart);
+  gameController(livello, &dati, &collisioni);
 
   pthread_join(pacmanID, NULL);
 

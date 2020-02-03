@@ -1,12 +1,14 @@
 #include "pacman.h"
 
 void * pacman(void * param) {
-  Buffer *buffer = (Buffer*) param; // parsing del buffer
+  // parsing dei buffer
+  PosStart *pacStart = (PosStart*) param; 
+  Buffer *dati = pacStart->dati;
+  Buffer *collisioni = pacStart->collisioni;
+  // info direzione e sparo
   char c, dir, dirOld;
   int hoSparato = 0;
-
-  nodelay(stdscr, TRUE);
-
+  //Stato iniziale di pacman
   Pos posPacman;
   posPacman.x = 45;
   posPacman.y = 29;
@@ -14,9 +16,11 @@ void * pacman(void * param) {
   posPacman.sparo = false;
   posPacman.entita = PACMAN;
   posPacman.id = pthread_self();
+  pacStart->posizione = posPacman;
 
   //Segnalazione della posizione iniziale
-  insertBuffer(buffer, mutexDati, posPacman);
+  insertBuffer(dati, mutexDati, posPacman);
+  nodelay(stdscr, TRUE);
 
   while(true) {
 
@@ -87,7 +91,7 @@ void * pacman(void * param) {
     }
 
     //aggiornamento della posizione nel buffer e pausa
-    insertBuffer(buffer, mutexDati, posPacman);
+    insertBuffer(dati, mutexDati, posPacman);
     usleep(100000);
   }
 }

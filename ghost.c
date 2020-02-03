@@ -2,8 +2,9 @@
 
 void * ghost (void * param){
   PosStart *start = (PosStart*) param; //parsing del buffer
-  Pos posIniziale = start -> posizione;
-  Buffer *buffer = start -> buffer;
+  Pos posIniziale = start->posizione;
+  Buffer *dati = start->dati;
+  Buffer *collisioni = start->collisioni;
   int dir, dirOpposta, dirNext = 0;
 
   Pos posGhost;
@@ -17,7 +18,7 @@ void * ghost (void * param){
   sleep(randRange(4,7));
 
   //Segnalazione della posizione iniziale
-  insertBuffer(buffer, mutexDati, posGhost);
+  insertBuffer(dati, mutexDati, posGhost);
 
   sleep(randRange(1,3));
 
@@ -75,11 +76,13 @@ void * ghost (void * param){
         break;
     }
 
-    /*if(randRange(1,5) == 3)
+    /*
+      if(randRange(1,5) == 3)
       posGhost.sparo = true;
     */
+   
     //aggiornamento della posizione nel buffer e pausa
-    insertBuffer(buffer, mutexDati, posGhost);
+    insertBuffer(dati, mutexDati, posGhost);
     switch(posGhost.entita){
       case BLINKY:
         usleep(100000);
@@ -101,7 +104,7 @@ void * ghost (void * param){
         break;  
       default:
         usleep(0);
+    }
 
-  }
   }
 }

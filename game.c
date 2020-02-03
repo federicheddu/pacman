@@ -221,66 +221,6 @@ void printSUGA() {
 
 //stampa del gioco
 void printCampo(int level){
-  char Campo[60][152]={"##==================================================================================================================================================##\n",
-                       "||                                                                                                                                                  ||\n",
-                       "||                                      #######################################################################                                     ||\n",
-                       "||                                      #                              #########                              #                                     ||\n",
-                       "||                                      # .  .  .  .   .  .  .  . .  . ######### .  . .  .  .  .   .  .  .  . #                                     ||\n",
-                       "||         LEVEL:                       #                              #########                              #             LIVEs:                  ||\n",
-                       "||         SCORE:                       #   ##########   ###########   #########   ###########   ##########   #             TIME:                   ||\n",
-                       "||                                      # . ########## . ########### . ######### . ########### . ########## . #             FRUITs:                 ||\n",
-                       "||                                      #   ##########   ###########   #########   ###########   ##########   #             KILLs:                  ||\n",
-                       "||                                      #   ##########   ###########   #########   ###########   ##########   #                                     ||\n",
-                       "||         HIGHSCORES:                  # . ########## . ########### . ######### . ########### . ########## . #                                     ||\n",
-                       "||         1.                           #   ##########   ###########   #########   ###########   ##########   #                                     ||\n",
-                       "||         2.                           #                                                                     #                                     ||\n",
-                       "||         3.                           # .  .  .  .   .  .  .  . .  .  .  .  .  .  . .  .  .  .   .  .  .  . #                                     ||\n",
-                       "||                                      #                                                                     #                                     ||\n",
-                       "||                                      #   ##########   ######   ###################   ######   ##########   #                                     ||\n",
-                       "||                                      # . ########## . ###### . ################### . ###### . ########## . #                                     ||\n",
-                       "||                                      #   ##########   ######   ###################   ######   ##########   #                                     ||\n",
-                       "||                                      #                ######        #########        ######                #                                     ||\n",
-                       "||                                      # .  .  .   .  . ###### .    . ######### .    . ###### .  .   .  .  . #                                     ||\n",
-                       "||                                      #                ######        #########        ######                #                                     ||\n",
-                       "||                                      ##############   ###########   #########   ###########   ##############                                     ||\n",
-                       "||                                      ############## . ########### . ######### . ########### . ##############                                     ||\n",
-                       "||                                      ##############   ###########   #########   ###########   ##############                                     ||\n",
-                       "||                                      ##############   ######                         ######   ##############                                     ||\n",
-                       "||                                      ############## . ###### .  .  .  .   .  .  .  . ###### . ##############                                     ||\n",
-                       "||                                      ##############   ######                         ######   ##############                                     ||\n",
-                       "||                                      ##############   ######   #######+   +#######   ######   ##############                                     ||\n",
-                       "||                                      ############## . ###### . #                 # . ###### . ##############                                     ||\n",
-                       "||                                                                +                 +                                                               ||\n",
-                       "||                                                     .  .  .  .                     .  .  .  .                                                    ||\n",
-                       "||                                                                +                 +                                                               ||\n",
-                       "||                                      ############## . ###### . #                 # . ###### . ##############                                     ||\n",
-                       "||                                      ##############   ######   #######+   +#######   ######   ##############                                     ||\n",
-                       "||                                      ##############   ######                         ######   ##############                                     ||\n",
-                       "||                                      ############## . ###### .  .  .  .   .  .  .  . ###### . ##############                                     ||\n",
-                       "||                                      ##############   ######                         ######   ##############                                     ||\n",
-                       "||                                      ##############   ######   ###################   ######   ##############                                     ||\n",
-                       "||                                      #                               #######                               #                                     ||\n",
-                       "||                                      # .  .  .  .   .  .  .  .  .  . ####### .  .  .  .  .  .   .  .  .  . #                                     ||\n",
-                       "||                                      #                               #######                               #                                     ||\n",
-                       "||                                      #   ##########   ############   #######   ############   ##########   #                                     ||\n",
-                       "||                                      # . ########## . ############ . ####### . ############ . ########## . #                                     ||\n",
-                       "||                                      #   ##########   ############   #######   ############   ##########   #                                     ||\n",
-                       "||                                      #          ###                                           ###          #                                     ||\n",
-                       "||                                      # .  .   . ### .  .  .  .  .  .  .   .  .  .  .  .  .  . ### .   .  . #                                     ||\n",
-                       "||                                      #          ###                                           ###          #                                     ||\n",
-                       "||                                      ########   ###   ######   ###################   ######   ###   ########                                     ||\n",
-                       "||                                      ######## . ### . ###### . ################### . ###### . ### . ########                                     ||\n",
-                       "||                                      ########   ###   ######   ###################   ######   ###   ########                                     ||\n",
-                       "||                                      #                ######         #######         ######                #                                     ||\n",
-                       "||                                      # .  .  .   .  . ###### .  .  . ####### .  .  . ###### .  .   .  .  . #                                     ||\n",
-                       "||                                      #                ######         #######         ######                #                                     ||\n",
-                       "||                                      # . ######################### . ####### . ######################### . #                                     ||\n",
-                       "||                                      #                                                                     #                                     ||\n",
-                       "||                                      # .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . #                                     ||\n",
-                       "||                                      #                                                                     #                                     ||\n",
-                       "||                                      #######################################################################                                     ||\n",
-                       "||                                                                                                                                                  ||\n",
-                       "##==================================================================================================================================================##"};
 
     attron(COLOR_PAIR(1));
     for (int i=0; i<=59; i++){
@@ -516,8 +456,9 @@ _Bool bulletMv(int x, int y, char dir) {
 /** --- ENTITÀ GENERALI ------------------------------------------------------------- **/
 void * bullet(void * param) {
     PosStart *start = (PosStart*) param;
-    Pos posIniziale = start -> posizione;
-    Buffer* buffer = start -> buffer;
+    Pos posIniziale = start->posizione;
+    Buffer* dati = start->dati;
+    Buffer* collisioni = start->collisioni;
 
     Pos posBullet;
     posBullet.x = posIniziale.x;
@@ -544,7 +485,7 @@ void * bullet(void * param) {
             break;
         }
 
-        insertBuffer(buffer, mutexDati, posBullet);
+        insertBuffer(dati, mutexDati, posBullet);
         usleep(200000);
     }
 
@@ -564,32 +505,41 @@ void * bullet(void * param) {
             break;
     }
     posBullet.sparo = false;
-    insertBuffer(buffer,mutexDati,posBullet);
+    insertBuffer(dati,mutexDati,posBullet);
     pthread_exit(NULL);
 }
 
 /** --- GIOCO ----------------------------------------------------------------------- **/
-void gameController(int livello, Buffer *buffer){
+void gameController(int livello, Buffer *dati, Buffer *collisioni){
 
     int score = 0;
-
+    //variabili tempo
     int ciclo = 0;
     clock_t start, end;
     double deltaTime;
 
+    //variabili per lettura dal buffer e posizioni di partenza dei fantasmi
+    BufferElement *node;
     Pos entita, fantasmi[NUM_FANTASMI];
     PosStart posPartenza, posPartenza_SU, posPartenza_GIU, posPartenza_DESTRA, posPartenza_SINISTRA;
-    posPartenza.buffer = buffer;
-    posPartenza_SU.buffer = buffer;
-    posPartenza_GIU.buffer = buffer;
-    posPartenza_DESTRA.buffer = buffer;
-    posPartenza_SINISTRA.buffer = buffer;
+    posPartenza.dati = dati;
+    posPartenza_SU.dati = dati;
+    posPartenza_GIU.dati = dati;
+    posPartenza_DESTRA.dati = dati;
+    posPartenza_SINISTRA.dati = dati;
+    posPartenza.collisioni = collisioni;
+    posPartenza_SU.collisioni = collisioni;
+    posPartenza_GIU.collisioni = collisioni;
+    posPartenza_DESTRA.collisioni = collisioni;
+    posPartenza_SINISTRA.collisioni = collisioni;
 
+    //copie in locale dei personaggi e rispettivi proiettili
     Par personaggi[NUM_PERSONAGGI];
     startCharacter(personaggi);
     Pos proiettili[NUM_PERSONAGGI][MAX_PROIETTILI];
     startBullet(MAX_PROIETTILI, proiettili);
 
+    //pallini in gioco: [0]y [1]x [2]attivo
     int pallini[210][3]= {
         {4, 42, 0},{4, 45, 0},{4, 48, 0},{4, 51, 0},
         {4, 55, 0},{4, 58, 0},{4, 61, 0},{4, 64, 0},{4, 66, 0},{4, 69, 0},
@@ -627,13 +577,12 @@ void gameController(int livello, Buffer *buffer){
         {55, 69, 0},{55, 72, 0},{55, 75, 0},{55, 78, 0},{55, 81, 0},{55, 84, 0},
         {55, 87, 0},{55, 90, 0},{55, 93, 0},{55, 96, 0},{55, 99, 0},{55, 102, 0},
         {55, 105, 0},{55, 108, 0}
-        };
-    /**/
+    };
 
-    BufferElement *node;
-
+    //pronti partenza via
     usleep(500);
 
+    //stampa del campo e partenza cronometro
     printCampo(livello);
     start = clock();
     //refresh();
@@ -647,7 +596,7 @@ void gameController(int livello, Buffer *buffer){
 
     while(personaggi[PACMAN].vite > 0) {
 
-        node = removeBuffer(buffer);
+        node = removeBuffer(dati);
 
         if(node != NULL) {
 

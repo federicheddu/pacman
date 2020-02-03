@@ -61,3 +61,29 @@ BufferElement* removeBuffer(Buffer *buffer){
 
     return node;
 }
+
+State checkDeathBuffer(Buffer *buffer, Pos pos) {
+    State stato = VIVO;
+    BufferElement *node, *oldNode;
+    node = buffer->first;
+
+    if(pos.id == buffer->first->posizione.id) {
+        if(buffer->first == buffer->last)
+            buffer->last = node->next;
+        buffer->first = node->next;
+        free(node);
+        stato = MORTO;
+    } else {
+        while(node != NULL) {
+            oldNode = node;
+            node = node->next;
+            if(pos.id == node->posizione.id) {
+                oldNode->next = node->next;
+                free(node);
+                stato = MORTO;
+            }
+        }
+    }
+
+    return stato;
+}
