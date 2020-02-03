@@ -86,8 +86,10 @@ void * pacman(void * param) {
         break;
     }
 
-    //aggiornamento della posizione nel buffer e pausa
+    //aggiornamento della posizione nel buffer
     insertBuffer(buffer, mutexDati, posPacman);
+    clearEntity(posPacman, mutexTerminale, 3, pallini);
+    printEntity(posPacman, mutexTerminale);
     usleep(100000);
   }
 }

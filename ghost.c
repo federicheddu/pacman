@@ -80,6 +80,10 @@ void * ghost (void * param){
     */
     //aggiornamento della posizione nel buffer e pausa
     insertBuffer(buffer, mutexDati, posGhost);
+    //stampa e cancellazione sul terminale
+    clearEntity(posGhost, mutexTerminale, 3, pallini);
+    printEntity(posGhost, mutexTerminale);
+    //pausa che regola la velocità dei proiettili
     switch(posGhost.entita){
       case BLINKY:
         usleep(100000);
@@ -98,10 +102,9 @@ void * ghost (void * param){
         break;
       case GLITCHY:
         usleep(10000);
-        break;  
+        break;
       default:
-        usleep(0);
-
-  }
+        break;
+    }
   }
 }
