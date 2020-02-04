@@ -63,21 +63,30 @@ BufferElement* removeBuffer(Buffer *buffer){
 }
 
 State checkDeathBuffer(Buffer *buffer, Pos pos) {
+
+    pthread_mutex_lock(mutexCollisioni);
+
     State stato = VIVO;
     BufferElement *node, *oldNode;
     node = buffer->first;
-
-    if(pos.id == buffer->first->posizione.id) {
-        if(buffer->first == buffer->last)
+    mvprintw(29, 160, "Dentro");
+    if(pos.id == node->posizione.id) {
+        mvprintw(29, 160, "Dentro 1");
+        if(node->posizione.id == buffer->last->posizione.id)
             buffer->last = node->next;
         buffer->first = node->next;
         free(node);
         stato = MORTO;
+        mvprintw(29, 160, "Cugi sono il primo");
     } else {
-        while(node != NULL) {
+        mvprintw(30, 160, "Cugi sono nell'else");
+        while(node->next != NULL) {
+            mvprintw(31,160,"Cugi sono nel ciclo");
             oldNode = node;
             node = node->next;
             if(pos.id == node->posizione.id) {
+                if(buffer->last->posizione.id == node->posizione.id)
+                    buffer->last = node->next;
                 oldNode->next = node->next;
                 free(node);
                 stato = MORTO;
@@ -86,4 +95,6 @@ State checkDeathBuffer(Buffer *buffer, Pos pos) {
     }
 
     return stato;
+
+    pthread_mutex_unlock(mutexCollisioni);
 }

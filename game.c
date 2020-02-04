@@ -681,17 +681,26 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
                     for(int j = 0; j<MAX_PROIETTILI; j++)
                         if(proiettili[i][j].id == entita.id)
                             proiettili[i][j] = entita;
+            
+            //check collisioni tra personaggi
+            for(int i=0; i<NUM_PERSONAGGI; i++) {
+                if(entita.x == personaggi[i].posizione.x && entita.y == personaggi[i].posizione.y && entita.entita != personaggi[i].posizione.entita && personaggi[i].vite > 0) {
+                    insertBuffer(collisioni, mutexCollisioni, personaggi[entita.entita].posizione);
+                    insertBuffer(collisioni, mutexCollisioni, personaggi[i].posizione);
+                }
+            }
         
             score += checkScore(personaggi[PACMAN].posizione.x, personaggi[PACMAN].posizione.y, 3, pallini);
 
+            //spawn fantasmi
             for(int i=0; i< NUM_FANTASMI; i++){
                 if(fantasmi[i].x == personaggi[PACMAN].posizione.x && fantasmi[i].y == personaggi[PACMAN].posizione.y && personaggi[i+1].vite == 0) {
                     personaggi[i+1].vite = 1;
                     posPartenza.posizione = personaggi[i+1].posizione;
                     pthread_create(&(personaggi[i+1].posizione.id), NULL, &ghost, (void*)&posPartenza);
                 }
-                    
-    }
+            }
+
             //se un entità ha sparato
             if(entita.entita < NUM_PERSONAGGI && entita.sparo) {
                 if(canShoot(proiettili, entita.entita)) {
