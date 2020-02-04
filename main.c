@@ -41,7 +41,7 @@ int main(){
   init_pair(4, COLOR_BLUE, COLOR_BLUE);
   //BULLETS
   init_pair(6, COLOR_GREEN, COLOR_BLACK);
-  
+
   
 
   livello = mainMenu()+1;
