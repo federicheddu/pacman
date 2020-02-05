@@ -37,13 +37,13 @@ void insertBuffer(Buffer *buffer, pthread_mutex_t *mutex, Pos new){
     newElement->posizione = new;
     newElement->next = NULL;
 
-	pthread_mutex_lock(&mutexDatiAux);
+	pthread_mutex_lock(mutex);
 
     if(buffer->first == NULL)
         buffer->first = newElement;
     buffer->last = newElement;
 
-	pthread_mutex_unlock(&mutexDatiAux);	
+	pthread_mutex_unlock(mutex);	
 }
 
 BufferElement* removeBuffer(Buffer *buffer){
@@ -69,32 +69,55 @@ State checkDeathBuffer(Buffer *buffer, Pos pos) {
     State stato = VIVO;
     BufferElement *node, *oldNode;
     node = buffer->first;
-    mvprintw(29, 160, "Dentro");
-    if(pos.id == node->posizione.id) {
-        mvprintw(29, 160, "Dentro 1");
-        if(node->posizione.id == buffer->last->posizione.id)
-            buffer->last = node->next;
-        buffer->first = node->next;
-        free(node);
-        stato = MORTO;
-        mvprintw(29, 160, "Cugi sono il primo");
-    } else {
-        mvprintw(30, 160, "Cugi sono nell'else");
-        while(node->next != NULL) {
-            mvprintw(31,160,"Cugi sono nel ciclo");
-            oldNode = node;
-            node = node->next;
-            if(pos.id == node->posizione.id) {
-                if(buffer->last->posizione.id == node->posizione.id)
-                    buffer->last = node->next;
-                oldNode->next = node->next;
-                free(node);
-                stato = MORTO;
+    //mvprintw(29, 160, "Dentro0");
+    if(node != NULL){
+       mvprintw(28, 160, "Dentro"); 
+
+        //Controllo se la pos è il primo nodo
+        if(pos.entita == node->posizione.entita) {
+            mvprintw(29, 160, "Rosso");
+
+            //Controllo se è anche l'ultimo nodo
+            if(node->posizione.entita == buffer->last->posizione.entita){
+                mvprintw(30, 160, "Nero");
+                buffer->last = NULL;
+            }
+            
+            buffer->first = node->next;
+            free(node);
+            stato = MORTO;
+
+        //Se non è in testa    
+        }else {
+            mvprintw(31, 160, "Blu");
+            //Scorro finché la lista non finisce
+            while(node->next != NULL || stato == MORTO) {
+                mvprintw(32,160,"Bianco");
+                oldNode = node;
+                node = node->next;
+
+                //Controllo se la pos è quel nodo
+                if(pos.entita == node->posizione.entita) {
+                    mvprintw(33,160,"Giallo");
+                    //Controllo se è anche l'ultimo nodo
+                    if(buffer->last->posizione.entita == node->posizione.entita){
+                        buffer->last = node->next;
+                        mvprintw(33,160,"Arancione");
+                    }
+                        
+
+                    oldNode->next = node->next;
+                    free(node);
+                    stato = MORTO;
+                }
             }
         }
     }
 
+    pthread_mutex_unlock(mutexCollisioni);
+
     return stato;
 
-    pthread_mutex_unlock(mutexCollisioni);
+    
+
 }
