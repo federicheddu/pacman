@@ -10,10 +10,6 @@ int main(){
   collisioni.first = NULL;
   collisioni.last = NULL;
 
-  pthread_t pacmanID;
-  PosStart pacStart;
-  pacStart.dati = &dati;
-  pacStart.collisioni = &collisioni;
 
   srand(time((time_t*)NULL));
   initscr();
@@ -45,10 +41,8 @@ int main(){
   
 
   livello = mainMenu()+1;
-  pthread_create(&pacmanID, NULL, &pacman, (void*)&pacStart);
+  //pthread_create(&pacmanID, NULL, &pacman, (void*)&pacStart);
   gameController(livello, &dati, &collisioni);
-
-  pthread_join(pacmanID, NULL);
 
   return 0;
 }

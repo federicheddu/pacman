@@ -8,18 +8,7 @@ int mainMenu() {
     char selMenu;
 
     do {
-
-        switch(menu) {
-            case NEWGAME:
-                printNewGame();
-                break;
-            case EXIT:
-                printExit();
-                break;
-            case SUGA:
-                printSUGA();
-                break;
-        }
+        printMenu(menu);
 
         selMenu = getch();
         switch (selMenu) {
@@ -37,9 +26,9 @@ int mainMenu() {
 }
 
 //stampa della schermata Nuova Partita
-void printNewGame() {
+void printMenu(int j) {
 
-    char newGame[60][152] = {"##==================================================================================================================================================##\n",
+    char menu[3][60][152] = {{"##==================================================================================================================================================##\n",
                              "||                                                                                                                                                  ||\n",
                              "||                                    ===========================================================================                                   ||\n",
                              "||                                    =       ======  =======     ==============  =====  =====  =====  =======  =                                   ||\n",
@@ -98,18 +87,8 @@ void printNewGame() {
                              "||                                                                                                                                                  ||\n",
                              "||                                                                                                                                                  ||\n",
                              "||                                                                                                                                                  ||\n",
-                             "##==================================================================================================================================================##"};
-
-    attron(COLOR_PAIR(1));
-    for(int i=0; i<60; i++)
-        mvprintw(i, 0, "%s", newGame[i]);
-
-}
-
-//stampa della schermata Esci
-void printExit() {
-
-    char newGame[60][152] = {"##==================================================================================================================================================##\n",
+                             "##==================================================================================================================================================##"}, 
+                             {"##==================================================================================================================================================##\n",
                              "||                                                                                                                                                  ||\n",
                              "||                                    ===========================================================================                                   ||\n",
                              "||                                    =       ======  =======     ==============  =====  =====  =====  =======  =                                   ||\n",
@@ -168,18 +147,8 @@ void printExit() {
                              "||                                                                                                                                                  ||\n",
                              "||                                                                                                                                                  ||\n",
                              "||                                                                                                                                                  ||\n",
-                             "##==================================================================================================================================================##"};
-
-    attron(COLOR_PAIR(1));
-    for(int i=0; i<60; i++)
-        mvprintw(i, 0, "%s", newGame[i]);
-
-}
-
-//Stampa della schermata Selezione Progetto
-void printSUGA() {
-
-    char newGame[60][152] = {"##==================================================================================================================================================##\n",
+                             "##==================================================================================================================================================##"},
+                             {"##==================================================================================================================================================##\n",
                              "||                                                                                                                                                  ||\n",
                              "||                                    ===========================================================================                                   ||\n",
                              "||                                    =       ======  =======     ==============  =====  =====  =====  =======  =                                   ||\n",
@@ -238,11 +207,11 @@ void printSUGA() {
                              "||                                                                                                                                                  ||\n",
                              "||                                                                                                                                                  ||\n",
                              "||                                                                                                                                                  ||\n",
-                             "##==================================================================================================================================================##"};
+                             "##==================================================================================================================================================##"}};
 
     attron(COLOR_PAIR(1));
     for(int i=0; i<60; i++)
-        mvprintw(i, 0, "%s", newGame[i]);
+        mvprintw(i, 0, "%s", menu[j][i]);
 
 }
 
@@ -574,6 +543,43 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
     clock_t start, end;
     double deltaTime;
 
+    //variabili per lettura dal buffer e posizioni di partenza dei fantasmi
+    BufferElement *node;
+    Pos entita, fantasmi[NUM_FANTASMI];
+    PosStart posPacmanSpawn, posGhostSpawn, posPartenza, posPartenza_SU, posPartenza_GIU, posPartenza_DESTRA, posPartenza_SINISTRA;
+    posPacmanSpawn.posizione.x = 45;
+    posPacmanSpawn.posizione.y = 29;
+    posPacmanSpawn.dati = dati;
+    posPacmanSpawn.collisioni = collisioni;
+    posGhostSpawn.posizione.x = 74;
+    posGhostSpawn.posizione.y = 29;
+    posGhostSpawn.dati = dati;
+    posGhostSpawn.collisioni = collisioni;
+    posPartenza.dati = dati;
+    posPartenza_SU.dati = dati;
+    posPartenza_GIU.dati = dati;
+    posPartenza_DESTRA.dati = dati;
+    posPartenza_SINISTRA.dati = dati;
+    posPartenza.collisioni = collisioni;
+    posPartenza_SU.collisioni = collisioni;
+    posPartenza_GIU.collisioni = collisioni;
+    posPartenza_DESTRA.collisioni = collisioni;
+    posPartenza_SINISTRA.collisioni = collisioni;
+
+    pthread_t pacmanID;
+  PosStart pacStart;
+  pacStart.dati = &dati;
+  pacStart.collisioni = &collisioni;
+
+    //copie in locale dei personaggi e rispettivi proiettili
+    Par personaggi[NUM_PERSONAGGI];
+    startCharacter(personaggi);
+    Pos proiettili[NUM_PERSONAGGI][MAX_PROIETTILI];
+    startBullet(MAX_PROIETTILI, proiettili);
+
+    BufferElement *debug;
+    int debugInt;
+
     //pallini in gioco: [0]y [1]x [2]attivo
     int pallini[210][3]= {
         {4, 42, 0},{4, 45, 0},{4, 48, 0},{4, 51, 0},
@@ -690,7 +696,10 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
         mvprintw(fantasmi[3].y+1, fantasmi[3].x+1, "G");
     #endif
 
-    while(personaggi[PACMAN].vite > 0) {
+
+    pthread_create(&(personaggi[PACMAN].posizione.id), NULL, &pacman, (void*)&posPacmanSpawn);
+
+    while(personaggi[PACMAN].vite > 0 && score < 2100) {
 
         node = removeBuffer(dati);
 
@@ -862,4 +871,6 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
         //refresh();
 
     }
+    for(int i=0; i< NUM_PERSONAGGI; i++)
+        pthread_cancel(personaggi[i].posizione.id);
 }
