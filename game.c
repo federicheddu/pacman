@@ -235,11 +235,15 @@ void printCampo(int level){
     }
 }
 
-void printStats(int livello, int score){
+void printStats(int livello, int score, Par pacman, double deltaTime){
     //stampo livello
     mvprintw(5, 18, "%d", livello);
     //stampo score
     mvprintw(6, 18, "%d", score);
+    //stampo vite
+    mvprintw(5, 131, "%d", pacman.vite);
+    //stampo tempo
+    mvprintw(6, 131, "%.3f", deltaTime);
 }
 
 void printDot(int num, int pallini[][num]){
@@ -699,18 +703,25 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
                             proiettili[i][j] = entita;
             
             //check collisioni tra fantasmi e pacman
-            for(int i=0; i<NUM_PERSONAGGI; i++) {
-                collisioneXdestra = entita.x == personaggi[PACMAN].posizione.x || entita.x == personaggi[PACMAN].posizione.x+1 || entita.x == personaggi[PACMAN].posizione.x+2;
-                collisioneXsinistra = entita.x == personaggi[PACMAN].posizione.x || entita.x+1 == personaggi[PACMAN].posizione.x || entita.x+2 == personaggi[PACMAN].posizione.x;
-                collisioneYsu = entita.y == personaggi[PACMAN].posizione.y || entita.y == personaggi[PACMAN].posizione.y-1 || entita.y == personaggi[PACMAN].posizione.y-2;
-                collisioneYgiu = entita.y == personaggi[PACMAN].posizione.y || entita.y-1 == personaggi[PACMAN].posizione.y || entita.y-2 == personaggi[PACMAN].posizione.y;
-                if((collisioneXdestra || collisioneXsinistra) && (collisioneYgiu || collisioneYsu) && entita.entita > PACMAN && entita.entita < NUM_PERSONAGGI) {
-                    pthread_cancel(personaggi[PACMAN].posizione.id);
-                    mvprintw(personaggi[PACMAN].posizione.y,personaggi[entita.entita].posizione.x, "%s", "   ");
-                    mvprintw(personaggi[PACMAN].posizione.y+1,personaggi[entita.entita].posizione.x, "%s", "   ");
-                    mvprintw(personaggi[PACMAN].posizione.y+2,personaggi[entita.entita].posizione.x, "%s", "   ");
-                    mvprintw(60,160, "Qualcuno è morto");
-                }
+            collisioneXdestra = entita.x == personaggi[PACMAN].posizione.x || entita.x == personaggi[PACMAN].posizione.x+1 || entita.x == personaggi[PACMAN].posizione.x+2;
+            collisioneXsinistra = entita.x == personaggi[PACMAN].posizione.x || entita.x+1 == personaggi[PACMAN].posizione.x || entita.x+2 == personaggi[PACMAN].posizione.x;
+            collisioneYsu = entita.y == personaggi[PACMAN].posizione.y || entita.y == personaggi[PACMAN].posizione.y-1 || entita.y == personaggi[PACMAN].posizione.y-2;
+            collisioneYgiu = entita.y == personaggi[PACMAN].posizione.y || entita.y-1 == personaggi[PACMAN].posizione.y || entita.y-2 == personaggi[PACMAN].posizione.y;
+            if((collisioneXdestra || collisioneXsinistra) && (collisioneYgiu || collisioneYsu) && entita.entita > PACMAN && entita.entita < NUM_PERSONAGGI) {
+                //eclissazione di pacman
+                mvprintw(personaggi[PACMAN].posizione.y,personaggi[entita.entita].posizione.x, "%s", "   ");
+                mvprintw(personaggi[PACMAN].posizione.y+1,personaggi[entita.entita].posizione.x, "%s", "   ");
+                mvprintw(personaggi[PACMAN].posizione.y+2,personaggi[entita.entita].posizione.x, "%s", "   ");
+                pthread_cancel(personaggi[PACMAN].posizione.id);
+                personaggi[PACMAN].posizione.x = 160;
+                personaggi[PACMAN].posizione.y = 30;
+                personaggi[PACMAN].posizione.dir = FERMO;
+                mvprintw(60,160, "Qualcuno è morto");
+
+                //respawn di pacman
+                pthread_create(&(personaggi[PACMAN].posizione.id), NULL, &pacman, (void*)&posPacmanSpawn);
+                personaggi[PACMAN].vite++;
+                personaggi[PACMAN].colpiSubiti = 0;
             }
 
         
@@ -762,13 +773,16 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
     
         }
 
-        printStats(livello, score);
+        end = clock();
+        deltaTime = ((double) (end-start))/CLOCKS_PER_SEC;
+        mvprintw(3, 160, "Tempo: %f", deltaTime);
+
+        printStats(livello, score, personaggi[PACMAN], deltaTime);
+        
 
         #if DEBUG == 1
 
-            end = clock();
-            deltaTime = ((double) (end-start))/CLOCKS_PER_SEC;
-            mvprintw(3, 160, "Tempo: %f", deltaTime);
+            
             
             ciclo++;
             mvprintw(2, 160, "Cicli per secondo: %f", ciclo/deltaTime);

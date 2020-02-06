@@ -12,7 +12,7 @@ void printMenu(int j);
 void printEntity(Pos entita, pthread_mutex_t *mutex);
 void clearEntity(Pos entita, pthread_mutex_t *mutex, int num, int pallini[][num]);
 void printCampo(int level);
-void printStats(int livello, int score);
+void printStats(int livello, int score, Par pacman, double deltaTime);
 void printDot(int num, int pallini[][num]);
 
 //inizializzazione dati
