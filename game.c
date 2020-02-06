@@ -569,6 +569,9 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
     Pos proiettili[NUM_PERSONAGGI][MAX_PROIETTILI];
     startBullet(MAX_PROIETTILI, proiettili);
 
+    BufferElement *debug;
+    int debugInt;
+
     //pallini in gioco: [0]y [1]x [2]attivo
     int pallini[210][3]= {
         {4, 42, 0},{4, 45, 0},{4, 48, 0},{4, 51, 0},
@@ -697,6 +700,7 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
                     mvprintw(60,160, "Qualcuno è morto");
                 }
             }
+
         
             score += checkScore(personaggi[PACMAN].posizione.x, personaggi[PACMAN].posizione.y, 3, pallini);
 

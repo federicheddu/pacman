@@ -6,6 +6,7 @@ void * ghost (void * param){
   Buffer *dati = start->dati;
   Buffer *collisioni = start->collisioni;
   int dir, dirOpposta, dirNext = 0;
+  State stato = VIVO;
 
   Pos posGhost;
   posGhost.x = posIniziale.x;
@@ -23,7 +24,7 @@ void * ghost (void * param){
   sleep(randRange(1,3));
 
   posGhost.dir = randRange(65,68);
-  while(true){
+  while(checkDeathBuffer(collisioni, posGhost) != MORTO){
 
     if(posGhost.dir % 2 == 0)
       dirOpposta = -1;
