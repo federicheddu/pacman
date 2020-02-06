@@ -440,6 +440,32 @@ void startCharacter(Par personaggi[]) {
     }
 }
 
+void startGhost(int num, int pallini[][num], Pos fantasmi[]){
+    int x, posGhosts[NUM_FANTASMI];
+    _Bool flag;
+    
+    for(int i=0; i<NUM_FANTASMI; i++){
+        do {
+            posGhosts[i] = randRange(0, NUM_PALLINI);
+
+            flag = true;
+            for(int j=0; j<i; j++){
+                if(posGhosts[i] == posGhosts[j])
+                    flag = false;
+            }
+        } while(!flag);
+
+        for(int i=0; i<NUM_FANTASMI; i++) {
+            fantasmi[i].y = pallini[posGhosts[i]][0] -1;
+            fantasmi[i].x = pallini[posGhosts[i]][1] -1;
+            fantasmi[i].dir = FERMO;
+            fantasmi[i].entita = i % MAX_FANTASMI + 1;
+            fantasmi[i].sparo = false;
+            fantasmi[i].id = NULL;
+        }
+    }
+}
+
 /** --- CONTROLLI DI GIOCO ---------------------------------------------------------- **/
 _Bool canShoot(Pos proiettili[][MAX_PROIETTILI], Entity entita) {
     return !proiettili[entita][SU-SHIFT_MOVIMENTO].sparo && !proiettili[entita][GIU-SHIFT_MOVIMENTO].sparo && !proiettili[entita][DESTRA-SHIFT_MOVIMENTO].sparo && !proiettili[entita][SINISTRA-SHIFT_MOVIMENTO].sparo;
@@ -548,30 +574,6 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
     clock_t start, end;
     double deltaTime;
 
-    //variabili per lettura dal buffer e posizioni di partenza dei fantasmi
-    BufferElement *node;
-    Pos entita, fantasmi[NUM_FANTASMI];
-    PosStart posPartenza, posPartenza_SU, posPartenza_GIU, posPartenza_DESTRA, posPartenza_SINISTRA;
-    posPartenza.dati = dati;
-    posPartenza_SU.dati = dati;
-    posPartenza_GIU.dati = dati;
-    posPartenza_DESTRA.dati = dati;
-    posPartenza_SINISTRA.dati = dati;
-    posPartenza.collisioni = collisioni;
-    posPartenza_SU.collisioni = collisioni;
-    posPartenza_GIU.collisioni = collisioni;
-    posPartenza_DESTRA.collisioni = collisioni;
-    posPartenza_SINISTRA.collisioni = collisioni;
-
-    //copie in locale dei personaggi e rispettivi proiettili
-    Par personaggi[NUM_PERSONAGGI];
-    startCharacter(personaggi);
-    Pos proiettili[NUM_PERSONAGGI][MAX_PROIETTILI];
-    startBullet(MAX_PROIETTILI, proiettili);
-
-    BufferElement *debug;
-    int debugInt;
-
     //pallini in gioco: [0]y [1]x [2]attivo
     int pallini[210][3]= {
         {4, 42, 0},{4, 45, 0},{4, 48, 0},{4, 51, 0},
@@ -640,7 +642,38 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
         {51, 108, 0},{53, 42, 0},{53, 70, 0},{53, 80, 0},{53, 108, 0},{55, 42, 0},{55, 45, 0},
         {55, 48, 0},{55, 51, 0},{55, 54, 0},{55, 57, 0},{55, 60, 0},{55, 63, 0},{55, 66, 0},
         {55, 69, 0},{55, 72, 0},{55, 75, 0},{55, 78, 0},{55, 81, 0},{55, 84, 0},{55, 87, 0},
-        {55, 90, 0},{55, 93, 0},{55, 96, 0},{55, 99, 0},{55, 102, 0},{55, 105, 0},{55, 108, 0}};
+        {55, 90, 0},{55, 93, 0},{55, 96, 0},{55, 99, 0},{55, 102, 0},{55, 105, 0},{55, 108, 0}
+    };
+
+    //variabili per lettura dal buffer e posizioni di partenza dei fantasmi
+    BufferElement *node;
+    Pos entita, fantasmi[NUM_FANTASMI];
+    PosStart posPartenza, posPartenza_SU, posPartenza_GIU, posPartenza_DESTRA, posPartenza_SINISTRA;
+    posPartenza.dati = dati;
+    posPartenza_SU.dati = dati;
+    posPartenza_GIU.dati = dati;
+    posPartenza_DESTRA.dati = dati;
+    posPartenza_SINISTRA.dati = dati;
+    posPartenza.collisioni = collisioni;
+    posPartenza_SU.collisioni = collisioni;
+    posPartenza_GIU.collisioni = collisioni;
+    posPartenza_DESTRA.collisioni = collisioni;
+    posPartenza_SINISTRA.collisioni = collisioni;
+
+    //copie in locale dei personaggi e rispettivi proiettili
+    Par personaggi[NUM_PERSONAGGI];
+    startCharacter(personaggi);
+    Pos proiettili[NUM_PERSONAGGI][MAX_PROIETTILI];
+    startBullet(MAX_PROIETTILI, proiettili);
+    //es
+    startGhost(3, pallini, fantasmi);
+    for(int i=0; i<NUM_FANTASMI; i++) {
+        personaggi[i+1].posizione = fantasmi[i];
+        personaggi[i+1].vite = 0;
+        personaggi[i+1].colpiSubiti = 0;
+    }
+
+    _Bool collisioneXdestra, collisioneXsinistra, collisioneYsu, collisioneYgiu;
 
     //pronti partenza via
     usleep(500);
@@ -650,17 +683,12 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
     start = clock();
     //refresh();
 
-    startGhost(3, pallini, fantasmi);
-    for(int i=0; i<NUM_FANTASMI; i++) {
-        personaggi[i+1].posizione = fantasmi[i];
-        personaggi[i+1].vite = 0;
-        personaggi[i+1].colpiSubiti = 0;
-    }
-
-    mvprintw(fantasmi[0].y, fantasmi[0].x, "G");
-    mvprintw(fantasmi[1].y, fantasmi[1].x, "G");
-    mvprintw(fantasmi[2].y, fantasmi[2].x, "G");
-    mvprintw(fantasmi[3].y, fantasmi[3].x, "G");
+    #if CHEATS == 1
+        mvprintw(fantasmi[0].y+1, fantasmi[0].x+1, "G");
+        mvprintw(fantasmi[1].y+1, fantasmi[1].x+1, "G");
+        mvprintw(fantasmi[2].y+1, fantasmi[2].x+1, "G");
+        mvprintw(fantasmi[3].y+1, fantasmi[3].x+1, "G");
+    #endif
 
     while(personaggi[PACMAN].vite > 0) {
 
@@ -690,13 +718,17 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
                         if(proiettili[i][j].id == entita.id)
                             proiettili[i][j] = entita;
             
-            //check collisioni tra personaggi
+            //check collisioni tra fantasmi e pacman
             for(int i=0; i<NUM_PERSONAGGI; i++) {
-                if(entita.x == personaggi[i].posizione.x && entita.y == personaggi[i].posizione.y && entita.entita != personaggi[i].posizione.entita && personaggi[i].vite > 0 && entita.entita > PACMAN && personaggi[i].posizione.entita == PACMAN) {
-                    pthread_cancel(entita.id);
-                    mvprintw(personaggi[entita.entita].posizione.y,personaggi[entita.entita].posizione.x, "%s", "   ");
-                    mvprintw(personaggi[entita.entita].posizione.y+1,personaggi[entita.entita].posizione.x, "%s", "   ");
-                    mvprintw(personaggi[entita.entita].posizione.y+2,personaggi[entita.entita].posizione.x, "%s", "   ");
+                collisioneXdestra = entita.x+2 >= personaggi[PACMAN].posizione.x && entita.x+4 <= personaggi[PACMAN].posizione.x;
+                collisioneXsinistra = personaggi[PACMAN].posizione.x+2 >= entita.x && personaggi[PACMAN].posizione.x+4 <= entita.x;
+                collisioneYsu = entita.y <= personaggi[PACMAN].posizione.y+2 && entita.y >= personaggi[PACMAN].posizione.y;
+                collisioneYgiu = personaggi[PACMAN].posizione.y <= entita.y+2 && personaggi[PACMAN].posizione.y >= entita.y;
+                if((collisioneXdestra || collisioneXsinistra) && (collisioneYgiu || collisioneYsu) && personaggi[i].vite > 0 && entita.entita > PACMAN && entita.entita < NUM_PERSONAGGI) {
+                    pthread_cancel(personaggi[PACMAN].posizione.id);
+                    mvprintw(personaggi[PACMAN].posizione.y,personaggi[entita.entita].posizione.x, "%s", "   ");
+                    mvprintw(personaggi[PACMAN].posizione.y+1,personaggi[entita.entita].posizione.x, "%s", "   ");
+                    mvprintw(personaggi[PACMAN].posizione.y+2,personaggi[entita.entita].posizione.x, "%s", "   ");
                     mvprintw(60,160, "Qualcuno è morto");
                 }
             }
@@ -754,106 +786,80 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
 
         #if DEBUG == 1
 
-        end = clock();
-        deltaTime = ((double) (end-start))/CLOCKS_PER_SEC;
-        mvprintw(3, 160, "Tempo: %f", deltaTime);
+            end = clock();
+            deltaTime = ((double) (end-start))/CLOCKS_PER_SEC;
+            mvprintw(3, 160, "Tempo: %f", deltaTime);
+            
+            ciclo++;
+            mvprintw(2, 160, "Cicli per secondo: %f", ciclo/deltaTime);
+
+            if(entita.entita == PACMAN) {
+                mvprintw(5, 160, "PACMAN [0]");
+                mvprintw(6, 160, "X: %d  \t Y: %d  ", entita.x, entita.y);
+                mvprintw(7, 160, "Sparo: %d, ID: %d", entita.sparo, entita.id);
+            }
+            
+            mvprintw(9, 160, "BULLET [SU]");
+            mvprintw(10, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][SU-SHIFT_MOVIMENTO].x, proiettili[PACMAN][SU-SHIFT_MOVIMENTO].y);
+            mvprintw(11, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][SU-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][SU-SHIFT_MOVIMENTO].id);
+            if(entita.entita == BULLET && entita.dir == SU)
+                mvprintw(9, 172, "SPARATO al ciclo %d", ciclo);
+
+
+            mvprintw(13, 160, "BULLET [GIU]");
+            mvprintw(14, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].x, proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].y);
+            mvprintw(15, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].id);
+            if(entita.entita == BULLET && entita.dir == GIU)
+                mvprintw(13, 172, "SPARATO al ciclo %d", ciclo);
+
+
+            mvprintw(17, 160, "BULLET [DESTRA]");
+            mvprintw(18, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].x, proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].y);
+            mvprintw(19, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].id);
+            if(entita.entita == BULLET && entita.dir == DESTRA)
+                mvprintw(17, 172, "SPARATO al ciclo %d", ciclo);
+
+
+            mvprintw(21, 160, "BULLET [SINISTRA]");
+            mvprintw(22, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].x, proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].y);
+            mvprintw(23, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].id);
+            if(entita.entita == BULLET && entita.dir == SINISTRA)
+                mvprintw(21, 172, "SPARATO al ciclo %d", ciclo);
+
+            
+            mvprintw(25, 160, "BLINKY [1]");
+            mvprintw(26, 160, "X: %d  \t Y: %d  ", personaggi[BLINKY].posizione.x, personaggi[BLINKY].posizione.y);
+            mvprintw(27, 160, "Sparo: %d, ID: %d", personaggi[BLINKY].posizione.sparo, personaggi[BLINKY].posizione.id);
         
-        ciclo++;
-        mvprintw(2, 160, "Cicli per secondo: %f", ciclo/deltaTime);
 
-        if(entita.entita == PACMAN) {
-            mvprintw(5, 160, "PACMAN [0]");
-            mvprintw(6, 160, "X: %d  \t Y: %d  ", entita.x, entita.y);
-            mvprintw(7, 160, "Sparo: %d, ID: %d", entita.sparo, entita.id);
-        }
+
+            mvprintw(29, 160, "PINKY [2]");
+            mvprintw(30, 160, "X: %d  \t Y: %d  ", personaggi[PINKY].posizione.x, personaggi[PINKY].posizione.y);
+            mvprintw(31, 160, "Sparo: %d, ID: %d", personaggi[PINKY].posizione.sparo, personaggi[PINKY].posizione.id);
         
-        mvprintw(9, 160, "BULLET [SU]");
-        mvprintw(10, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][SU-SHIFT_MOVIMENTO].x, proiettili[PACMAN][SU-SHIFT_MOVIMENTO].y);
-        mvprintw(11, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][SU-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][SU-SHIFT_MOVIMENTO].id);
-        if(entita.entita == BULLET && entita.dir == SU)
-            mvprintw(9, 172, "SPARATO al ciclo %d", ciclo);
-
-
-        mvprintw(13, 160, "BULLET [GIU]");
-        mvprintw(14, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].x, proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].y);
-        mvprintw(15, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].id);
-        if(entita.entita == BULLET && entita.dir == GIU)
-            mvprintw(13, 172, "SPARATO al ciclo %d", ciclo);
-
-
-        mvprintw(17, 160, "BULLET [DESTRA]");
-        mvprintw(18, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].x, proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].y);
-        mvprintw(19, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].id);
-        if(entita.entita == BULLET && entita.dir == DESTRA)
-            mvprintw(17, 172, "SPARATO al ciclo %d", ciclo);
-
-
-        mvprintw(21, 160, "BULLET [SINISTRA]");
-        mvprintw(22, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].x, proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].y);
-        mvprintw(23, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].id);
-        if(entita.entita == BULLET && entita.dir == SINISTRA)
-            mvprintw(21, 172, "SPARATO al ciclo %d", ciclo);
 
         
-        mvprintw(25, 160, "BLINKY [1]");
-        mvprintw(26, 160, "X: %d  \t Y: %d  ", personaggi[BLINKY].posizione.x, personaggi[BLINKY].posizione.y);
-        mvprintw(27, 160, "Sparo: %d, ID: %d", personaggi[BLINKY].posizione.sparo, personaggi[BLINKY].posizione.id);
-    
+            mvprintw(33, 160, "CLYDE [3]");
+            mvprintw(34, 160, "X: %d  \t Y: %d  ", personaggi[CLYDE].posizione.x, personaggi[CLYDE].posizione.y);
+            mvprintw(35, 160, "Sparo: %d, ID: %d", personaggi[CLYDE].posizione.sparo, personaggi[CLYDE].posizione.id);
+        
 
+        
+            mvprintw(37, 160, "INKY [4]");
+            mvprintw(38, 160, "X: %d  \t Y: %d  ", personaggi[INKY].posizione.x, personaggi[INKY].posizione.y);
+            mvprintw(39, 160, "Sparo: %d, ID: %d", personaggi[INKY].posizione.sparo, personaggi[INKY].posizione.id);
 
-        mvprintw(29, 160, "PINKY [2]");
-        mvprintw(30, 160, "X: %d  \t Y: %d  ", personaggi[PINKY].posizione.x, personaggi[PINKY].posizione.y);
-        mvprintw(31, 160, "Sparo: %d, ID: %d", personaggi[PINKY].posizione.sparo, personaggi[PINKY].posizione.id);
-    
-
-    
-        mvprintw(33, 160, "CLYDE [3]");
-        mvprintw(34, 160, "X: %d  \t Y: %d  ", personaggi[CLYDE].posizione.x, personaggi[CLYDE].posizione.y);
-        mvprintw(35, 160, "Sparo: %d, ID: %d", personaggi[CLYDE].posizione.sparo, personaggi[CLYDE].posizione.id);
-    
-
-    
-        mvprintw(37, 160, "INKY [4]");
-        mvprintw(38, 160, "X: %d  \t Y: %d  ", personaggi[INKY].posizione.x, personaggi[INKY].posizione.y);
-        mvprintw(39, 160, "Sparo: %d, ID: %d", personaggi[INKY].posizione.sparo, personaggi[INKY].posizione.id);
-
-        /*
-        if(node != NULL)
-            mvprintw(29 + (ciclo % 47), 160, "%d : %s", ciclo, EntityName[node->posizione.entita]);
-        else
-            mvprintw(29 + (ciclo % 47), 160, "%d : NULL     ", ciclo);
-        */
+            /*
+            if(node != NULL)
+                mvprintw(29 + (ciclo % 47), 160, "%d : %s", ciclo, EntityName[node->posizione.entita]);
+            else
+                mvprintw(29 + (ciclo % 47), 160, "%d : NULL     ", ciclo);
+            */
 
         #endif
 
         //se vuoi ridere togli la refresh (anche se vuoi piangere)
         //refresh();
 
-    }
-}
-
-void startGhost(int num, int pallini[][num], Pos fantasmi[]){
-    int x, posGhosts[NUM_FANTASMI];
-    _Bool flag;
-    
-    for(int i=0; i<NUM_FANTASMI; i++){
-        do {
-            posGhosts[i] = randRange(0, NUM_PALLINI);
-
-            flag = true;
-            for(int j=0; j<i; j++){
-                if(posGhosts[i] == posGhosts[j])
-                    flag = false;
-            }
-        } while(!flag);
-
-        for(int i=0; i<NUM_FANTASMI; i++) {
-            fantasmi[i].y = pallini[posGhosts[i]][0] -1;
-            fantasmi[i].x = pallini[posGhosts[i]][1] -1;
-            fantasmi[i].dir = FERMO;
-            fantasmi[i].entita = i % MAX_FANTASMI + 1;
-            fantasmi[i].sparo = false;
-            fantasmi[i].id = NULL;
-        }
     }
 }

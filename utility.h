@@ -11,6 +11,7 @@
 
 //macro sacra
 #define DEBUG 1
+#define CHEATS 1
 
 //macro tasti, movimento e azioni
 #define SU 65 						/* Freccia su */
