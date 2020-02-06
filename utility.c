@@ -37,13 +37,13 @@ void insertBuffer(Buffer *buffer, pthread_mutex_t *mutex, Pos new){
     newElement->posizione = new;
     newElement->next = NULL;
 
-	pthread_mutex_lock(&mutexDatiAux);
+	pthread_mutex_lock(mutex);
 
     if(buffer->first == NULL)
         buffer->first = newElement;
     buffer->last = newElement;
 
-	pthread_mutex_unlock(&mutexDatiAux);	
+	pthread_mutex_unlock(mutex);	
 }
 
 BufferElement* removeBuffer(Buffer *buffer){
@@ -66,35 +66,44 @@ State checkDeathBuffer(Buffer *buffer, Pos pos) {
 
     pthread_mutex_lock(mutexCollisioni);
 
-    State stato = VIVO;
     BufferElement *node, *oldNode;
     node = buffer->first;
-    mvprintw(29, 160, "Dentro");
-    if(pos.id == node->posizione.id) {
-        mvprintw(29, 160, "Dentro 1");
-        if(node->posizione.id == buffer->last->posizione.id)
-            buffer->last = node->next;
-        buffer->first = node->next;
-        free(node);
-        stato = MORTO;
-        mvprintw(29, 160, "Cugi sono il primo");
-    } else {
-        mvprintw(30, 160, "Cugi sono nell'else");
-        while(node->next != NULL) {
-            mvprintw(31,160,"Cugi sono nel ciclo");
-            oldNode = node;
-            node = node->next;
-            if(pos.id == node->posizione.id) {
-                if(buffer->last->posizione.id == node->posizione.id)
-                    buffer->last = node->next;
-                oldNode->next = node->next;
-                free(node);
-                stato = MORTO;
+
+    if(node != NULL)
+
+        if(pos.id == node->posizione.id) { //trovato in testa
+
+            //check coda
+            if(node->posizione.id == buffer->last->posizione.id)
+                buffer->last = node->next;
+
+            //tolgo dalla lista il nodo
+            buffer->first = node->next;
+            free(node);
+            return MORTO;
+
+        } else { //non in testa
+
+            //ricerca fino a buffer vuoto
+            while(node->next != NULL) {
+                oldNode = node;
+                node = node->next;
+                //check
+                if(pos.id == node->posizione.id) {
+
+                    //controllo coda
+                    if(buffer->last->posizione.id == node->posizione.id)
+                        buffer->last = node->next;
+
+                    //tolgo dalla lista il nodo
+                    oldNode->next = node->next;
+                    free(node);
+                    return MORTO;
+                }
             }
         }
-    }
-
-    return stato;
 
     pthread_mutex_unlock(mutexCollisioni);
+
+    return VIVO;
 }

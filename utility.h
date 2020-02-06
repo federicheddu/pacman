@@ -10,7 +10,7 @@
 #include <time.h>
 
 //macro sacra
-#define DEBUG 0
+#define DEBUG 1
 
 //macro tasti, movimento e azioni
 #define SU 65 						/* Freccia su */

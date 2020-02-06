@@ -80,7 +80,7 @@ void * ghost (void * param){
       if(randRange(1,5) == 3)
       posGhost.sparo = true;
     */
-   
+
     //aggiornamento della posizione nel buffer e pausa
     insertBuffer(dati, mutexDati, posGhost);
     switch(posGhost.entita){

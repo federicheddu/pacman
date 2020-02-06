@@ -654,6 +654,11 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
         personaggi[i+1].colpiSubiti = 0;
     }
 
+    mvprintw(fantasmi[0].y, fantasmi[0].x, "G");
+    mvprintw(fantasmi[1].y, fantasmi[1].x, "G");
+    mvprintw(fantasmi[2].y, fantasmi[2].x, "G");
+    mvprintw(fantasmi[3].y, fantasmi[3].x, "G");
+
     while(personaggi[PACMAN].vite > 0) {
 
         node = removeBuffer(dati);
@@ -684,9 +689,12 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
             
             //check collisioni tra personaggi
             for(int i=0; i<NUM_PERSONAGGI; i++) {
-                if(entita.x == personaggi[i].posizione.x && entita.y == personaggi[i].posizione.y && entita.entita != personaggi[i].posizione.entita && personaggi[i].vite > 0) {
-                    insertBuffer(collisioni, mutexCollisioni, personaggi[entita.entita].posizione);
-                    insertBuffer(collisioni, mutexCollisioni, personaggi[i].posizione);
+                if(entita.x == personaggi[i].posizione.x && entita.y == personaggi[i].posizione.y && entita.entita != personaggi[i].posizione.entita && personaggi[i].vite > 0 && entita.entita > PACMAN && personaggi[i].posizione.entita == PACMAN) {
+                    pthread_cancel(entita.id);
+                    mvprintw(personaggi[entita.entita].posizione.y,personaggi[entita.entita].posizione.x, "%s", "   ");
+                    mvprintw(personaggi[entita.entita].posizione.y+1,personaggi[entita.entita].posizione.x, "%s", "   ");
+                    mvprintw(personaggi[entita.entita].posizione.y+2,personaggi[entita.entita].posizione.x, "%s", "   ");
+                    mvprintw(60,160, "Qualcuno è morto");
                 }
             }
         
