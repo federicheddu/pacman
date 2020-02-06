@@ -10,13 +10,12 @@ void * pacman(void * param) {
   int hoSparato = 0;
   //Stato iniziale di pacman
   Pos posPacman;
-  posPacman.x = 45;
-  posPacman.y = 29;
+  posPacman.x = pacStart->posizione.x;
+  posPacman.y = pacStart->posizione.y;
   posPacman.dir = FERMO;
   posPacman.sparo = false;
   posPacman.entita = PACMAN;
   posPacman.id = pthread_self();
-  pacStart->posizione = posPacman;
 
   //Segnalazione della posizione iniziale
   insertBuffer(dati, mutexDati, posPacman);
