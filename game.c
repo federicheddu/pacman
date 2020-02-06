@@ -543,43 +543,6 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
     clock_t start, end;
     double deltaTime;
 
-    //variabili per lettura dal buffer e posizioni di partenza dei fantasmi
-    BufferElement *node;
-    Pos entita, fantasmi[NUM_FANTASMI];
-    PosStart posPacmanSpawn, posGhostSpawn, posPartenza, posPartenza_SU, posPartenza_GIU, posPartenza_DESTRA, posPartenza_SINISTRA;
-    posPacmanSpawn.posizione.x = 45;
-    posPacmanSpawn.posizione.y = 29;
-    posPacmanSpawn.dati = dati;
-    posPacmanSpawn.collisioni = collisioni;
-    posGhostSpawn.posizione.x = 74;
-    posGhostSpawn.posizione.y = 29;
-    posGhostSpawn.dati = dati;
-    posGhostSpawn.collisioni = collisioni;
-    posPartenza.dati = dati;
-    posPartenza_SU.dati = dati;
-    posPartenza_GIU.dati = dati;
-    posPartenza_DESTRA.dati = dati;
-    posPartenza_SINISTRA.dati = dati;
-    posPartenza.collisioni = collisioni;
-    posPartenza_SU.collisioni = collisioni;
-    posPartenza_GIU.collisioni = collisioni;
-    posPartenza_DESTRA.collisioni = collisioni;
-    posPartenza_SINISTRA.collisioni = collisioni;
-
-    pthread_t pacmanID;
-  PosStart pacStart;
-  pacStart.dati = &dati;
-  pacStart.collisioni = &collisioni;
-
-    //copie in locale dei personaggi e rispettivi proiettili
-    Par personaggi[NUM_PERSONAGGI];
-    startCharacter(personaggi);
-    Pos proiettili[NUM_PERSONAGGI][MAX_PROIETTILI];
-    startBullet(MAX_PROIETTILI, proiettili);
-
-    BufferElement *debug;
-    int debugInt;
-
     //pallini in gioco: [0]y [1]x [2]attivo
     int pallini[210][3]= {
         {4, 42, 0},{4, 45, 0},{4, 48, 0},{4, 51, 0},
@@ -654,7 +617,15 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
     //variabili per lettura dal buffer e posizioni di partenza dei fantasmi
     BufferElement *node;
     Pos entita, fantasmi[NUM_FANTASMI];
-    PosStart posPartenza, posPartenza_SU, posPartenza_GIU, posPartenza_DESTRA, posPartenza_SINISTRA;
+    PosStart posPacmanSpawn, posGhostSpawn, posPartenza, posPartenza_SU, posPartenza_GIU, posPartenza_DESTRA, posPartenza_SINISTRA;
+    posPacmanSpawn.posizione.x = 45;
+    posPacmanSpawn.posizione.y = 29;
+    posPacmanSpawn.dati = dati;
+    posPacmanSpawn.collisioni = collisioni;
+    posGhostSpawn.posizione.x = 74;
+    posGhostSpawn.posizione.y = 29;
+    posGhostSpawn.dati = dati;
+    posGhostSpawn.collisioni = collisioni;
     posPartenza.dati = dati;
     posPartenza_SU.dati = dati;
     posPartenza_GIU.dati = dati;
@@ -671,7 +642,7 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
     startCharacter(personaggi);
     Pos proiettili[NUM_PERSONAGGI][MAX_PROIETTILI];
     startBullet(MAX_PROIETTILI, proiettili);
-    //es
+    //inizializzazione ed estrazione fantasmi
     startGhost(3, pallini, fantasmi);
     for(int i=0; i<NUM_FANTASMI; i++) {
         personaggi[i+1].posizione = fantasmi[i];
@@ -729,11 +700,11 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
             
             //check collisioni tra fantasmi e pacman
             for(int i=0; i<NUM_PERSONAGGI; i++) {
-                collisioneXdestra = entita.x+2 >= personaggi[PACMAN].posizione.x && entita.x+4 <= personaggi[PACMAN].posizione.x;
-                collisioneXsinistra = personaggi[PACMAN].posizione.x+2 >= entita.x && personaggi[PACMAN].posizione.x+4 <= entita.x;
-                collisioneYsu = entita.y <= personaggi[PACMAN].posizione.y+2 && entita.y >= personaggi[PACMAN].posizione.y;
-                collisioneYgiu = personaggi[PACMAN].posizione.y <= entita.y+2 && personaggi[PACMAN].posizione.y >= entita.y;
-                if((collisioneXdestra || collisioneXsinistra) && (collisioneYgiu || collisioneYsu) && personaggi[i].vite > 0 && entita.entita > PACMAN && entita.entita < NUM_PERSONAGGI) {
+                collisioneXdestra = entita.x == personaggi[PACMAN].posizione.x || entita.x == personaggi[PACMAN].posizione.x+1 || entita.x == personaggi[PACMAN].posizione.x+2;
+                collisioneXsinistra = entita.x == personaggi[PACMAN].posizione.x || entita.x+1 == personaggi[PACMAN].posizione.x || entita.x+2 == personaggi[PACMAN].posizione.x;
+                collisioneYsu = entita.y == personaggi[PACMAN].posizione.y || entita.y == personaggi[PACMAN].posizione.y-1 || entita.y == personaggi[PACMAN].posizione.y-2;
+                collisioneYgiu = entita.y == personaggi[PACMAN].posizione.y || entita.y-1 == personaggi[PACMAN].posizione.y || entita.y-2 == personaggi[PACMAN].posizione.y;
+                if((collisioneXdestra || collisioneXsinistra) && (collisioneYgiu || collisioneYsu) && entita.entita > PACMAN && entita.entita < NUM_PERSONAGGI) {
                     pthread_cancel(personaggi[PACMAN].posizione.id);
                     mvprintw(personaggi[PACMAN].posizione.y,personaggi[entita.entita].posizione.x, "%s", "   ");
                     mvprintw(personaggi[PACMAN].posizione.y+1,personaggi[entita.entita].posizione.x, "%s", "   ");
