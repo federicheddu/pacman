@@ -89,6 +89,7 @@ _Bool entityMv(int x, int y, char dir);
 //gestione del buffer
 void insertBuffer(Buffer *buffer, pthread_mutex_t *mutex, Pos new);
 BufferElement* removeBuffer(Buffer *buffer);
+void clearBuffer(Buffer *buffer, Entity entita);
 State checkDeathBuffer(Buffer *buffer, Pos pos);
 
 //mutex

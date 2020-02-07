@@ -62,6 +62,43 @@ BufferElement* removeBuffer(Buffer *buffer){
     return node;
 }
 
+void clearBuffer(Buffer *buffer, Entity entita) {
+    BufferElement *oldNode, *node = buffer->first;
+
+    if(node != NULL) {
+
+        if(entita == node->posizione.entita) { //trovato in testa
+
+            //check coda
+            if(node->posizione.id == buffer->last->posizione.id)
+                buffer->last = node->next;
+
+            //tolgo dalla lista il nodo
+            buffer->first = node->next;
+            free(node);
+
+        }
+
+        //ricerca fino a buffer vuoto
+        while(node->next != NULL) {
+            oldNode = node;
+            node = node->next;
+            //check
+            if(entita == node->posizione.entita) {
+
+                //controllo coda
+                if(buffer->last->posizione.entita == node->posizione.entita)
+                    buffer->last = node->next;
+
+                //tolgo dalla lista il nodo
+                oldNode->next = node->next;
+                free(node);
+            }
+        }
+
+    }
+}
+
 State checkDeathBuffer(Buffer *buffer, Pos pos) {
 
     pthread_mutex_lock(mutexCollisioni);

@@ -708,15 +708,20 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
             collisioneYsu = entita.y == personaggi[PACMAN].posizione.y || entita.y == personaggi[PACMAN].posizione.y-1 || entita.y == personaggi[PACMAN].posizione.y-2;
             collisioneYgiu = entita.y == personaggi[PACMAN].posizione.y || entita.y-1 == personaggi[PACMAN].posizione.y || entita.y-2 == personaggi[PACMAN].posizione.y;
             if((collisioneXdestra || collisioneXsinistra) && (collisioneYgiu || collisioneYsu) && entita.entita > PACMAN && entita.entita < NUM_PERSONAGGI) {
-                //eclissazione di pacman
+
+                //nascondo le prove
                 mvprintw(personaggi[PACMAN].posizione.y,personaggi[entita.entita].posizione.x, "%s", "   ");
                 mvprintw(personaggi[PACMAN].posizione.y+1,personaggi[entita.entita].posizione.x, "%s", "   ");
                 mvprintw(personaggi[PACMAN].posizione.y+2,personaggi[entita.entita].posizione.x, "%s", "   ");
+                //uccido pacman
                 pthread_cancel(personaggi[PACMAN].posizione.id);
+                //getto il corpo nel fiume
                 personaggi[PACMAN].posizione.x = 160;
                 personaggi[PACMAN].posizione.y = 30;
                 personaggi[PACMAN].posizione.dir = FERMO;
-                mvprintw(60,160, "Qualcuno è morto");
+
+                //elimino i documenti che lo riguardano
+                clearBuffer(dati,PACMAN);
 
                 //respawn di pacman
                 pthread_create(&(personaggi[PACMAN].posizione.id), NULL, &pacman, (void*)&posPacmanSpawn);
