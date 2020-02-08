@@ -4,7 +4,7 @@ void * pacman(void * param) {
   // parsing dei buffer
   PosStart *pacStart = (PosStart*) param; 
   Buffer *dati = pacStart->dati;
-  Buffer *collisioni = pacStart->collisioni;
+  _Bool *collisioni = pacStart->collisioni;
   // info direzione e sparo
   char c, dir, dirOld;
   int hoSparato = 0;

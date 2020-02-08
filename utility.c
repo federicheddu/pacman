@@ -5,29 +5,28 @@ int randRange(int min, int max) {
 }
 
 _Bool entityMv(int x, int y, char dir) {
-    pthread_mutex_trylock(mutexFantasmi);
+
     switch (dir) {
         case SU:
-            if(scampo[y-1][x] == '#' || scampo[y-1][x+1] == '#' || scampo[y-1][x+2] == '#')
+            if(scampo[y-1][x] == '#' || scampo[y-1][x+1] == '#' || scampo[y-1][x+2] == '#'|| scampo[y-1][x] == 'D' || scampo[y-1][x+1] == 'D' || scampo[y-1][x+2] == 'D')
                 return false;
             break;
         case GIU:
-            if(scampo[y+3][x] == '#' || scampo[y+3][x+1] == '#' || scampo[y+3][x+2] == '#')
+            if(scampo[y+3][x] == '#' || scampo[y+3][x+1] == '#' || scampo[y+3][x+2] == '#' || scampo[y+3][x] == 'U' || scampo[y+3][x+1] == 'U' || scampo[y+3][x+2] == 'U')
                 return false;
             break;
         case DESTRA:
-            if(scampo[y][x+3] == '#' || scampo[y+1][x+3] == '#' || scampo[y+2][x+3] == '#')
+            if(scampo[y][x+3] == '#' || scampo[y+1][x+3] == '#' || scampo[y+2][x+3] == '#' || scampo[y][x+3] == 'L' || scampo[y+1][x+3] == 'L' || scampo[y+2][x+3] == 'L')
                 return false;
             break;
         case SINISTRA:
-            if(scampo[y][x-1] == '#' || scampo[y+1][x-1] == '#' || scampo[y+2][x-1] == '#')
+            if(scampo[y][x-1] == '#' || scampo[y+1][x-1] == '#' || scampo[y+2][x-1] == '#' || scampo[y][x-1] == 'R' || scampo[y+1][x-1] == 'R' || scampo[y+2][x-1] == 'R')
                 return false;
             break;
         default:
             return false;
     }
     return true;
-        pthread_mutex_unlock(mutexFantasmi);
 
 }
 
@@ -97,50 +96,4 @@ void clearBuffer(Buffer *buffer, Entity entita) {
         }
 
     }
-}
-
-State checkDeathBuffer(Buffer *buffer, Pos pos) {
-
-    pthread_mutex_lock(mutexCollisioni);
-
-    BufferElement *node, *oldNode;
-    node = buffer->first;
-
-    if(node != NULL)
-
-        if(pos.id == node->posizione.id) { //trovato in testa
-
-            //check coda
-            if(node->posizione.id == buffer->last->posizione.id)
-                buffer->last = node->next;
-
-            //tolgo dalla lista il nodo
-            buffer->first = node->next;
-            free(node);
-            return MORTO;
-
-        } else { //non in testa
-
-            //ricerca fino a buffer vuoto
-            while(node->next != NULL) {
-                oldNode = node;
-                node = node->next;
-                //check
-                if(pos.id == node->posizione.id) {
-
-                    //controllo coda
-                    if(buffer->last->posizione.id == node->posizione.id)
-                        buffer->last = node->next;
-
-                    //tolgo dalla lista il nodo
-                    oldNode->next = node->next;
-                    free(node);
-                    return MORTO;
-                }
-            }
-        }
-
-    pthread_mutex_unlock(mutexCollisioni);
-
-    return VIVO;
 }

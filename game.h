@@ -23,8 +23,12 @@ void startGhost(int num, int pallini[][num], Pos fantasmi[]);
 //controlli di gioco
 _Bool canShoot(Pos proiettili[][MAX_PROIETTILI], Entity entita);
 int checkScore(int x, int y, int num, int pallini[][num]);
+_Bool bulletMv(int x, int y, char dir);
+
+//entita generali
+void * bullet(void * param);
 
 //gioco
-void gameController(int livello, Buffer *dati, Buffer *collisioni);
+void gameController(int livello, Buffer *dati, _Bool *collisioni);
 
 #endif

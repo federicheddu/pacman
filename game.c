@@ -259,7 +259,7 @@ void printEntity(Pos entita, pthread_mutex_t *mutex) {
     switch (entita.entita) {
         case BULLET:
             attron(COLOR_PAIR(2));
-            mvprintw(entita.y,entita.x,"o");
+            mvprintw(entita.y,entita.x, "o");
             attroff(COLOR_PAIR(2));
             break;
         case PACMAN:
@@ -320,13 +320,13 @@ void printEntity(Pos entita, pthread_mutex_t *mutex) {
 }
 
 void clearEntity(Pos entita, pthread_mutex_t *mutex, int num, int pallini[][num]) {
-        pthread_mutex_lock(mutex);
+    pthread_mutex_lock(mutex);
+
     switch(entita.dir) {
       case SU:
-        if(entita.entita != BULLET)
-            mvprintw(entita.y+3,entita.x, "%s","   ");
-        else
-            mvprintw(entita.y+1,entita.x, "%s"," ");
+
+        if(entita.entita == BULLET)
+            mvprintw(entita.y+1, entita.x, " ");
 
         if(entita.entita>PACMAN)
             for(int i=0; i<NUM_PALLINI; i++)
@@ -335,10 +335,10 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex, int num, int pallini[][num]
         break;
 
       case GIU:
-        if(entita.entita != BULLET)
-            mvprintw(entita.y-1,entita.x, "%s", "   ");
-        else
-            mvprintw(entita.y-1,entita.x, "%s", " ");
+
+        if(entita.entita == BULLET)
+            mvprintw(entita.y-1, entita.x, " ");
+
         if(entita.entita>PACMAN)
             for(int i=0; i<NUM_PALLINI; i++)
                 if(entita.y-1 == pallini[i][0] && entita.x+1 == pallini[i][1] && pallini[i][2] == 0)
@@ -347,13 +347,8 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex, int num, int pallini[][num]
 
       case SINISTRA:
 
-        if(entita.entita != BULLET) {
-            mvprintw(entita.y,entita.x+3, "%c", ' ');
-            mvprintw(entita.y+1,entita.x+3, "%c", ' ');
-            mvprintw(entita.y+2,entita.x+3, "%c", ' ');
-        } else
-            mvprintw(entita.y,entita.x+1, "%c", ' ');
-        
+        if(entita.entita == BULLET)
+            mvprintw(entita.y, entita.x+1, " ");
 
         if(entita.entita>PACMAN)
             for(int i=0; i<NUM_PALLINI; i++)
@@ -368,11 +363,9 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex, int num, int pallini[][num]
         break;
 
       case DESTRA:
-        mvprintw(entita.y,entita.x-1, "%c",' ');
-        if(entita.entita != BULLET) {
-            mvprintw(entita.y+1,entita.x-1, "%c",' ');
-            mvprintw(entita.y+2,entita.x-1, "%c",' ');
-        }
+
+        if(entita.entita == BULLET)
+            mvprintw(entita.y, entita.x-1, " ");
         
         if(entita.entita>PACMAN)
             for(int i=0; i<NUM_PALLINI; i++)
@@ -386,7 +379,8 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex, int num, int pallini[][num]
         }
         break;
     }
-            pthread_mutex_unlock(mutex);
+    
+    pthread_mutex_unlock(mutex);
 }
 
 /** --- INIZIALIZZAZIONE DATI ------------------------------------------------------- **/
@@ -460,25 +454,24 @@ _Bool bulletMv(int x, int y, char dir) {
 
     switch (dir) {
         case SU:
-            if(scampo[y-1][x] == '#' )
+            if(scampo[y-1][x] == '#' || scampo[y-1][x] == 'D')
                 return false;
             break;
         case GIU:
-            if(scampo[y+1][x] == '#' )
+            if(scampo[y+3][x] == '#' || scampo[y+3][x] == 'U')
                 return false;
             break;
         case DESTRA:
-            if(scampo[y][x+1] == '#' )
+            if(scampo[y][x+3] == '#' || scampo[y][x+3] == 'L')
                 return false;
             break;
         case SINISTRA:
-            if(scampo[y][x-1] == '#' )
+            if(scampo[y][x-1] == '#' || scampo[y][x-1] == 'R')
                 return false;
             break;
         default:
             return false;
     }
-    
     return true;
 }
 
@@ -487,7 +480,7 @@ void * bullet(void * param) {
     PosStart *start = (PosStart*) param;
     Pos posIniziale = start->posizione;
     Buffer* dati = start->dati;
-    Buffer* collisioni = start->collisioni;
+    _Bool* collisioni = start->collisioni;
 
     Pos posBullet;
     posBullet.x = posIniziale.x;
@@ -539,9 +532,9 @@ void * bullet(void * param) {
 }
 
 /** --- GIOCO ----------------------------------------------------------------------- **/
-void gameController(int livello, Buffer *dati, Buffer *collisioni){
+void gameController(int livello, Buffer *dati, _Bool *collisioni){
 
-    int score = 0;
+    int score = 0, dirOpposta = 0;
     //variabili tempo
     int ciclo = 0;
     clock_t start, end;
@@ -622,14 +615,17 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
     BufferElement *node;
     Pos entita, fantasmi[NUM_FANTASMI];
     PosStart posPacmanSpawn, posGhostSpawn, posPartenza, posPartenza_SU, posPartenza_GIU, posPartenza_DESTRA, posPartenza_SINISTRA;
+
     posPacmanSpawn.posizione.x = 45;
     posPacmanSpawn.posizione.y = 29;
     posPacmanSpawn.dati = dati;
     posPacmanSpawn.collisioni = collisioni;
+
     posGhostSpawn.posizione.x = 74;
     posGhostSpawn.posizione.y = 29;
     posGhostSpawn.dati = dati;
     posGhostSpawn.collisioni = collisioni;
+
     posPartenza.dati = dati;
     posPartenza_SU.dati = dati;
     posPartenza_GIU.dati = dati;
@@ -682,7 +678,14 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
 
             entita = node->posizione;
 
-            
+            //pulisce sempre la vecchia posizione
+            mvprintw(personaggi[entita.entita].posizione.y,personaggi[entita.entita].posizione.x, "%s", "   ");
+            mvprintw(personaggi[entita.entita].posizione.y+1,personaggi[entita.entita].posizione.x, "%s", "   ");
+            mvprintw(personaggi[entita.entita].posizione.y+2,personaggi[entita.entita].posizione.x, "%s", "   ");
+            mvprintw(entita.y,entita.x, "%s", "   ");
+            mvprintw(entita.y+1,entita.x, "%s", "   ");
+            mvprintw(entita.y+2,entita.x, "%s", "   ");
+            clearEntity(personaggi[entita.entita].posizione, mutexTerminale, 3, pallini);
             //stampa solo se è un personaggio oppure un proiettile ancora in vita (motivo del controllo)
             if(!(entita.entita == BULLET && entita.sparo == false)) {
                 mvprintw(personaggi[entita.entita].posizione.y,personaggi[entita.entita].posizione.x, "%s", "   ");
@@ -690,8 +693,6 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
                 mvprintw(personaggi[entita.entita].posizione.y+2,personaggi[entita.entita].posizione.x, "%s", "   ");
                 printEntity(entita, mutexTerminale);
             }
-            //pulisce sempre la vecchia posizione
-            clearEntity(personaggi[entita.entita].posizione, mutexTerminale, 3, pallini);
 
             //backup delle posizioni in locale
             if(entita.entita < NUM_PERSONAGGI)
@@ -709,10 +710,6 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
             collisioneYgiu = entita.y == personaggi[PACMAN].posizione.y || entita.y-1 == personaggi[PACMAN].posizione.y || entita.y-2 == personaggi[PACMAN].posizione.y;
             if((collisioneXdestra || collisioneXsinistra) && (collisioneYgiu || collisioneYsu) && entita.entita > PACMAN && entita.entita < NUM_PERSONAGGI) {
 
-                //nascondo le prove
-                mvprintw(personaggi[PACMAN].posizione.y,personaggi[entita.entita].posizione.x, "%s", "   ");
-                mvprintw(personaggi[PACMAN].posizione.y+1,personaggi[entita.entita].posizione.x, "%s", "   ");
-                mvprintw(personaggi[PACMAN].posizione.y+2,personaggi[entita.entita].posizione.x, "%s", "   ");
                 //uccido pacman
                 pthread_cancel(personaggi[PACMAN].posizione.id);
                 //getto il corpo nel fiume
@@ -720,16 +717,40 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
                 personaggi[PACMAN].posizione.y = 30;
                 personaggi[PACMAN].posizione.dir = FERMO;
 
-                //elimino i documenti che lo riguardano
-                clearBuffer(dati,PACMAN);
+                //nascondo le prove
+                attron(COLOR_PAIR(11));
+                mvprintw(personaggi[PACMAN].posizione.y,personaggi[entita.entita].posizione.x, "%s", "   ");
+                mvprintw(personaggi[PACMAN].posizione.y+1,personaggi[entita.entita].posizione.x, "%s", "   ");
+                mvprintw(personaggi[PACMAN].posizione.y+2,personaggi[entita.entita].posizione.x, "%s", "   ");
+                attroff(COLOR_PAIR(11));
 
                 //respawn di pacman
                 pthread_create(&(personaggi[PACMAN].posizione.id), NULL, &pacman, (void*)&posPacmanSpawn);
                 personaggi[PACMAN].vite++;
                 personaggi[PACMAN].colpiSubiti = 0;
+
+                attron(COLOR_PAIR(4));
+                for(int i=0; i<152; i++)
+                    if(Campo[32][i] == '#')
+                        mvprintw(32, i, "#");
+                attroff(COLOR_PAIR(4));
+            }
+            //bump fantasmi
+            if(entita.entita != PACMAN) {
+                for(int i=1; i<NUM_PERSONAGGI; i++) {
+                    if(entita.entita != personaggi[i].posizione.entita) {
+                        collisioneXdestra = entita.x == personaggi[i].posizione.x || entita.x == personaggi[i].posizione.x+1 || entita.x == personaggi[i].posizione.x+2;
+                        collisioneXsinistra = entita.x == personaggi[i].posizione.x || entita.x+1 == personaggi[i].posizione.x || entita.x+2 == personaggi[i].posizione.x;
+                        collisioneYsu = entita.y == personaggi[i].posizione.y || entita.y == personaggi[i].posizione.y-1 || entita.y == personaggi[i].posizione.y-2;
+                        collisioneYgiu = entita.y == personaggi[i].posizione.y || entita.y-1 == personaggi[i].posizione.y || entita.y-2 == personaggi[i].posizione.y;
+                        if((collisioneXdestra || collisioneXsinistra) && (collisioneYgiu || collisioneYsu)) {
+                            collisioni[i-1] = true;
+                            collisioni[entita.entita-1] = true;
+                        }
+                    }
+                }
             }
 
-        
             score += checkScore(personaggi[PACMAN].posizione.x, personaggi[PACMAN].posizione.y, 3, pallini);
 
             //spawn fantasmi
@@ -753,7 +774,7 @@ void gameController(int livello, Buffer *dati, Buffer *collisioni){
                     }
                     if(entityMv(entita.x, entita.y, GIU)) {
                         proiettili[entita.entita][GIU-SHIFT_MOVIMENTO].x = entita.x+1;
-                        proiettili[entita.entita][GIU-SHIFT_MOVIMENTO].y = entita.y-3;
+                        proiettili[entita.entita][GIU-SHIFT_MOVIMENTO].y = entita.y+3;
                         proiettili[entita.entita][GIU-SHIFT_MOVIMENTO].sparo = true;
                         posPartenza_GIU.posizione = proiettili[entita.entita][GIU-SHIFT_MOVIMENTO];
                         pthread_create(&(proiettili[entita.entita][GIU-SHIFT_MOVIMENTO].id), NULL, &bullet, (void*)&posPartenza_GIU);

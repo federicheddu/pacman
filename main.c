@@ -4,11 +4,13 @@ int main(){
 
   int livello;
 
-  Buffer dati, collisioni;
+  Buffer dati;
+  _Bool *collisioni;
   dati.first = NULL;
   dati.last = NULL;
-  collisioni.first = NULL;
-  collisioni.last = NULL;
+  collisioni = (_Bool*)malloc(sizeof(_Bool)*NUM_FANTASMI);
+  for(int i=0; i<NUM_FANTASMI; i++)
+    collisioni[i] = false;
 
 
   srand(time((time_t*)NULL));
@@ -37,13 +39,15 @@ int main(){
   init_pair(4, COLOR_BLUE, COLOR_BLUE);
   //BULLETS
   init_pair(6, COLOR_GREEN, COLOR_BLACK);
+  //Prova
+  init_pair(11, COLOR_BLACK, COLOR_BLACK);
 
   
 
   livello = mainMenu()+1;
   //pthread_create(&pacmanID, NULL, &pacman, (void*)&pacStart);
-  gameController(livello, &dati, &collisioni);
-  
+  gameController(livello, &dati, collisioni);
+
   endwin();
   return 0;
 }

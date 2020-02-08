@@ -4,9 +4,9 @@ void * ghost (void * param){
   PosStart *start = (PosStart*) param; //parsing del buffer
   Pos posIniziale = start->posizione;
   Buffer *dati = start->dati;
-  Buffer *collisioni = start->collisioni;
+  _Bool *collisioni = start->collisioni;
   int dir, dirOpposta, dirNext = 0;
-  State stato = VIVO;
+  _Bool bump = false;
 
   Pos posGhost;
   posGhost.x = posIniziale.x;
@@ -24,12 +24,17 @@ void * ghost (void * param){
   sleep(randRange(1,3));
 
   posGhost.dir = randRange(65,68);
-  while(checkDeathBuffer(collisioni, posGhost) != MORTO){
+  while(true){
 
     if(posGhost.dir % 2 == 0)
       dirOpposta = -1;
     else
       dirOpposta = 1;
+
+    if(collisioni[posGhost.entita-1]) {
+      posGhost.dir = posGhost.dir + dirOpposta;
+      collisioni[posGhost.entita-1] = false;
+    }
 
     /*BEST RICORDO DEL PROGETTO DI SO1 EVER*/
     //while(dir=randRange(65,68) == posGhost.dir + dirOpposta && !entityMv(posGhost.x, posGhost.y,dir)) {};
