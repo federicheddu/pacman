@@ -44,7 +44,7 @@ int main(){
 
   
 
-  livello = mainMenu()+1;
+  livello = mainMenu();
   //pthread_create(&pacmanID, NULL, &pacman, (void*)&pacStart);
   gameController(livello, &dati, collisioni);
 

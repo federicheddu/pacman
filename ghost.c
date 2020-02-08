@@ -5,6 +5,7 @@ void * ghost (void * param){
   Pos posIniziale = start->posizione;
   Buffer *dati = start->dati;
   _Bool *collisioni = start->collisioni;
+  int lv = start->lv;
   int dir, dirOpposta, dirNext = 0;
   _Bool bump = false;
 
@@ -42,7 +43,7 @@ void * ghost (void * param){
     //Genera una direzione che non sia l'opposta a quella attuale, e che sia fattibile nella mappa
     dirNext = randRange(0,3);
     dir = dirNext + SHIFT_MOVIMENTO;
-    while (dir == posGhost.dir + dirOpposta || !entityMv(posGhost.x, posGhost.y,dir)) {
+    while (dir == posGhost.dir + dirOpposta || !entityMv(posGhost.x, posGhost.y,dir, lv)) {
        dirNext++;
        dirNext %= 4;
        dir = dirNext + SHIFT_MOVIMENTO;
@@ -66,7 +67,7 @@ void * ghost (void * param){
         posGhost.dir = DESTRA;
 
         //effetto pacman
-        if(posGhost.x+3 == 112)
+        if(posGhost.x+2 == 110)
           posGhost.x= 40;
 
         break;
@@ -76,7 +77,7 @@ void * ghost (void * param){
         posGhost.dir = SINISTRA;
 
         //effetto pacman
-        if(posGhost.x-1 == 38)
+        if(posGhost.x == 40)
           posGhost.x = 108;
 
         break;

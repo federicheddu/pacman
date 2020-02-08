@@ -5,6 +5,7 @@ void * pacman(void * param) {
   PosStart *pacStart = (PosStart*) param; 
   Buffer *dati = pacStart->dati;
   _Bool *collisioni = pacStart->collisioni;
+  int lv = pacStart->lv;
   // info direzione e sparo
   char c, dir, dirOld;
   int hoSparato = 0;
@@ -24,7 +25,7 @@ void * pacman(void * param) {
   while(true) {
 
     //direzione -> controllo se può continuare senza input
-    if(!entityMv(posPacman.x, posPacman.y, posPacman.dir))
+    if(!entityMv(posPacman.x, posPacman.y, posPacman.dir, lv))
       posPacman.dir = FERMO;
 
     //piglia input (non bloccante)
@@ -35,7 +36,7 @@ void * pacman(void * param) {
     //modifica della posizione
     switch(dir) {
       case SU:
-        if(entityMv(posPacman.x, posPacman.y, SU)) {
+        if(entityMv(posPacman.x, posPacman.y, SU, lv)) {
           posPacman.y-=1;
           posPacman.dir = SU;
         } else posPacman.dir = FERMO;
@@ -43,7 +44,7 @@ void * pacman(void * param) {
         break;
 
       case GIU:
-        if(entityMv(posPacman.x, posPacman.y, GIU)) {
+        if(entityMv(posPacman.x, posPacman.y, GIU, lv)) {
           posPacman.y+=1;
           posPacman.dir = GIU;
         } else posPacman.dir = FERMO;
@@ -51,26 +52,26 @@ void * pacman(void * param) {
         break;
 
       case DESTRA:
-        if(entityMv(posPacman.x, posPacman.y, DESTRA)) {
+        if(entityMv(posPacman.x, posPacman.y, DESTRA, lv)) {
           posPacman.x+=1;
           posPacman.dir = DESTRA;
         } else posPacman.dir = FERMO;
         hoSparato = 0;
 
         //effetto pacman
-        if(posPacman.x+3 == 112)
+        if(posPacman.x+2 == 110)
           posPacman.x= 40;
         break;
 
       case SINISTRA:
-        if(entityMv(posPacman.x, posPacman.y, SINISTRA)) {
+        if(entityMv(posPacman.x, posPacman.y, SINISTRA, lv)) {
           posPacman.x-=1;
           posPacman.dir = SINISTRA;
         } else posPacman.dir = FERMO;
         hoSparato = 0;
 
         //effetto pacman
-        if(posPacman.x-1 == 38)
+        if(posPacman.x == 40)
           posPacman.x = 108;
         break;
 

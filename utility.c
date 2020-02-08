@@ -4,23 +4,23 @@ int randRange(int min, int max) {
     return min+rand()%(max-min+1);
 }
 
-_Bool entityMv(int x, int y, char dir) {
+_Bool entityMv(int x, int y, char dir, int lv) {
 
     switch (dir) {
         case SU:
-            if(scampo[y-1][x] == '#' || scampo[y-1][x+1] == '#' || scampo[y-1][x+2] == '#'|| scampo[y-1][x] == 'D' || scampo[y-1][x+1] == 'D' || scampo[y-1][x+2] == 'D')
+            if(scampo[lv][y-1][x] == '#' || scampo[lv][y-1][x+1] == '#' || scampo[lv][y-1][x+2] == '#'|| scampo[lv][y-1][x] == 'D' || scampo[lv][y-1][x+1] == 'D' || scampo[lv][y-1][x+2] == 'D')
                 return false;
             break;
         case GIU:
-            if(scampo[y+3][x] == '#' || scampo[y+3][x+1] == '#' || scampo[y+3][x+2] == '#' || scampo[y+3][x] == 'U' || scampo[y+3][x+1] == 'U' || scampo[y+3][x+2] == 'U')
+            if(scampo[lv][y+3][x] == '#' || scampo[lv][y+3][x+1] == '#' || scampo[lv][y+3][x+2] == '#' || scampo[lv][y+3][x] == 'U' || scampo[lv][y+3][x+1] == 'U' || scampo[lv][y+3][x+2] == 'U')
                 return false;
             break;
         case DESTRA:
-            if(scampo[y][x+3] == '#' || scampo[y+1][x+3] == '#' || scampo[y+2][x+3] == '#' || scampo[y][x+3] == 'L' || scampo[y+1][x+3] == 'L' || scampo[y+2][x+3] == 'L')
+            if(scampo[lv][y][x+3] == '#' || scampo[lv][y+1][x+3] == '#' || scampo[lv][y+2][x+3] == '#' || scampo[lv][y][x+3] == 'L' || scampo[lv][y+1][x+3] == 'L' || scampo[lv][y+2][x+3] == 'L')
                 return false;
             break;
         case SINISTRA:
-            if(scampo[y][x-1] == '#' || scampo[y+1][x-1] == '#' || scampo[y+2][x-1] == '#' || scampo[y][x-1] == 'R' || scampo[y+1][x-1] == 'R' || scampo[y+2][x-1] == 'R')
+            if(scampo[lv][y][x-1] == '#' || scampo[lv][y+1][x-1] == '#' || scampo[lv][y+2][x-1] == '#' || scampo[lv][y][x-1] == 'R' || scampo[lv][y+1][x-1] == 'R' || scampo[lv][y+2][x-1] == 'R')
                 return false;
             break;
         default:
