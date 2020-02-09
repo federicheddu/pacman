@@ -5,28 +5,32 @@ int randRange(int min, int max) {
 }
 
 _Bool entityMv(int x, int y, char dir, int lv) {
+    _Bool flag = true;;
 
+    pthread_mutex_lock(mutexFantasmi);
     switch (dir) {
         case SU:
             if(scampo[lv][y-1][x] == '#' || scampo[lv][y-1][x+1] == '#' || scampo[lv][y-1][x+2] == '#'|| scampo[lv][y-1][x] == 'D' || scampo[lv][y-1][x+1] == 'D' || scampo[lv][y-1][x+2] == 'D')
-                return false;
+                flag = false;
             break;
         case GIU:
             if(scampo[lv][y+3][x] == '#' || scampo[lv][y+3][x+1] == '#' || scampo[lv][y+3][x+2] == '#' || scampo[lv][y+3][x] == 'U' || scampo[lv][y+3][x+1] == 'U' || scampo[lv][y+3][x+2] == 'U')
-                return false;
+                flag = false;
             break;
         case DESTRA:
             if(scampo[lv][y][x+3] == '#' || scampo[lv][y+1][x+3] == '#' || scampo[lv][y+2][x+3] == '#' || scampo[lv][y][x+3] == 'L' || scampo[lv][y+1][x+3] == 'L' || scampo[lv][y+2][x+3] == 'L')
-                return false;
+                flag = false;
             break;
         case SINISTRA:
             if(scampo[lv][y][x-1] == '#' || scampo[lv][y+1][x-1] == '#' || scampo[lv][y+2][x-1] == '#' || scampo[lv][y][x-1] == 'R' || scampo[lv][y+1][x-1] == 'R' || scampo[lv][y+2][x-1] == 'R')
-                return false;
+                flag = false;
             break;
         default:
-            return false;
+            flag = false;
     }
-    return true;
+
+    pthread_mutex_unlock(mutexFantasmi);
+    return flag;
 
 }
 

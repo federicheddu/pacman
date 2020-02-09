@@ -233,21 +233,47 @@ void printCampo(int level){
             }
         }
     }
+    attroff(COLOR_PAIR(1));
 }
 
-void printStats(int livello, int score, Par pacman, double deltaTime){
+void printLevelComplete(){
+
+    attron(COLOR_PAIR(1));
+    for (int i=0; i<60; i++){
+        for(int j=0; j<152; j++){
+            if(levelComplete[i][j] == '#' && (j> 2 && j< 145)){
+                attron(COLOR_PAIR(10));
+                mvprintw(i,j, "%c", levelComplete[i][j]);
+                attroff(COLOR_PAIR(10));
+            }else{
+                mvprintw(i,j,"%c", levelComplete[i][j]);
+            }
+        }
+    }
+    attroff(COLOR_PAIR(1));
+    usleep(500000);
+}
+
+void printStats(int livello, int score, Par pacman, double deltaTime, int highscore[], int scoreTotale){
     //stampo livello
     mvprintw(5, 18, "%d", livello+1);
     //stampo score
-    mvprintw(6, 18, "%d", score);
+    mvprintw(6, 18, "%d", score+scoreTotale);
+    mvprintw(7, 11, "Prossima vita a %d", 2000-score);
+
+    //stampo highscore
+    mvprintw(11, 13, "%d", highscore[0]);
+    mvprintw(12, 13, "%d", highscore[1]);
+    mvprintw(13, 13, "%d", highscore[2]);
     //stampo vite
     mvprintw(5, 131, "%d", pacman.vite);
     //stampo tempo
     mvprintw(6, 131, "%.3f", deltaTime);
 }
 
-void printEntity(Pos entita, pthread_mutex_t *mutex) {
+void printEntity(Pos entita, pthread_mutex_t *mutex, _Bool flagPower) {
         pthread_mutex_lock(mutex);
+
     switch (entita.entita) {
         case BULLET:
             attron(COLOR_PAIR(2));
@@ -262,50 +288,99 @@ void printEntity(Pos entita, pthread_mutex_t *mutex) {
             attroff(COLOR_PAIR(5));
             break;
         case BLINKY:
-            attron(COLOR_PAIR(3));
-            mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
-            mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
-            mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
-            attroff(COLOR_PAIR(3));
+            if(!flagPower){
+                attron(COLOR_PAIR(3));
+                mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
+                mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
+                mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
+                attroff(COLOR_PAIR(3));
+            }else{
+                attron(COLOR_PAIR(13));
+                mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
+                mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
+                mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
+                attroff(COLOR_PAIR(13));
+            }
+            
             break;
         case PINKY:
-            attron(COLOR_PAIR(8));
-            mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
-            mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
-            mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
-            attroff(COLOR_PAIR(8));
+            if(!flagPower){
+                attron(COLOR_PAIR(8));
+                mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
+                mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
+                mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
+                attroff(COLOR_PAIR(8));
+            }else{
+                attron(COLOR_PAIR(13));
+                mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
+                mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
+                mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
+                attroff(COLOR_PAIR(13));
+            }
             break;
         case CLYDE:
-            attron(COLOR_PAIR(9));
-            mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
-            mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
-            mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
-            attroff(COLOR_PAIR(9));
+            if(!flagPower){
+                attron(COLOR_PAIR(9));
+                mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
+                mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
+                mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
+                attroff(COLOR_PAIR(9));
+            }else{
+                attron(COLOR_PAIR(13));
+                mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
+                mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
+                mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
+                attroff(COLOR_PAIR(13));
+            }
             break;
         case INKY:
-            attron(COLOR_PAIR(7));
-            mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
-            mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
-            mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
-            attroff(COLOR_PAIR(7));
+            if(!flagPower){
+                attron(COLOR_PAIR(7));
+                mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
+                mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
+                mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
+                attroff(COLOR_PAIR(7));
+            }else{
+                attron(COLOR_PAIR(13));
+                mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
+                mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
+                mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
+                attroff(COLOR_PAIR(13));
+            }
             break;
         case FUNKY:
-            attron(COLOR_PAIR(10));
-            mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
-            mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
-            mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
-            attroff(COLOR_PAIR(10));
+            if(!flagPower){
+                attron(COLOR_PAIR(10));
+                mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
+                mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
+                mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
+                attroff(COLOR_PAIR(10));
+            }else{
+                attron(COLOR_PAIR(13));
+                mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
+                mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
+                mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
+                attroff(COLOR_PAIR(13));
+            }
             break;
         case GLITCHY:
-            attron(COLOR_PAIR(7));
-            mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
-            attroff(COLOR_PAIR(7));
-            attron(COLOR_PAIR(9));
-            mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
-            attroff(COLOR_PAIR(9));
-            attron(COLOR_PAIR(3));
-            mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
-            attroff(COLOR_PAIR(3));
+            if(!flagPower){
+                attron(COLOR_PAIR(7));
+                mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
+                attroff(COLOR_PAIR(7));
+                attron(COLOR_PAIR(9));
+                mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
+                attroff(COLOR_PAIR(9));
+                attron(COLOR_PAIR(3));
+                mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
+                attroff(COLOR_PAIR(3));
+            }else{
+                attron(COLOR_PAIR(13));
+                mvprintw(entita.y,entita.x, "%s","GHO"); //1° riga
+                mvprintw(entita.y+1,entita.x, "%s","H S"); //2° riga
+                mvprintw(entita.y+2,entita.x, "%s","OST"); //3° riga
+                attroff(COLOR_PAIR(13));
+            }
             break;
     }
             pthread_mutex_unlock(mutex);
@@ -321,9 +396,17 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex, int lv, int num, int par, i
             mvprintw(entita.y+1, entita.x, "   ");
 
         if(entita.entita>PACMAN && entita.entita<BULLET)
-            for(int i=0; i<num; i++)
+            for(int i=0; i<num; i++) {
                 if(entita.y+3 == pallini[lv][i][0] && entita.x+1 == pallini[lv][i][1] && pallini[lv][i][2] == 0)
                     mvprintw(entita.y+3,entita.x+1, "%c",'.');
+                if(entita.y+3 == pallini[lv][i][0] && entita.x+1 == pallini[lv][i][1] && pallini[lv][i][2] == 4)
+                    mvprintw(entita.y+3,entita.x+1, "%c",'0');
+                if(entita.y+3 == pallini[lv][i][0] && entita.x+1 == pallini[lv][i][1] && pallini[lv][i][2] == 2) {
+                    attron(COLOR_PAIR(12));
+                    mvprintw(entita.y+3,entita.x+1, "%c",'Y');
+                    attroff(COLOR_PAIR(12));
+                }
+            }
         break;
 
       case GIU:
@@ -332,9 +415,18 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex, int lv, int num, int par, i
             mvprintw(entita.y-1, entita.x, "   ");
 
         if(entita.entita>PACMAN && entita.entita<BULLET)
-            for(int i=0; i<num; i++)
+            for(int i=0; i<num; i++) {
                 if(entita.y-1 == pallini[lv][i][0] && entita.x+1 == pallini[lv][i][1] && pallini[lv][i][2] == 0)
                     mvprintw(entita.y-1,entita.x+1, "%c", '.');
+                if(entita.y-1 == pallini[lv][i][0] && entita.x+1 == pallini[lv][i][1] && pallini[lv][i][2] == 4)
+                    mvprintw(entita.y-1,entita.x+1, "%c", '0');
+                if(entita.y-1 == pallini[lv][i][0] && entita.x+1 == pallini[lv][i][1] && pallini[lv][i][2] == 2) {
+                    attron(COLOR_PAIR(12));
+                    mvprintw(entita.y-1,entita.x+1, "%c", 'Y');
+                    attroff(COLOR_PAIR(12));
+                }
+                    
+            }
         break;
 
       case SINISTRA:
@@ -347,9 +439,17 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex, int lv, int num, int par, i
             
 
         if(entita.entita>PACMAN && entita.entita<BULLET)
-            for(int i=0; i<num; i++)
+            for(int i=0; i<num; i++){
                 if(entita.y+1 == pallini[lv][i][0] && entita.x+3 == pallini[lv][i][1] && pallini[lv][i][2] == 0)
                     mvprintw(entita.y+1,entita.x+3, "%c",'.');
+                if(entita.y+1 == pallini[lv][i][0] && entita.x+3 == pallini[lv][i][1] && pallini[lv][i][2] == 4)
+                    mvprintw(entita.y+1,entita.x+3, "%c", '0');
+                if(entita.y+1 == pallini[lv][i][0] && entita.x+3 == pallini[lv][i][1] && pallini[lv][i][2] == 2) {
+                    attron(COLOR_PAIR(12));
+                    mvprintw(entita.y+1,entita.x+3, "%c", 'Y');
+                    attroff(COLOR_PAIR(12));
+                }
+            }
 
         if(entita.x == 108 && entita.entita>PACMAN && entita.entita<BULLET) {
             mvprintw(entita.y,40, "%s","   ");
@@ -368,9 +468,17 @@ void clearEntity(Pos entita, pthread_mutex_t *mutex, int lv, int num, int par, i
             
         
         if(entita.entita>PACMAN && entita.entita<BULLET)
-            for(int i=0; i<num; i++)
+            for(int i=0; i<num; i++){
                 if(entita.y+1 == pallini[lv][i][0] && entita.x-1 == pallini[lv][i][1] && pallini[lv][i][2] == 0)
                     mvprintw(entita.y+1,entita.x-1, "%c",'.');
+                if(entita.y+1 == pallini[lv][i][0] && entita.x-1 == pallini[lv][i][1] && pallini[lv][i][2] == 4)
+                    mvprintw(entita.y+1,entita.x-1, "%c", '0');
+                if(entita.y+1 == pallini[lv][i][0] && entita.x-1 == pallini[lv][i][1] && pallini[lv][i][2] == 2) {
+                    attron(COLOR_PAIR(12));
+                    mvprintw(entita.y+1,entita.x-1, "%c", 'Y');
+                    attroff(COLOR_PAIR(12));
+                }
+            }
 
         if(entita.x == 40 && entita.entita>PACMAN && entita.entita<BULLET) {
             mvprintw(entita.y,108, "%s","   ");
@@ -441,42 +549,64 @@ _Bool canShoot(Pos proiettili[][MAX_PROIETTILI], Entity entita) {
 int checkScore(int x, int y, int lv, int num, int par, int pallini[][num][par]){
     for (int i; i<num; i++){
         if(pallini[lv][i][0] == y+1)
-            if(pallini[lv][i][1] == x+1)
-                if(pallini[lv][i][2] == 0){
+            if(pallini[lv][i][1] == x+1) {
+                if(pallini[lv][i][2] == 0 || pallini[lv][i][2] == 4){
                     pallini[lv][i][2] = 1;
                     return 10;
                 }
+                if(pallini[lv][i][2] == 2){
+                    pallini[lv][i][2] = 1;
+                    return 50;
+                }
+            }
     }
     return 0;
 }
 
+_Bool checkPower(int x, int y, int lv, int num, int par, int pallini[][num][par]) {
+    for (int i; i<num; i++){
+        if(pallini[lv][i][0] == y+1)
+            if(pallini[lv][i][1] == x+1) {
+                if(pallini[lv][i][2] == 4){
+                    return true;
+                }
+            }
+    }
+    return false;
+}
+
 _Bool bulletMv(int x, int y, char dir, int lv) {
 
+    _Bool flag=true;
+
+    pthread_mutex_lock(mutexFantasmi);
     switch (dir) {
         case SU:
             //for (int i; i<NUM_PALLINI; i++)
                 if(scampo[lv][y-1][x] == '#' || scampo[lv][y-1][x] == 'D' /*|| (pallini[i][0] == y-1 && pallini[i][1] == x && pallini[i][2] == 1)*/)
-                    return false;
+                    flag = false;
             break;
         case GIU:
             //for (int i; i<NUM_PALLINI; i++)
-                if(scampo[lv][y+3][x] == '#' || scampo[lv][y+3][x] == 'U' /*|| (pallini[i][0] == y+3 && pallini[i][1] == x && pallini[i][2] == 1)*/)
-                    return false;
+                if(scampo[lv][y+1][x] == '#' || scampo[lv][y+1][x] == 'U' /*|| (pallini[i][0] == y+3 && pallini[i][1] == x && pallini[i][2] == 1)*/)
+                    flag = false;
             break;
         case DESTRA:
             //for (int i; i<NUM_PALLINI; i++)
-                if(scampo[lv][y][x+3] == '#' || scampo[lv][y][x+3] == 'L' /*|| (pallini[i][0] == y && pallini[i][1] == x+3 && pallini[i][2] == 1)*/)
-                    return false;
+                if(scampo[lv][y][x+1] == '#' || scampo[lv][y][x+1] == 'L' /*|| (pallini[i][0] == y && pallini[i][1] == x+3 && pallini[i][2] == 1)*/)
+                    flag = false;
             break;
         case SINISTRA:
             //for (int i; i<NUM_PALLINI; i++)
                 if(scampo[lv][y][x-1] == '#' || scampo[lv][y][x-1] == 'R' /*|| (pallini[i][0] == y && pallini[i][1] == x-1 && pallini[i][2] == 1)*/)
-                    return false;
+                    flag = false;
             break;
         default:
-            return false;
+            flag = false;
     }
-    return true;
+    pthread_mutex_unlock(mutexFantasmi);
+
+    return flag;
 }
 
 /** --- ENTITÀ GENERALI ------------------------------------------------------------- **/
@@ -527,9 +657,10 @@ void * bullet(void * param) {
         insertBuffer(dati, mutexDati, posBullet);
         usleep(85000);
         death = clock();
-        deltaTime = (double) (death-birth)/CLOCKS_PER_SEC;
+        deltaTime = ((double) (death-birth))/CLOCKS_PER_SEC;
     }
 
+    posBullet.sparo = false;
 
     //PUNTO DI MORTEH
     switch (posBullet.dir) {
@@ -546,30 +677,33 @@ void * bullet(void * param) {
             posBullet.x -= 1;
             break;
     }
-    posBullet.sparo = false;
+    
     insertBuffer(dati,mutexDati,posBullet);
     pthread_exit(NULL);
 }
 
 /** --- GIOCO ----------------------------------------------------------------------- **/
-void gameController(int livello, Buffer *dati, _Bool *collisioni){
+int gameController(int livello, Buffer *dati, _Bool *collisioni, int highscore[]){
 
-    int scorePallini = 0, scoreLivello = 0, scoreFantasmi = 0, scoreFrutta = 0, scoreTotale = 0;
+    int scorePallini = 0, scoreLivello = 0, scoreFantasmi = 0, scoreFrutta = 0, scoreTotale = 0, scoreAux = 0;
     int dirOpposta = 0;
     //variabili tempo
     int ciclo = 0;
-    clock_t start, end;
-    double deltaTime;
+    clock_t start, end, clockPower;
+    double deltaTime, deltaPower;
+    _Bool flagPower = false;
 
-    //pallini in gioco: [0]y [1]x [2]attivo
+    //pallini in gioco: [0]y [1]x [2] attivo(0) - disattivato(1) - frutto(2) - porcamadonna(3) - powerpill(4)
     int numPallini[2] = {NUM_PALLINI_1, NUM_PALLINI_2};
     int maxScore[2] = {2100, 1900};
+    int frutto;
+    _Bool flagFrutta;
     int pallini[2][210][3]= {{
         {4, 42, 0},{4, 45, 0},{4, 48, 0},{4, 51, 0},
         {4, 55, 0},{4, 58, 0},{4, 61, 0},{4, 64, 0},{4, 66, 0},{4, 69, 0},
         {4, 81, 0},{4, 84, 0},{4, 86, 0},{4, 89, 0},{4, 92, 0},{4, 95, 0},
-        {4, 99, 0},{4, 102, 0},{4, 105, 0},{4, 108, 0},{7, 42, 0},{7, 55, 0},
-        {7, 69, 0},{7, 81, 0},{7, 95, 0},{7, 108, 0},{10, 42, 0},{10, 55, 0},
+        {4, 99, 0},{4, 102, 0},{4, 105, 0},{4, 108, 0},{7, 42, 4},{7, 55, 0},
+        {7, 69, 0},{7, 81, 0},{7, 95, 0},{7, 108, 4},{10, 42, 0},{10, 55, 0},
         {10, 69, 0},{10, 81, 0},{10, 95, 0},{10, 108, 0},{13, 42, 0},{13, 45, 0},
         {13, 48, 0},{13, 51, 0},{13, 55, 0},{13, 58, 0},{13, 61, 0},{13, 64, 0},
         {13, 66, 0},{13, 69, 0},{13, 72, 0},{13, 75, 0},{13, 78, 0},{13, 81, 0},
@@ -588,11 +722,11 @@ void gameController(int livello, Buffer *dati, _Bool *collisioni){
         {39, 51, 0},{39, 55, 0},{39, 58, 0},{39, 61, 0},{39, 64, 0},{39, 67, 0},
         {39, 70, 0},{39, 80, 0},{39, 83, 0},{39, 86, 0},{39, 89, 0},{39, 92, 0},
         {39, 95, 0},{39, 99, 0},{39, 102, 0},{39, 105, 0},{39, 108, 0},{42, 42, 0},
-        {42, 55, 0},{42, 70, 0},{42, 80, 0},{42, 95, 0},{42, 108, 0},{45, 42, 0},
+        {42, 55, 0},{42, 70, 0},{42, 80, 0},{42, 95, 0},{42, 108, 0},{45, 42, 4},
         {45, 45, 0},{45, 49, 0},{45, 55, 0},{45, 58, 0},{45, 61, 0},{45, 64, 0},
         {45, 67, 0},{45, 70, 0},{45, 73, 0},{45, 77, 0},{45, 80, 0},{45, 83, 0},
         {45, 86, 0},{45, 89, 0},{45, 92, 0},{45, 95, 0},{45, 101, 0},{45, 105, 0},
-        {45, 108, 0},{48, 49, 0},{48, 55, 0},{48, 64, 0},{48, 86, 0},{48, 95, 0},
+        {45, 108, 4},{48, 49, 0},{48, 55, 0},{48, 64, 0},{48, 86, 0},{48, 95, 0},
         {48, 101, 0},{51, 42, 0},{51, 45, 0},{51, 48, 0},{51, 52, 0},{51, 55, 0},
         {51, 64, 0},{51, 67, 0},{51, 70, 0},{51, 80, 0},{51, 83, 0},{51, 86, 0},
         {51, 95, 0},{51, 98, 0},{51, 102, 0},{51, 105, 0},{51, 108, 0},{53, 42, 0},
@@ -603,7 +737,7 @@ void gameController(int livello, Buffer *dati, _Bool *collisioni){
         {55, 105, 0},{55, 108, 0}},
         {{4, 42, 0}, {4, 45, 0}, {4, 49, 0}, {4, 53, 0}, {4, 56, 0}, {4, 69, 0}, {4, 72, 0}, 
         {4, 75, 0}, {4, 78, 0}, {4, 81, 0}, {4, 94, 0}, {4, 97, 0}, {4, 101, 0}, {4, 105, 0}, 
-        {4, 108, 0}, {7, 42, 0}, {7, 56, 0}, {7, 69, 0}, {7, 81, 0}, {7, 94, 0}, {7, 108, 0}, 
+        {4, 108, 0}, {7, 42, 4}, {7, 56, 0}, {7, 69, 0}, {7, 81, 0}, {7, 94, 0}, {7, 108, 4}, 
         {10, 42, 0}, {10, 45, 0}, {10, 49, 0}, {10, 53, 0}, {10, 56, 0}, {10, 69, 0}, {10, 81, 0}, 
         {10, 94, 0}, {10, 97, 0}, {10, 101, 0}, {10, 105, 0}, {10, 108, 0}, {13, 42, 0}, {13, 56, 0}, 
         {13, 59, 0}, {13, 63, 0}, {13, 66, 0}, {13, 69, 0}, {13, 81, 0}, {13, 84, 0}, {13, 88, 0}, 
@@ -619,10 +753,10 @@ void gameController(int livello, Buffer *dati, _Bool *collisioni){
         {35, 94, 0}, {39, 42, 0}, {39, 45, 0}, {39, 48, 0}, {39, 52, 0}, {39, 56, 0}, {39, 60, 0}, 
         {39, 64, 0}, {39, 67, 0}, {39, 70, 0}, {39, 75, 0}, {39, 80, 0}, {39, 83, 0}, {39, 86, 0}, 
         {39, 90, 0}, {39, 94, 0}, {39, 98, 0}, {39, 102, 0}, {39, 105, 0}, {39, 108, 0}, {42, 42, 0}, 
-        {42, 56, 0}, {42, 70, 0}, {42, 75, 0}, {42, 80, 0}, {42, 94, 0}, {42, 108, 0}, {45, 42, 0}, 
+        {42, 56, 0}, {42, 70, 0}, {42, 75, 0}, {42, 80, 0}, {42, 94, 0}, {42, 108, 0}, {45, 42, 4}, 
         {45, 45, 0}, {45, 49, 0}, {45, 56, 0}, {45, 60, 0}, {45, 64, 0}, {45, 67, 0}, {45, 70, 0}, 
         {45, 80, 0}, {45, 83, 0}, {45, 86, 0}, {45, 90, 0}, {45, 94, 0}, {45, 101, 0}, {45, 105, 0}, 
-        {45, 108, 0}, {48, 49, 0}, {48, 64, 0}, {48, 86, 0}, {48, 101, 0}, {51, 42, 0}, {51, 45, 0}, 
+        {45, 108, 4}, {48, 49, 0}, {48, 64, 0}, {48, 86, 0}, {48, 101, 0}, {51, 42, 0}, {51, 45, 0}, 
         {51, 49, 0}, {51, 64, 0}, {51, 67, 0}, {51, 70, 0}, {51, 80, 0}, {51, 83, 0}, {51, 86, 0}, 
         {51, 101, 0}, {51, 105, 0}, {51, 108, 0}, {53, 42, 0}, {53, 70, 0}, {53, 80, 0}, {53, 108, 0}, 
         {55, 42, 0}, {55, 45, 0}, {55, 48, 0}, {55, 51, 0}, {55, 54, 0}, {55, 57, 0}, {55, 60, 0}, 
@@ -666,7 +800,7 @@ void gameController(int livello, Buffer *dati, _Bool *collisioni){
     _Bool collisioneXdestra, collisioneXsinistra, collisioneYsu, collisioneYgiu;
 
     while(livello<2) {
-        //livello =1;
+        livello =1;
         //pronti partenza via
         usleep(500);
 
@@ -682,11 +816,43 @@ void gameController(int livello, Buffer *dati, _Bool *collisioni){
             personaggi[i+1].colpiSubiti = 0;
         }
 
+        //estrazione del frutto
+        do {
+            frutto = randRange(0, numPallini[livello]-1);
+
+            flagFrutta = true;
+            for(int i=0; i<NUM_FANTASMI; i++){
+                if(fantasmi[i+1].y == pallini[livello][frutto][0] && fantasmi[i+1].x == pallini[livello][frutto][1])
+                    flagFrutta = false;
+            }
+        } while(!flagFrutta);
+        pallini[livello][frutto][2] = 2;
+        attron(COLOR_PAIR(12));
+        mvprintw(pallini[livello][frutto][0], pallini[livello][frutto][1], "Y");
+        attroff(COLOR_PAIR(12));
+
+        //messe le powerpills
+        mvprintw(7, 42, "0");
+        mvprintw(7, 108, "0");
+        mvprintw(45, 42, "0");
+        mvprintw(45, 108, "0");
+
         #if CHEATS == 1
+            attron(COLOR_PAIR(3));
             mvprintw(fantasmi[0].y+1, fantasmi[0].x+1, "G");
+            attroff(COLOR_PAIR(3));
+
+            attron(COLOR_PAIR(8));
             mvprintw(fantasmi[1].y+1, fantasmi[1].x+1, "G");
+            attroff(COLOR_PAIR(8));
+
+            attron(COLOR_PAIR(9));
             mvprintw(fantasmi[2].y+1, fantasmi[2].x+1, "G");
+            attroff(COLOR_PAIR(9));
+
+            attron(COLOR_PAIR(7));
             mvprintw(fantasmi[3].y+1, fantasmi[3].x+1, "G");
+            attroff(COLOR_PAIR(7));
         #endif
 
         posPacmanSpawn.lv = livello;
@@ -723,8 +889,7 @@ void gameController(int livello, Buffer *dati, _Bool *collisioni){
                         if(entita.y == pallini[livello][i][0] && entita.x == pallini[livello][i][1] && pallini[livello][i][2] == 0){
                                 entita.sparo = false;
                                 pthread_cancel(entita.id);
-                        }
-                        
+                        } 
                     }
 
                     for(int i = 0; i<NUM_PERSONAGGI; i++){
@@ -741,7 +906,7 @@ void gameController(int livello, Buffer *dati, _Bool *collisioni){
                     mvprintw(personaggi[entita.entita].posizione.y,personaggi[entita.entita].posizione.x, "%s", "   ");
                     mvprintw(personaggi[entita.entita].posizione.y+1,personaggi[entita.entita].posizione.x, "%s", "   ");
                     mvprintw(personaggi[entita.entita].posizione.y+2,personaggi[entita.entita].posizione.x, "%s", "   ");
-                    printEntity(entita, mutexTerminale);
+                    printEntity(entita, mutexTerminale, flagPower);
                 }
 
                 //backup delle posizioni in locale
@@ -754,37 +919,65 @@ void gameController(int livello, Buffer *dati, _Bool *collisioni){
                                 proiettili[i][j] = entita;
                 
                 //check collisioni tra fantasmi e pacman
-                collisioneXdestra = entita.x == personaggi[PACMAN].posizione.x || entita.x == personaggi[PACMAN].posizione.x+1 || entita.x == personaggi[PACMAN].posizione.x+2;
-                collisioneXsinistra = entita.x == personaggi[PACMAN].posizione.x || entita.x+1 == personaggi[PACMAN].posizione.x || entita.x+2 == personaggi[PACMAN].posizione.x;
-                collisioneYsu = entita.y == personaggi[PACMAN].posizione.y || entita.y == personaggi[PACMAN].posizione.y-1 || entita.y == personaggi[PACMAN].posizione.y-2;
-                collisioneYgiu = entita.y == personaggi[PACMAN].posizione.y || entita.y-1 == personaggi[PACMAN].posizione.y || entita.y-2 == personaggi[PACMAN].posizione.y;
-                if((collisioneXdestra || collisioneXsinistra) && (collisioneYgiu || collisioneYsu) && entita.entita > PACMAN && entita.entita < NUM_PERSONAGGI) {
+                if(entita.entita > PACMAN && entita.entita < NUM_PERSONAGGI) {
+                    collisioneXdestra = entita.x == personaggi[PACMAN].posizione.x || entita.x == personaggi[PACMAN].posizione.x+1 || entita.x == personaggi[PACMAN].posizione.x+2;
+                    collisioneXsinistra = entita.x == personaggi[PACMAN].posizione.x || entita.x+1 == personaggi[PACMAN].posizione.x || entita.x+2 == personaggi[PACMAN].posizione.x;
+                    collisioneYsu = entita.y == personaggi[PACMAN].posizione.y || entita.y == personaggi[PACMAN].posizione.y-1 || entita.y == personaggi[PACMAN].posizione.y-2;
+                    collisioneYgiu = entita.y == personaggi[PACMAN].posizione.y || entita.y-1 == personaggi[PACMAN].posizione.y || entita.y-2 == personaggi[PACMAN].posizione.y;
+                    if((collisioneXdestra || collisioneXsinistra) && (collisioneYgiu || collisioneYsu) && !flagPower) {
 
-                    //uccido pacman
-                    pthread_cancel(personaggi[PACMAN].posizione.id);
-                    //getto il corpo nel fiume
-                    personaggi[PACMAN].posizione.x = 160;
-                    personaggi[PACMAN].posizione.y = 30;
-                    personaggi[PACMAN].posizione.dir = FERMO;
+                        //uccido pacman
+                        pthread_cancel(personaggi[PACMAN].posizione.id);
 
-                    //nascondo le prove
-                    attron(COLOR_PAIR(11));
-                    mvprintw(personaggi[PACMAN].posizione.y,personaggi[entita.entita].posizione.x, "%s", "   ");
-                    mvprintw(personaggi[PACMAN].posizione.y+1,personaggi[entita.entita].posizione.x, "%s", "   ");
-                    mvprintw(personaggi[PACMAN].posizione.y+2,personaggi[entita.entita].posizione.x, "%s", "   ");
-                    attroff(COLOR_PAIR(11));
+                        //getto il corpo nel fiume
+                        personaggi[PACMAN].posizione.x = 160;
+                        personaggi[PACMAN].posizione.y = 30;
+                        personaggi[PACMAN].posizione.dir = FERMO;
 
-                    //respawn di pacman
-                    pthread_create(&(personaggi[PACMAN].posizione.id), NULL, &pacman, (void*)&posPacmanSpawn);
-                    personaggi[PACMAN].vite++;
-                    personaggi[PACMAN].colpiSubiti = 0;
+                        //nascondo le prove
+                        attron(COLOR_PAIR(11));
+                        mvprintw(personaggi[PACMAN].posizione.y,personaggi[entita.entita].posizione.x, "%s", "   ");
+                        mvprintw(personaggi[PACMAN].posizione.y+1,personaggi[entita.entita].posizione.x, "%s", "   ");
+                        mvprintw(personaggi[PACMAN].posizione.y+2,personaggi[entita.entita].posizione.x, "%s", "   ");
+                        attroff(COLOR_PAIR(11));
 
-                    attron(COLOR_PAIR(4));
-                    for(int i=0; i<152; i++)
-                        if(Campo[livello][32][i] == '#')
-                            mvprintw(32, i, "#");
-                    attroff(COLOR_PAIR(4));
+                        //respawn di pacman
+                        pthread_create(&(personaggi[PACMAN].posizione.id), NULL, &pacman, (void*)&posPacmanSpawn);
+                        personaggi[PACMAN].vite--;
+                        personaggi[PACMAN].colpiSubiti = 0;
+
+                        attron(COLOR_PAIR(4));
+                        for(int i=0; i<152; i++)
+                            if(Campo[livello][32][i] == '#')
+                                mvprintw(32, i, "#");
+                        attroff(COLOR_PAIR(4));
+                    }
+
+                    if((collisioneXdestra || collisioneXsinistra) && (collisioneYgiu || collisioneYsu) && flagPower) {
+
+                        //uccido fantasma
+                        pthread_cancel(entita.id);
+
+                        //getto l'ectoplasma nel fiume
+                        entita.x = 170;
+                        entita.y = 30;
+                        entita.dir = FERMO;
+
+                        //respawn fantasma
+                        posGhostSpawn.posizione.entita = entita.entita;
+                        personaggi[entita.entita].colpiSubiti = 0;
+                        personaggi[entita.entita].vite--;
+                        pthread_create(&(personaggi[entita.entita].posizione.id), NULL, &ghost, (void*)&posGhostSpawn);
+                        scoreFantasmi += 200;
+
+                        attron(COLOR_PAIR(4));
+                        for(int i=0; i<152; i++)
+                            if(Campo[livello][32][i] == '#')
+                                mvprintw(32, i, "#");
+                        attroff(COLOR_PAIR(4));
+                    }
                 }
+
                 //bump fantasmi
                 if(entita.entita != PACMAN) {
                     for(int i=1; i<NUM_PERSONAGGI; i++) {
@@ -801,13 +994,85 @@ void gameController(int livello, Buffer *dati, _Bool *collisioni){
                     }
                 }
 
-                scorePallini += checkScore(personaggi[PACMAN].posizione.x, personaggi[PACMAN].posizione.y, livello, numPallini[livello], 3, pallini);
+                //collisioni proiettili personaggi
+                if(entita.entita == BULLET){
+                    for(int i=0; i<NUM_PERSONAGGI; i++){
+                        collisioneXdestra = entita.x == personaggi[i].posizione.x || entita.x == personaggi[i].posizione.x+1 || entita.x == personaggi[i].posizione.x+2;
+                        collisioneXsinistra = entita.x == personaggi[i].posizione.x || entita.x+1 == personaggi[i].posizione.x || entita.x+2 == personaggi[i].posizione.x;
+                        collisioneYsu = entita.y == personaggi[i].posizione.y || entita.y == personaggi[i].posizione.y-1 /*|| entita.y == personaggi[i].posizione.y-2*/;
+                        collisioneYgiu = entita.y == personaggi[i].posizione.y || entita.y-1 == personaggi[i].posizione.y /*|| entita.y-2 == personaggi[i].posizione.y*/;
+                        if((collisioneXdestra || collisioneXsinistra) && (collisioneYgiu || collisioneYsu)) {
+
+                            //giustiziamo il proiettile
+                            pthread_cancel(entita.id);
+                            mvprintw(entita.y,entita.x, "%s", " ");
+                            for(int i = 0; i<NUM_PERSONAGGI ; i++)
+                                for(int j = 0; j<MAX_PROIETTILI; j++)
+                                    if(proiettili[i][j].id == entita.id)
+                                        proiettili[i][j].sparo = false;
+
+                            //multiamo il personaggio
+                            personaggi[i].colpiSubiti++;
+
+                            #if CHEATS == 1 //aimbot
+                            if(personaggi[i].posizione.entita > PACMAN && personaggi[i].posizione.entita < BULLET)
+                                personaggi[i].colpiSubiti+=9;
+                            #endif
+
+
+                            if(personaggi[i].colpiSubiti == 10) {
+                                personaggi[i].vite--;
+                                pthread_cancel(personaggi[i].posizione.id);
+
+                                if(personaggi[i].posizione.entita == PACMAN && personaggi[i].vite > 0) {
+                                    personaggi[PACMAN].colpiSubiti = 0;
+                                    pthread_create(&(personaggi[PACMAN].posizione.id), NULL, &pacman, (void*)&posPacmanSpawn);
+                                }
+                                if(personaggi[i].posizione.entita > PACMAN && personaggi[i].posizione.entita < BULLET && personaggi[i].vite > 0) {
+                                    posGhostSpawn.posizione.entita = personaggi[i].posizione.entita;
+                                    personaggi[i].colpiSubiti = 0;
+                                    pthread_create(&(personaggi[personaggi[i].posizione.entita].posizione.id), NULL, &ghost, (void*)&posGhostSpawn);
+                                    scoreFantasmi += 100;
+                                }
+
+                            }
+                        }
+                    }
+
+                    /*if(scampo[livello][]){
+                        //giustiziamo il proiettile
+                            entita.sparo =false;
+                            pthread_cancel(entita.id);
+                            mvprintw(entita.y,entita.x, "%s", " ");
+                            for(int i = 0; i<NUM_PERSONAGGI ; i++)
+                                for(int j = 0; j<MAX_PROIETTILI; j++)
+                                    if(proiettili[i][j].id == entita.id)
+                                        proiettili[i][j].sparo = false;
+                    }*/
+                }
+
+                if(checkPower(personaggi[PACMAN].posizione.x, personaggi[PACMAN].posizione.y, livello, numPallini[livello], 3, pallini)) {
+                    flagPower = true;
+                    clockPower = clock();
+                }
+                end = clock();
+                deltaPower = ((double) (end-clockPower))/CLOCKS_PER_SEC;
+                if(flagPower && deltaPower > 8)
+                    flagPower = false;
+                
+                
+                scoreAux = checkScore(personaggi[PACMAN].posizione.x, personaggi[PACMAN].posizione.y, livello, numPallini[livello], 3, pallini);
+                if(scoreAux > 0)
+                    scorePallini += 10;
+                if(scoreAux == 50)
+                    scoreFrutta += 40;
+
                 scoreLivello = scoreFantasmi+scoreFrutta+scorePallini;
 
                 //spawn fantasmi
                 for(int i=0; i< NUM_FANTASMI; i++){
                     if(fantasmi[i].x == personaggi[PACMAN].posizione.x && fantasmi[i].y == personaggi[PACMAN].posizione.y && personaggi[i+1].vite == 0) {
-                        personaggi[i+1].vite = 1;
+                        personaggi[i+1].vite = 5;
                         posPartenza.posizione = personaggi[i+1].posizione;
                         pthread_create(&(personaggi[i+1].posizione.id), NULL, &ghost, (void*)&posPartenza);
                     }
@@ -838,7 +1103,7 @@ void gameController(int livello, Buffer *dati, _Bool *collisioni){
                             pthread_create(&(proiettili[entita.entita][DESTRA-SHIFT_MOVIMENTO].id), NULL, &bullet, (void*)&posPartenza_DESTRA);
                         }
                         if(bulletMv(entita.x, entita.y+1, SINISTRA, livello)) {
-                            proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO].x = entita.x-1;
+                            proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO].x = entita.x-2;
                             proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO].y = entita.y+1;
                             proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO].sparo = true;
                             posPartenza_SINISTRA.posizione = proiettili[entita.entita][SINISTRA-SHIFT_MOVIMENTO];
@@ -856,7 +1121,7 @@ void gameController(int livello, Buffer *dati, _Bool *collisioni){
             deltaTime = ((double) (end-start))/CLOCKS_PER_SEC;
             mvprintw(3, 160, "Tempo: %f", deltaTime);
 
-            printStats(livello, scoreLivello, personaggi[PACMAN], deltaTime);
+            printStats(livello, scoreLivello, personaggi[PACMAN], deltaTime, highscore, scoreTotale);
             
 
             #if DEBUG == 1
@@ -866,61 +1131,60 @@ void gameController(int livello, Buffer *dati, _Bool *collisioni){
                 ciclo++;
                 mvprintw(2, 160, "Cicli per secondo: %f", ciclo/deltaTime);
 
-                if(entita.entita == PACMAN) {
-                    mvprintw(5, 160, "PACMAN [0]");
-                    mvprintw(6, 160, "X: %d  \t Y: %d  ", entita.x, entita.y);
-                    mvprintw(7, 160, "Sparo: %d, ID: %d", entita.sparo, entita.id);
-                }
+                mvprintw(5, 160, "PACMAN [0]");
+                mvprintw(6, 160, "X: %d  \t Y: %d  ", personaggi[PACMAN].posizione.x, personaggi[PACMAN].posizione.y);
+                mvprintw(7, 160, "Sparo: %d, ID: %d, Vite: %d, Colpi Subiti: %d", personaggi[PACMAN].posizione.sparo, personaggi[PACMAN].posizione.id, personaggi[PACMAN].vite, personaggi[PACMAN].colpiSubiti);
+
                 
                 mvprintw(9, 160, "BULLET [SU]");
                 mvprintw(10, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][SU-SHIFT_MOVIMENTO].x, proiettili[PACMAN][SU-SHIFT_MOVIMENTO].y);
                 mvprintw(11, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][SU-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][SU-SHIFT_MOVIMENTO].id);
                 if(entita.entita == BULLET && entita.dir == SU)
-                    mvprintw(9, 172, "SPARATO al ciclo %d", ciclo);
+                    mvprintw(9, 180, "MORTO %d", ciclo);
 
 
                 mvprintw(13, 160, "BULLET [GIU]");
                 mvprintw(14, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].x, proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].y);
                 mvprintw(15, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][GIU-SHIFT_MOVIMENTO].id);
                 if(entita.entita == BULLET && entita.dir == GIU)
-                    mvprintw(13, 172, "SPARATO al ciclo %d", ciclo);
+                    mvprintw(13, 180, "MORTO %d", ciclo);
 
 
                 mvprintw(17, 160, "BULLET [DESTRA]");
                 mvprintw(18, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].x, proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].y);
                 mvprintw(19, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][DESTRA-SHIFT_MOVIMENTO].id);
                 if(entita.entita == BULLET && entita.dir == DESTRA)
-                    mvprintw(17, 172, "SPARATO al ciclo %d", ciclo);
+                    mvprintw(17, 180, "MORTO %d", ciclo);
 
 
                 mvprintw(21, 160, "BULLET [SINISTRA]");
                 mvprintw(22, 160, "X: %d  \t Y: %d  ", proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].x, proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].y);
                 mvprintw(23, 160, "Sparo: %d, ID: %d", proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].sparo, proiettili[PACMAN][SINISTRA-SHIFT_MOVIMENTO].id);
                 if(entita.entita == BULLET && entita.dir == SINISTRA)
-                    mvprintw(21, 172, "SPARATO al ciclo %d", ciclo);
+                    mvprintw(21, 180, "MORTO %d", ciclo);
 
                 
                 mvprintw(25, 160, "BLINKY [1]");
                 mvprintw(26, 160, "X: %d  \t Y: %d  ", personaggi[BLINKY].posizione.x, personaggi[BLINKY].posizione.y);
-                mvprintw(27, 160, "Sparo: %d, ID: %d", personaggi[BLINKY].posizione.sparo, personaggi[BLINKY].posizione.id);
+                mvprintw(27, 160, "Sparo: %d, ID: %d, Vite: %d, Colpi Subiti: %d", personaggi[BLINKY].posizione.sparo, personaggi[BLINKY].posizione.id, personaggi[BLINKY].vite, personaggi[BLINKY].colpiSubiti);
             
 
 
                 mvprintw(29, 160, "PINKY [2]");
                 mvprintw(30, 160, "X: %d  \t Y: %d  ", personaggi[PINKY].posizione.x, personaggi[PINKY].posizione.y);
-                mvprintw(31, 160, "Sparo: %d, ID: %d", personaggi[PINKY].posizione.sparo, personaggi[PINKY].posizione.id);
+                mvprintw(31, 160, "Sparo: %d, ID: %d, Vite: %d, Colpi Subiti: %d", personaggi[PINKY].posizione.sparo, personaggi[PINKY].posizione.id, personaggi[PINKY].vite, personaggi[PINKY].colpiSubiti);
             
 
             
                 mvprintw(33, 160, "CLYDE [3]");
                 mvprintw(34, 160, "X: %d  \t Y: %d  ", personaggi[CLYDE].posizione.x, personaggi[CLYDE].posizione.y);
-                mvprintw(35, 160, "Sparo: %d, ID: %d", personaggi[CLYDE].posizione.sparo, personaggi[CLYDE].posizione.id);
+                mvprintw(35, 160, "Sparo: %d, ID: %d, Vite: %d, Colpi Subiti: %d", personaggi[CLYDE].posizione.sparo, personaggi[CLYDE].posizione.id, personaggi[CLYDE].vite, personaggi[CLYDE].colpiSubiti);
             
 
             
                 mvprintw(37, 160, "INKY [4]");
                 mvprintw(38, 160, "X: %d  \t Y: %d  ", personaggi[INKY].posizione.x, personaggi[INKY].posizione.y);
-                mvprintw(39, 160, "Sparo: %d, ID: %d", personaggi[INKY].posizione.sparo, personaggi[INKY].posizione.id);
+                mvprintw(39, 160, "Sparo: %d, ID: %d, Vite: %d, Colpi Subiti: %d", personaggi[INKY].posizione.sparo, personaggi[INKY].posizione.id, personaggi[INKY].vite, personaggi[INKY].colpiSubiti);
 
                 /*
                 if(node != NULL)
@@ -937,12 +1201,25 @@ void gameController(int livello, Buffer *dati, _Bool *collisioni){
         }
         for(int i=0; i< NUM_PERSONAGGI; i++)
             pthread_cancel(personaggi[i].posizione.id);
+        nodelay(stdscr, FALSE);
+
         scoreTotale += scoreLivello;
+
+        if(scoreLivello >= 2000)
+            personaggi[PACMAN].vite++;
+
         scoreLivello = 0;
         scorePallini = 0;
         scoreFantasmi = 0;
         scoreFrutta = 0;
         livello++;
-        mvprintw(3, 5, "%s", "FINITO");
+
+        printLevelComplete();
+        while(getch()!= '\n'){}
     }
+
+    //bonus tempo
+    scoreTotale+=(scoreTotale/deltaTime)*175;
+
+    return scoreTotale;
 }

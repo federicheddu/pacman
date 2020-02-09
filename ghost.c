@@ -26,6 +26,7 @@ void * ghost (void * param){
 
   posGhost.dir = randRange(65,68);
   while(true){
+    posGhost.sparo = false;
 
     if(posGhost.dir % 2 == 0)
       dirOpposta = -1;
@@ -83,11 +84,10 @@ void * ghost (void * param){
         break;
     }
 
-    /*
-      if(randRange(1,5) == 3)
+    
+    if(randRange(1,100)%7 == 0)
       posGhost.sparo = true;
-    */
-
+    
     //aggiornamento della posizione nel buffer e pausa
     insertBuffer(dati, mutexDati, posGhost);
     switch(posGhost.entita){
