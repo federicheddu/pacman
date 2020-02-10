@@ -236,21 +236,37 @@ void printCampo(int level){
     attroff(COLOR_PAIR(1));
 }
 
-void printLevelComplete(){
-
-    attron(COLOR_PAIR(1));
-    for (int i=0; i<60; i++){
-        for(int j=0; j<152; j++){
-            if(levelComplete[i][j] == '#' && (j> 2 && j< 145)){
-                attron(COLOR_PAIR(10));
-                mvprintw(i,j, "%c", levelComplete[i][j]);
-                attroff(COLOR_PAIR(10));
-            }else{
-                mvprintw(i,j,"%c", levelComplete[i][j]);
+void printLevelComplete(_Bool flag){
+    if(flag){
+        attron(COLOR_PAIR(1));
+        for (int i=0; i<60; i++){
+            for(int j=0; j<152; j++){
+                if(levelComplete[0][i][j] == '#' && (j> 2 && j< 145)){
+                    attron(COLOR_PAIR(10));
+                    mvprintw(i,j, "%c", levelComplete[0][i][j]);
+                    attroff(COLOR_PAIR(10));
+                }else{
+                    mvprintw(i,j,"%c", levelComplete[0][i][j]);
+                }
             }
         }
+        attroff(COLOR_PAIR(1));
+    }else{
+        attron(COLOR_PAIR(1));
+        for (int i=0; i<60; i++){
+            for(int j=0; j<152; j++){
+                if(levelComplete[1][i][j] == '#' && (j> 2 && j< 145)){
+                    attron(COLOR_PAIR(3));
+                    mvprintw(i,j, "%c", levelComplete[1][i][j]);
+                    attroff(COLOR_PAIR(3));
+                }else{
+                    mvprintw(i,j,"%c", levelComplete[1][i][j]);
+                }
+            }
+        }
+        attroff(COLOR_PAIR(1));
     }
-    attroff(COLOR_PAIR(1));
+    
     usleep(500000);
 }
 
@@ -630,29 +646,33 @@ void * bullet(void * param) {
 
     birth=clock();
     //Movimento bullet
-    while(bulletMv(posBullet.x, posBullet.y, posBullet.dir, lv) && deltaTime < 6) {
-        switch (posBullet.dir) {
+    while(deltaTime < 6) {
+        if(bulletMv(posBullet.x, posBullet.y, posBullet.dir, lv)){
+            switch (posBullet.dir) {
             case SU:
-            posBullet.y -= 1;
-            break;
-        case GIU:
-            posBullet.y += 1;
-            break;
-        case DESTRA:
-            posBullet.x += 1;
+                posBullet.y -= 1;
+                break;
+            case GIU:
+                posBullet.y += 1;
+                break;
+            case DESTRA:
+                posBullet.x += 1;
 
-            /*//effetto pacman
-            if(posBullet.x+3 == 111)
-                posBullet.x= 40;*/
-            break;
-        case SINISTRA:
-            posBullet.x -= 1;
+                /*//effetto pacman
+                if(posBullet.x+3 == 111)
+                    posBullet.x= 40;*/
+                break;
+            case SINISTRA:
+                posBullet.x -= 1;
 
-            /*//effetto pacman
-            if(posBullet.x-1 == 39)
-                posBullet.x = 108;*/
+                /*//effetto pacman
+                if(posBullet.x-1 == 39)
+                    posBullet.x = 108;*/
+                break;
+            }
+        
+        }else
             break;
-        }
 
         insertBuffer(dati, mutexDati, posBullet);
         usleep(85000);
@@ -692,6 +712,7 @@ int gameController(int livello, Buffer *dati, _Bool *collisioni, int highscore[]
     clock_t start, end, clockPower;
     double deltaTime, deltaPower;
     _Bool flagPower = false;
+    _Bool flagVittoria = true;
 
     //pallini in gioco: [0]y [1]x [2] attivo(0) - disattivato(1) - frutto(2) - porcamadonna(3) - powerpill(4)
     int numPallini[2] = {NUM_PALLINI_1, NUM_PALLINI_2};
@@ -799,8 +820,8 @@ int gameController(int livello, Buffer *dati, _Bool *collisioni, int highscore[]
 
     _Bool collisioneXdestra, collisioneXsinistra, collisioneYsu, collisioneYgiu;
 
-    while(livello<2) {
-        livello =1;
+    while(livello<2 && flagVittoria) {
+        //livello =1;
         //pronti partenza via
         usleep(500);
 
@@ -882,7 +903,7 @@ int gameController(int livello, Buffer *dati, _Bool *collisioni, int highscore[]
                     mvprintw(entita.y+2,entita.x, "%s", "   ");
                     clearEntity(personaggi[entita.entita].posizione, mutexTerminale, livello, numPallini[livello], 3, pallini);
 
-                    mvprintw(43,160, "%s", "Cancello");
+                    //mvprintw(43,160, "%s", "Cancello");
                 }else{
                     
                     for(int i=0; i<numPallini[livello]; i++){
@@ -943,7 +964,7 @@ int gameController(int livello, Buffer *dati, _Bool *collisioni, int highscore[]
 
                         //respawn di pacman
                         pthread_create(&(personaggi[PACMAN].posizione.id), NULL, &pacman, (void*)&posPacmanSpawn);
-                        personaggi[PACMAN].vite--;
+                        personaggi[PACMAN].vite++;
                         personaggi[PACMAN].colpiSubiti = 0;
 
                         attron(COLOR_PAIR(4));
@@ -1119,7 +1140,7 @@ int gameController(int livello, Buffer *dati, _Bool *collisioni, int highscore[]
 
             end = clock();
             deltaTime = ((double) (end-start))/CLOCKS_PER_SEC;
-            mvprintw(3, 160, "Tempo: %f", deltaTime);
+            //mvprintw(3, 160, "Tempo: %f", deltaTime);
 
             printStats(livello, scoreLivello, personaggi[PACMAN], deltaTime, highscore, scoreTotale);
             
@@ -1201,9 +1222,18 @@ int gameController(int livello, Buffer *dati, _Bool *collisioni, int highscore[]
         }
         for(int i=0; i< NUM_PERSONAGGI; i++)
             pthread_cancel(personaggi[i].posizione.id);
+        for(int i=0; i<NUM_PERSONAGGI; i++){
+            for(int j=0; j<MAX_PROIETTILI; j++){
+                proiettili[i][j].sparo = false;
+                pthread_cancel(proiettili[i][j].id);
+            }
+        }
         nodelay(stdscr, FALSE);
 
         scoreTotale += scoreLivello;
+
+        if(personaggi[PACMAN].vite == 0)
+            flagVittoria = false;
 
         if(scoreLivello >= 2000)
             personaggi[PACMAN].vite++;
@@ -1214,7 +1244,7 @@ int gameController(int livello, Buffer *dati, _Bool *collisioni, int highscore[]
         scoreFrutta = 0;
         livello++;
 
-        printLevelComplete();
+        printLevelComplete(flagVittoria);
         while(getch()!= '\n'){}
     }
 

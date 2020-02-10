@@ -13,7 +13,7 @@ void printEntity(Pos entita, pthread_mutex_t *mutex, _Bool flagPower);
 void clearEntity(Pos entita, pthread_mutex_t *mutex, int lv, int num, int par, int pallini[][num][par]);
 void printCampo(int level);
 void printStats(int livello, int score, Par pacman, double deltaTime, int highscore[], int scoreTotale);
-void printLevelComplete();
+void printLevelComplete(_Bool flag);
 
 //inizializzazione dati
 void startBullet(int num, Pos proiettili[][num]);
