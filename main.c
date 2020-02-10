@@ -2,7 +2,7 @@
 
 int main(){
 
-  int livello, highscore[3], score, aux;
+  int livello, menu, highscore[3], score, aux;
   FILE *pf;
 
   Buffer dati;
@@ -57,8 +57,24 @@ int main(){
   }
   fclose(pf);
 
-  livello = mainMenu();
-  //pthread_create(&pacmanID, NULL, &pacman, (void*)&pacStart);
+  do {
+
+    switch (mainMenu()) {
+      case 0:
+        livello = 0;
+        break;
+
+      case 2:
+        livello = selLevel();
+        break;
+
+      default:
+        endwin();
+        return 0;
+    }
+
+  } while(livello == 3);
+
   score = gameController(livello, &dati, collisioni, highscore);
 
   for(int i=0; i<3; i++){

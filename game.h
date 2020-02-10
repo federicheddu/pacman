@@ -6,13 +6,15 @@
 
 //stampa del menu
 int mainMenu();
+int selLevel();
 void printMenu(int j);
+void printSelecLevel(int j);
 
 //stampa del gioco
 void printEntity(Pos entita, pthread_mutex_t *mutex, _Bool flagPower);
 void clearEntity(Pos entita, pthread_mutex_t *mutex, int lv, int num, int par, int pallini[][num][par]);
 void printCampo(int level);
-void printStats(int livello, int score, Par pacman, double deltaTime, int highscore[], int scoreTotale);
+void printStats(int livello, int score, Par pacman, double deltaTime, int highscore[], int scoreTotale, int uccisioni);
 void printLevelComplete(_Bool flag);
 
 //inizializzazione dati
